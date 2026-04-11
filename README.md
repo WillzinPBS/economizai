@@ -1,4 +1,4 @@
-# Economizou
+# Economizai
 
 Sistema web de comparação de preços criado por estudantes de Análise e Desenvolvimento de Sistemas para ajudar usuários a economizar no dia a dia, comparando produtos entre diferentes mercados.
 
