@@ -6,21 +6,49 @@
 
   <link rel="stylesheet" href="./css/styles.css">
 
+  <script src="https://kit.fontawesome.com/4620774d96.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
   <script type="module" src="./js/main.js"></script>
 </head>
-<body class="bg-gray-100">
-  <h1 class="text-3xl font-bold text-green-600 text-center mt-10">
-    Economizou 
-  </h1>
+<body>
+    <header>
+        <div class="menu">
+                <img src="img/logoecom.png" alt="" style="width: 12%;">
+            <nav>
+                <a href="" id="visitando">Home</a>
+                <a href="">Produtos</a>
+                <a href="">Como Funciona</a>
+                <a href="">Contato</a>
+            </nav>
+            <div class="login">
+                <a href="" id="entrar"><i class="fa-regular fa-user" style="color: rgb(255, 255, 255);"></i> Entrar</a>
+            </div>
+        </div>
+    </header>
 
-  <div class="teste">
-    <botao-principal
-        label="Enviar Mensagem"
-        icon="phone"
-        icon-color="red"
-      ></botao-principal>
-  </div>
+    <main>
+        <div class="container">
+            <h1>Produtos Disponíveis</h1>
+            <div class="produtos">
+                <div class="item">
+                    <div class="imagem">
+                        <!-- <img src="img/cocacola.jpg"> -->
+                        <span>Menor preço</span>
+                    </div>
+                    <p>Bebidas</p>
+                    <h1>Coca-Cola 2L</h1>
+                    <button id="entrar">Adicionar</button>
+                    <hr>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div>
+            <span>© 2026 Compara Preço - Projeto Acadêmico - Encontre os melhores preços para sua lista de compras</span>
+        </div>
+    </footer>
 </body>
 </html>
 

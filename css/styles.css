@@ -1,0 +1,159 @@
+* {
+    color: rgba(0, 0, 0, 0.70);
+    margin: 0%;
+    text-decoration: none;
+    font-family:  'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body{
+    padding-top: 72px;
+    padding-bottom: 72px;
+    font-size: 14px;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+
+}
+
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 999;
+    top: 0px;
+    
+    background-color: rgb(255, 255, 255);
+    box-shadow: 1px 0px 6px 0px rgba(0,0,0,0.40);
+
+    width: 100%;
+    height: 72px;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    position: absolute;
+    bottom: 0px;
+    position: fixed;
+    
+    background-color: rgb(255, 255, 255);
+    box-shadow: 1px 0px 1px 0px rgba(0,0,0,0.40);
+
+    width: 100%;
+    height: 72px;
+}
+
+.menu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    width: 50%;
+    height: 72px;
+}
+
+nav {
+    display: flex;
+    margin-left: 20%;
+    margin-right: 20%;
+    gap: 12px;
+}
+
+nav a {
+    padding: 8px;
+}
+
+nav a:hover {
+    background-color: rgba(0, 0, 0, 0.03);
+    color: rgba(0, 0, 0, 0.80);
+    border-radius: 8px;
+    /* padding-left: 14px;
+    padding-right: 14px; */
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    border-radius: 8px;
+    height: 80%;
+    box-shadow: 1px 2px 5px 0px rgba(0,0,0,0.40);
+}
+
+.container h1 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.produtos {
+    display: flex;
+    flex-direction: row;
+    gap: 3%;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.item {
+    width: 17.5%;
+    height: 75%;
+    background-color: #ffffff;
+    box-shadow: 1px 2px 5px 0px rgba(0,0,0,0.20);
+    border-radius: 8px;
+}
+
+
+
+.imagem {
+    border-radius: 8px 8px 0 0 ;
+    background-image: url("img/cocacola.jpg");
+    background-position: center center;
+    background-size: contain;
+    width: 100%;
+    height: 45%;
+}
+
+.item span {
+    position: absolute;
+    border-radius: 8px;
+    background-color: rgb(76, 224, 96);
+    color: white;
+    font-weight: 500;
+    padding: 4px 8px 4px 8px;
+    margin: 6px 0 0 6px;
+    z-index: 2;
+}
+
+#visitando {
+    background-color: #63b8fd4f;
+    color: #275ae7;
+    border-radius: 8px;
+    padding: 8px;
+    padding-left: 14px;
+    padding-right: 14px;
+}
+
+#entrar {
+    background-color: #276ae7;
+    color: white;
+    border-radius: 8px;
+    font-weight: 400;
+    font-size: 14px;
+    padding: 8px;
+    padding-left: 18px;
+    padding-right: 18px;
+}
+
+#entrar:hover {
+    background-color: #1b61e6;
+}
