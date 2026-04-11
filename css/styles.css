@@ -172,7 +172,16 @@ nav a:hover {
     font-weight: 500;
 }
 
-
 #entrar:hover {
     background-color: #1b61e6;
+}
+
+
+#visitando {
+    background-color: #63b8fd4f;
+    color: #275ae7;
+    border-radius: 8px;
+    padding: 8px;
+    padding-left: 14px;
+    padding-right: 14px;
 }
