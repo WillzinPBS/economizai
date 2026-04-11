@@ -27,7 +27,12 @@ class BotaoPrincipal extends HTMLElement {
         <svg
           class="icon lucide-mail" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-phone-icon lucide-phone"><path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/>
         </svg>
-      `
+      `,
+      user: `
+      <svg 
+      class="icon lucide-user" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" troke-linejoin="round"><path d="M20 21a8 8 0 1 0-16 0"/><circle cx="12" cy="7" r="4"/>
+      </svg>
+    `
     };
 
     return icons[icon] || "";
@@ -45,19 +50,20 @@ class BotaoPrincipal extends HTMLElement {
     this.shadowRoot.innerHTML = `
       <style>
         .btn {
+          font-family:  'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          gap: 10px;
-          width: ${width};
-          height: ${height};
-          padding: 0 16px;
+          gap: 8px;
+          // width: ${width};
+          // height: ${height};
+          padding: 8px 14px 8px 14px;
           border: none;
-          border-radius: 10px;
+          border-radius: 8px;
           background: ${bgColor};
           color: ${textColor};
-          font-size: 16px;
-          font-weight: 600;
+          font-size: 14px;
+          font-weight: 400;
           cursor: pointer;
           transition: 0.2s ease;
         }

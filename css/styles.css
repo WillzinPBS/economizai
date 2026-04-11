@@ -12,11 +12,10 @@ body{
 }
 
 main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100%;
-
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;    
 }
 
 header {
@@ -58,6 +57,10 @@ footer {
     height: 72px;
 }
 
+.menu img {
+    width: 12%;
+}
+
 nav {
     display: flex;
     margin-left: 20%;
@@ -80,7 +83,6 @@ nav a:hover {
 .container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     background-color: #ffffff;
     border-radius: 8px;
@@ -99,24 +101,21 @@ nav a:hover {
     flex-direction: row;
     gap: 3%;
     justify-content: center;
-    align-items: center;
     width: 100%;
     height: 100%;
 }
 
 .item {
     width: 17.5%;
-    height: 75%;
+    height: 50%;
     background-color: #ffffff;
     box-shadow: 1px 2px 5px 0px rgba(0,0,0,0.20);
     border-radius: 8px;
 }
 
-
-
 .imagem {
+    background-image: url('../img/cocacola.jpg');
     border-radius: 8px 8px 0 0 ;
-    background-image: url("img/cocacola.jpg");
     background-position: center center;
     background-size: contain;
     width: 100%;
