@@ -93,7 +93,6 @@ nav a:hover {
 .container h1 {
     font-size: 24px;
     font-weight: bold;
-    margin-bottom: 12px;
 }
 
 .produtos {
@@ -106,20 +105,24 @@ nav a:hover {
 }
 
 .item {
-    width: 17.5%;
-    height: 50%;
+    width: 18%;
+    height: 54%;
     background-color: #ffffff;
     box-shadow: 1px 2px 5px 0px rgba(0,0,0,0.20);
     border-radius: 8px;
+}
+
+.descricao {
+    padding: 8px 8px 0 8px;
 }
 
 .imagem {
     background-image: url('../img/cocacola.jpg');
     border-radius: 8px 8px 0 0 ;
     background-position: center center;
-    background-size: contain;
+    background-size:cover;
     width: 100%;
-    height: 45%;
+    height: 35%;
 }
 
 .item span {
@@ -133,23 +136,42 @@ nav a:hover {
     z-index: 2;
 }
 
-#visitando {
-    background-color: #63b8fd4f;
-    color: #275ae7;
-    border-radius: 8px;
-    padding: 8px;
-    padding-left: 14px;
-    padding-right: 14px;
+.precificacao {
+    display: flex;
+    align-items: center;
+    gap: 42%;
+    margin: 0;
+    margin-bottom: 12px;
 }
 
-#entrar {
-    background-color: #276ae7;
-    color: white;
-    border-radius: 8px;
-    font-weight: 400;
-    font-size: 14px;
-    padding: 8px;
+.precificacao #preco {
+    font-size: 24px;
+    font-weight: bold;
+    color: rgb(48, 173, 31);
 }
+
+.precificacao #tipo {
+    font-size: 12px;
+    font-weight: 300;
+}
+
+.precificacao #mercado {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.outros-mercados {
+    display: flex;
+    flex-direction:column;
+}
+
+#outro {
+    display: flex;
+    justify-content:space-between;
+    font-size: 12px;
+    font-weight: 500;
+}
+
 
 #entrar:hover {
     background-color: #1b61e6;

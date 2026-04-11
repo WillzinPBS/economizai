@@ -32,7 +32,10 @@ class BotaoPrincipal extends HTMLElement {
       <svg 
       class="icon lucide-user" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" troke-linejoin="round"><path d="M20 21a8 8 0 1 0-16 0"/><circle cx="12" cy="7" r="4"/>
       </svg>
-    `
+    `,
+      soma: `
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-plus"><path d="M12 5v14"/><path d="M5 12h14"/></svg>
+      `
     };
 
     return icons[icon] || "";
@@ -41,11 +44,12 @@ class BotaoPrincipal extends HTMLElement {
   render() {
     const label = this.getAttribute("label") || "Botão";
     const icon = this.getAttribute("icon") || "";
-    const width = this.getAttribute("width") || "280px";
-    const height = this.getAttribute("height") || "48px";
+    const width = this.getAttribute("width") || "";
+    const height = this.getAttribute("height") || "";
     const iconColor = this.getAttribute("icon-color") || "#ffffff";
     const bgColor = this.getAttribute("bg-color") || "#2563eb";
     const textColor = this.getAttribute("text-color") || "#ffffff";
+    const margin = this.getAttribute("margin") || "";
 
     this.shadowRoot.innerHTML = `
       <style>
@@ -55,8 +59,8 @@ class BotaoPrincipal extends HTMLElement {
           align-items: center;
           justify-content: center;
           gap: 8px;
-          // width: ${width};
-          // height: ${height};
+          width: ${width};
+          height: ${height};
           padding: 8px 14px 8px 14px;
           border: none;
           border-radius: 8px;
@@ -65,6 +69,7 @@ class BotaoPrincipal extends HTMLElement {
           font-size: 14px;
           font-weight: 400;
           cursor: pointer;
+          margin: ${margin};
           transition: 0.2s ease;
         }
 
