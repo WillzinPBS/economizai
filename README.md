@@ -1,10 +1,10 @@
-# Economizou
+# Economizai
 
 Sistema web de comparação de preços criado por estudantes de Análise e Desenvolvimento de Sistemas para ajudar usuários a economizar no dia a dia, comparando produtos entre diferentes mercados.
 
 ## Objetivo do Projeto
 
-O **Economizou** foi desenvolvido para facilitar decisões de compra com base em preço.  
+O **Economizai** foi desenvolvido para facilitar decisões de compra com base em preço.  
 A proposta é simples: mostrar, de forma clara, onde está o menor valor de um produto entre mercados cadastrados.
 
 Com isso, o usuário pode:
@@ -66,7 +66,7 @@ Para o funcionamento completo do sistema (principalmente autenticação e dados 
 
 ```bash
 git clone <url-do-repositorio>
-cd economizou
+cd economizai
 ```
 
 ### 2. Abrir o projeto
@@ -96,7 +96,7 @@ Sem a API, funcionalidades que dependem de dados dinâmicos e autenticação pod
 ## Estrutura de Pastas
 
 ```txt
-economizou/
+economizai/
 ├── assets/               # Recursos estáticos gerais
 ├── css/                  # Estilos do projeto
 ├── docs/                 # Documentação, branding e materiais de apoio
