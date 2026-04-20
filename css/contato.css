@@ -1,0 +1,183 @@
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #ececec;
+}
+
+
+
+
+/* título */
+h1 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    margin-top: 60px;
+    font-size: 3rem
+}
+
+.duvida {
+    text-align: center;
+    color: #4b5563;
+    font-size: 1.25rem;
+    max-width: 768px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* layout */
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    max-width: 1100px;
+    margin: auto auto;
+    padding: 40px;
+    align-items: flex-start;
+}
+
+.contact-left {
+    flex: 1;
+    flex: 0 0 300px;
+}
+
+.contact-right {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+}
+
+.contact-right .card {
+    width: 100%;
+    max-width: 750px;
+    padding: 30px;
+}
+
+/* cards */
+.card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 24px 24px 24px 35px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* links */
+a {
+    color: #4b5563;
+    text-decoration: none;
+    display: block;
+    margin-bottom: 10px;
+}
+
+#list a:hover {
+    color: #2563eb;
+}
+
+#list {
+    list-style: none;
+    padding-left: 0;
+}
+
+#list li {
+    position: relative;
+    padding-left: -20px;
+    margin-left: -10;
+    margin-bottom: 15px;
+}
+
+/* Ícones */
+#list {
+    list-style: none;
+    padding-left: 0;
+}
+
+#list li {
+    position: relative;
+    padding-left: 20px;
+    margin-left: 0;
+    margin-bottom: 15px;
+}
+
+/* Ícones */
+#E-mail::before,
+#Telefone::before,
+#Endereco::before,
+#Horas::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+#E-mail::before {
+    background-image: url(../img/mail.svg);
+}
+
+#Telefone::before {
+    background-image: url(../img/phone.svg);
+}
+
+#Endereco::before {
+    background-image: url(../img/map-pin.svg);
+}
+
+#Horas::before {
+    background-image: url(../img/message-square.svg);
+}
+
+#perguntas:hover {
+    color: #2563eb;
+}
+
+
+
+/* formulário */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.row {
+    display: flex;
+    gap: 20px;
+}
+
+.row input {
+    flex: 1;
+}
+
+/* inputs */
+input,
+textarea {
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+}
+
+/* textarea maior */
+textarea {
+    height: 180px;
+    width: 40rem;
+    resize: none;
+}
+
+/* botão */
+button {
+    background-color: #2563eb;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #1d4ed8;
+}
