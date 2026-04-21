@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,10 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/produto.css">
     <script src="https://kit.fontawesome.com/4620774d96.js"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="js/components/BotaoPrincipal.js" defer></script>
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <script src="js/components/LayoutCompartilhado.js" defer></script>
 </head>
+
 <body>
     <economizai-header active-page="produtos"></economizai-header>
 
@@ -35,12 +36,15 @@
                             <p id="mercado">Atacadao</p>
                         </div>
                         <div id="comprar">
-                            <botao-principal
-                                label="Adicionar"
-                                icon="soma"
-                                width="100%"
-                                margin="0 0 12px 0">
-                            </botao-principal>
+                            <button class="botao-principal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus">
+                                    <path d="M5 12h14" />
+                                    <path d="M12 5v14" />
+                                </svg>
+                                Adicionar
+                            </button>
                         </div>
                         <hr>
                         <div>Outros mercados:</div>
@@ -62,4 +66,5 @@
 
     <economizai-footer></economizai-footer>
 </body>
+
 </html>
