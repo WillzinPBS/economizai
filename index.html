@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,30 +8,12 @@
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://kit.fontawesome.com/4620774d96.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="js/components/BotaoPrincipal.js"></script>
+    <script src="js/components/LayoutCompartilhado.js" defer></script>
+</head>
+
 <body>
-    <header>
-        <div class="menu">
-                <img src="img/logoecom.png" alt="">
-            <nav>
-                <a href="index.html" id="visitando">Home</a>
-                <a href="produto.html">Produtos</a>
-                <a href="">Como Funciona</a>
-                <a href="">Contato</a>
-            </nav>
-            <div class="login">
-                <botao-principal
-                  label="Entrar"
-                  icon="user"
-                ></botao-principal>
-            </div>
-        </div>
-    </header>
-    
-    <footer>
-        <div>
-            <span>© 2026 Compara Preço - Projeto Acadêmico - Encontre os melhores preços para sua lista de compras</span>
-        </div>
-    </footer>
+    <economizai-header active-page="home"></economizai-header>
+    <economizai-footer></economizai-footer>
 </body>
+
 </html>

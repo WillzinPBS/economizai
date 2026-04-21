@@ -1,0 +1,125 @@
+.container {
+    width: min(100%, 1040px);
+    padding: 32px;
+    border-radius: 16px;
+    background-color: #ffffff;
+    box-shadow: 1px 2px 5px 0 rgba(0, 0, 0, 0.20);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+}
+
+.container h1 {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.produtos {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 24px;
+    width: 100%;
+}
+
+.item {
+    width: min(100%, 320px);
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #ffffff;
+    box-shadow: 1px 2px 5px 0 rgba(0, 0, 0, 0.20);
+}
+
+.descricao {
+    padding: 16px;
+}
+
+.descricao p {
+    margin-bottom: 4px;
+}
+
+.descricao h1 {
+    margin-bottom: 16px;
+}
+
+.imagem {
+    position: relative;
+    width: 100%;
+    height: 240px;
+    background-image: url('../img/cocacola.jpg');
+    background-position: center center;
+    background-size: cover;
+}
+
+.item span {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    padding: 4px 8px;
+    border-radius: 999px;
+    background-color: rgb(76, 224, 96);
+    color: #ffffff;
+    font-weight: 500;
+}
+
+.precificacao {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.precificacao #preco {
+    font-size: 24px;
+    font-weight: bold;
+    color: rgb(48, 173, 31);
+}
+
+.precificacao #tipo {
+    font-size: 12px;
+    font-weight: 300;
+}
+
+.precificacao #mercado {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+#comprar {
+    margin-bottom: 8px;
+}
+
+hr {
+    margin: 12px 0;
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.outros-mercados {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.outro-mercado {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+@media (max-width: 640px) {
+    .container {
+        padding: 24px 20px;
+    }
+
+    .precificacao {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

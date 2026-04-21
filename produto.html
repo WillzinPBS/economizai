@@ -1,37 +1,21 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
+
 <head>
-  <meta charset="UTF-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ECONOMIZAI</title>
+    <title>ECONOMIZAI | Produtos</title>
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/produto.css">
     <script src="https://kit.fontawesome.com/4620774d96.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="js/components/BotaoPrincipal.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
+
 <body>
-  <header>
-        <div class="menu">
-                <img src="img/logoecom.png">
-            <nav>
-                <a href="index.html">Home</a>
-                <a href="produto.html" id="visitando">Produtos</a>
-                <a href="">Como Funciona</a>
-                <a href="">Contato</a>
-            </nav>
-            <div class="login">
-                <!-- <a href="" id="entrar"><i class="fa-regular fa-user" style="color: rgb(255, 255, 255);"></i> Entrar</a> -->
-            <div>
-                <botao-principal
-                  label="Entrar"
-                  icon="user"
-                ></botao-principal>
-            </div>
-            </div>
-        </div>
-    </header>
+    <economizai-header active-page="produtos"></economizai-header>
 
     <main>
         
@@ -92,7 +76,7 @@
             <div class="produtos">
                 <div class="item">
                     <div class="imagem">
-                        <span>Menor preço</span>
+                        <span>Menor preco</span>
                     </div>
 
                     <div class="descricao">
@@ -103,26 +87,29 @@
                                 <h2 id="preco">R$7.99</h2>
                                 <p id="tipo">por unidade</p>
                             </div>
-                            
-                            <p id="mercado">🏭 Atacadão</p>
+
+                            <p id="mercado">Atacadao</p>
                         </div>
                         <div id="comprar">
-                            <botao-principal
-                            label="Adicionar"
-                            icon="soma"
-                            width="100%"
-                            margin="0 0 12px 0">
-                            </botao-principal>
+                            <button class="botao-principal">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="lucide lucide-plus-icon lucide-plus">
+                                    <path d="M5 12h14" />
+                                    <path d="M12 5v14" />
+                                </svg>
+                                Adicionar
+                            </button>
                         </div>
                         <hr>
                         <div>Outros mercados:</div>
                         <div class="outros-mercados">
-                            <div id="outro">
-                                <div>🛒Carrefour</div>
+                            <div class="outro-mercado">
+                                <div>Carrefour</div>
                                 <div>R$ 8.99</div>
                             </div>
-                            <div id="outro">
-                                <div>🏪Extra</div>
+                            <div class="outro-mercado">
+                                <div>Extra</div>
                                 <div>R$ 9.29</div>
                             </div>
                         </div>
@@ -132,10 +119,7 @@
         </div>
     </main>
 
-    <footer>
-        <div>
-            <span>© 2026 Compara Preço - Projeto Acadêmico - Encontre os melhores preços para sua lista de compras</span>
-        </div>
-    </footer>
+    <economizai-footer></economizai-footer>
 </body>
+
 </html>

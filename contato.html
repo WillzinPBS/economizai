@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ECONOMIZAI | Contato</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/contato.css">
+    <script src="https://kit.fontawesome.com/4620774d96.js"></script>
+    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
+    <script src="js/components/LayoutCompartilhado.js" defer></script>
+</head>
+
+<body>
+    <economizai-header active-page="contato"></economizai-header>
+
+    <h1>Entre em Contato</h1>
+
+    <p class="duvida">Tem alguma dúvida, sugestão ou feedback? Estamos aqui para ajudar! Preencha o formulário abaixo ou
+        use nossos canais de contato.</p>
+
+    <div class="container">
+
+        <div class="contact-left">
+            <div class="card">
+                <h3><strong>Infomações de Contato</strong></h3>
+
+                <ul id="list">
+                    <li id="E-mail"><strong>E-mail</strong></li>
+                    <a href="#">contato@comparapreco.com.br</a>
+                    <li id="Telefone"><strong>Telefone</strong></li>
+                    <a href="#">(11) 4000-4000</a>
+                    <li id="Endereco"><strong>Endereço</strong></li>
+                    <a href="#">Rio de janeiro, RJ Brasil</a>
+                    <li id="Horas"><strong>Hora de atendimento</strong></li>
+                    <p class="hora">Segunda a Sexta: 9h às 18h<br>
+                        Sábado: 9h às 13h</p>
+                </ul>
+
+            </div>
+
+            <div class="frequente">
+                <ul>
+                    <li>Como funciona a comparação de preços?</li>
+                    <li>Como posso sugerir novos mercados?</li>
+                    <li>O serviço é gratuito?</li>
+                    <li>Os preços são atualizados em tempo real?</li>
+                    <a id="perguntas" href="#">Ver todas as perguntas →</a>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="contact-right">
+            <div class="card">
+                <h3><strong>Envie sua Mensagem</strong></h3>
+
+                <form class="form">
+
+                    <div class="row">
+                        <input type="text" placeholder="Seu nome completo">
+                        <input type="email" placeholder="seu@email.com">
+                    </div>
+
+                    <input type="text" placeholder="Assunto">
+
+                    <textarea placeholder="Digite sua mensagem aqui..."></textarea>
+
+                    <button type="submit" class="botao-principal">
+                        Enviar Mensagem
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <economizai-footer></economizai-footer>
+</body>
+
+</html>
