@@ -15,7 +15,7 @@ function cadastrar() {
   }
 
   if (!validarEmail(email)) {
-    erro.innerText = "Email inválido"
+    erro.innerText = "E-mail inválido"
     return
   }
 

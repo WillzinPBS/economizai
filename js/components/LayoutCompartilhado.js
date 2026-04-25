@@ -185,13 +185,13 @@ class EconomizaiHeader extends HTMLElement {
       </style>
       <header>
         <div class="menu">
-          <a class="logo-link" href="index.html" aria-label="Ir para a pagina inicial do Economizai">
+          <a class="logo-link" href="index.html" aria-label="Ir para a página inicial do Economizai">
             <img src="img/logoecom.png" alt="Logo Economizai">
           </a>
-          <nav aria-label="Navegacao principal">
-            ${this.getNavLink("home", "index.html", "Home")}
+          <nav aria-label="Navegação principal">
+            ${this.getNavLink("home", "index.html", "Início")}
             ${this.getNavLink("produtos", "produto.html", "Produtos")}
-            ${this.getNavLink("como-funciona", "comofunciona.html", "Como Funciona")}
+            ${this.getNavLink("como-funciona", "comofunciona.html", "Como funciona")}
             ${this.getNavLink("contato", "contato.html", "Contato")}
           </nav>
           <div class="login">
@@ -269,7 +269,7 @@ class EconomizaiFooter extends HTMLElement {
       </style>
       <footer>
         <div>
-          <span>&copy; 2026 Economizai - Projeto Academico - Encontre os melhores precos para sua lista de compras</span>
+          <span>&copy; 2026 Economizai - Projeto acadêmico - Encontre os melhores preços para sua lista de compras</span>
         </div>
       </footer>
     `;
