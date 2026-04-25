@@ -13,7 +13,7 @@ h1 {
 
 .duvida {
     text-align: center;
-    color: #4b5563;
+    color: var(--cor-texto-secundario);
     font-size: 1.25rem;
     max-width: 768px;
     margin-left: auto;
@@ -50,21 +50,21 @@ h1 {
 
 /* cards */
 .card {
-    background-color: white;
+    background-color: var(--cor-superficie-elevada);
     border-radius: 10px;
     padding: 24px 24px 24px 35px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 10px var(--cor-sombra);
 }
 
 /* links */
 a {
-    color: #4b5563;
+    color: var(--cor-texto-secundario);
     text-decoration: none;
     display: block;
 }
 
 #list a:hover {
-    color: #16a34a;
+    color: var(--cor-link-hover);
 }
 
 #list {
@@ -123,8 +123,16 @@ a {
     background-image: url(../img/message-square.svg);
 }
 
+html[data-theme="dark"] #E-mail::before,
+html[data-theme="dark"] #Telefone::before,
+html[data-theme="dark"] #Endereco::before,
+html[data-theme="dark"] #Horas::before {
+    filter: invert(1) brightness(1.4);
+    opacity: 0.86;
+}
+
 #perguntas:hover {
-    color: #16a34a;
+    color: var(--cor-link-hover);
 }
 
 
@@ -151,7 +159,9 @@ textarea {
     width: 100%;
     padding: 14px;
     border-radius: 8px;
-    border: 1px solid #ccc;
+    border: 1px solid var(--cor-campo-borda);
+    background-color: var(--cor-campo);
+    color: var(--cor-texto);
     font-size: 15px;
 }
 

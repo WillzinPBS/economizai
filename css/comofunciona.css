@@ -28,14 +28,14 @@
     font-size: clamp(42px, 5vw, 64px);
     font-weight: 800;
     line-height: 1.05;
-    color: #1f2937;
+    color: var(--cor-texto);
 }
 
 .cf-apresentacao p {
     max-width: 860px;
     font-size: clamp(20px, 2vw, 23px);
     line-height: 1.45;
-    color: #4b5563;
+    color: var(--cor-texto-secundario);
 }
 
 .cf-passos {
@@ -74,7 +74,7 @@
 .cf-passo-cabecalho h2 {
     font-size: clamp(28px, 3.2vw, 42px);
     font-weight: 800;
-    color: #1f2937;
+    color: var(--cor-texto);
 }
 
 .cf-passo-numero {
@@ -88,6 +88,10 @@
     font-size: 24px;
     font-weight: 700;
     flex-shrink: 0;
+}
+
+.cf-passo-numero-azul {
+    background-color: #2563eb;
 }
 
 .cf-passo-numero-verde {
@@ -105,7 +109,7 @@
 .cf-passo-conteudo p {
     font-size: 18px;
     line-height: 1.65;
-    color: #4b5563;
+    color: var(--cor-texto-secundario);
 }
 
 .cf-lista-detalhes {
@@ -120,7 +124,7 @@
     padding-left: 38px;
     font-size: 18px;
     line-height: 1.5;
-    color: #1f2937;
+    color: var(--cor-texto);
 }
 
 .cf-lista-detalhes li::before {
@@ -156,19 +160,19 @@
 }
 
 .cf-passo-visual-azul {
-    background-color: #dbeafe;
+    background-color: var(--cor-azul-suave);
 }
 
 .cf-passo-visual-verde {
-    background-color: #dcfce7;
+    background-color: var(--cor-verde-suave);
 }
 
 .cf-passo-visual-roxo {
-    background-color: #f3e8ff;
+    background-color: var(--cor-roxo-suave);
 }
 
 .cf-passo-visual-laranja {
-    background-color: #ffedd5;
+    background-color: var(--cor-laranja-suave);
 }
 
 .cf-passo-icone,
@@ -212,7 +216,7 @@
     text-align: center;
     font-size: clamp(34px, 4vw, 50px);
     font-weight: 800;
-    color: #1f2937;
+    color: var(--cor-texto);
 }
 
 .cf-grade-beneficios {
@@ -222,10 +226,10 @@
 }
 
 .cf-cartao-beneficio {
-    background-color: #ffffff;
+    background-color: var(--cor-superficie-elevada);
     border-radius: 16px;
     padding: 24px;
-    box-shadow: 0 8px 24px rgba(31, 41, 55, 0.10);
+    box-shadow: 0 8px 24px var(--cor-sombra);
     display: flex;
     flex-direction: column;
     gap: 18px;
@@ -241,22 +245,22 @@
 }
 
 .cf-cartao-beneficio-icone-verde {
-    background-color: #dcfce7;
+    background-color: var(--cor-verde-suave);
     color: #16a34a;
 }
 
 .cf-cartao-beneficio-icone-roxo {
-    background-color: #f3e8ff;
+    background-color: var(--cor-roxo-suave);
     color: #9333ea;
 }
 
 .cf-cartao-beneficio-icone-laranja {
-    background-color: #ffedd5;
+    background-color: var(--cor-laranja-suave);
     color: #f97316;
 }
 
 .cf-cartao-beneficio-icone-vermelho {
-    background-color: #fee2e2;
+    background-color: var(--cor-vermelho-suave);
     color: #ef4444;
 }
 
@@ -268,17 +272,17 @@
 .cf-cartao-beneficio h3 {
     font-size: 20px;
     font-weight: 800;
-    color: #1f2937;
+    color: var(--cor-texto);
 }
 
 .cf-cartao-beneficio p {
     font-size: 18px;
     line-height: 1.6;
-    color: #4b5563;
+    color: var(--cor-texto-secundario);
 }
 
 .cf-chamada-acao {
-    background: #dcfce7;
+    background: var(--cor-verde-suave);
     border-radius: 16px;
     padding: 56px 24px;
     display: flex;
@@ -290,7 +294,7 @@
 
 .cf-chamada-acao h2,
 .cf-chamada-acao p {
-    color: #14532d;
+    color: var(--cor-nav-ativo-texto);
 }
 
 .cf-chamada-acao h2 {
