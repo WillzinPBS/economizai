@@ -2,94 +2,99 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Cadastro</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECONOMIZAI | Cadastro</title>
+  <link rel="stylesheet" href="css/styles.css">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="./JS/auth.js"></script>
-
+  <script src="js/components/LayoutCompartilhado.js" defer></script>
+  <script src="js/components/BotaoPrincipal.js" defer></script>
+  <script src="js/auth.js" defer></script>
 </head>
 
-<body class="bg-gray-100 flex items-center justify-center h-screen">
+<body>
+  <economizai-header></economizai-header>
 
-  <div class="bg-white p-8 rounded-lg shadow-md w-96">
+  <main class="w-full">
+    <div class="bg-white p-8 rounded-lg shadow-md w-96">
+      <h1 class="text-2xl font-bold text-center mb-6">
+        Criar Conta
+      </h1>
 
-    <h1 class="text-2xl font-bold text-center mb-6">
-      Criar Conta
-    </h1>
+      <form onsubmit="cadastrar(); return false;">
+        <div class="mb-4">
+          <label class="block text-sm mb-1" for="user">
+            Nome
+          </label>
 
-    <form onsubmit="cadastrar(); return false;">
+          <input
+            type="text"
+            placeholder="Digite seu nome"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
+            id="user"
+            autocomplete="name"
+          >
+        </div>
 
-      <div class="mb-4">
-        <label class="block text-sm mb-1">
-          Nome
-        </label>
+        <div class="mb-4">
+          <label class="block text-sm mb-1" for="email">
+            Email
+          </label>
 
-        <input
-          type="text"
-          placeholder="Digite seu nome"
-          class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
-          id="user"
-        >
-      </div>
+          <input
+            type="email"
+            placeholder="Digite seu email"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
+            id="email"
+            autocomplete="email"
+          >
+        </div>
 
-      <div class="mb-4">
-        <label class="block text-sm mb-1">
-          Email
-        </label>
+        <div class="mb-4">
+          <label class="block text-sm mb-1" for="senha">
+            Senha
+          </label>
 
-        <input
-          type="email"
-          placeholder="Digite seu email"
-          class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
-          id="email"
-        >
-      </div>
+          <input
+            type="password"
+            placeholder="Crie uma senha"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
+            id="senha"
+            autocomplete="new-password"
+          >
+        </div>
 
-      <div class="mb-4">
-        <label class="block text-sm mb-1">
-          Senha
-        </label>
+        <div class="mb-6">
+          <label class="block text-sm mb-1" for="confirma_senha">
+            Confirmar Senha
+          </label>
 
-        <input
-          type="password"
-          placeholder="Crie uma senha"
-          class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
-          id="senha"
-        >
-      </div>
+          <input
+            type="password"
+            placeholder="Confirme sua senha"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
+            id="confirma_senha"
+            autocomplete="new-password"
+          >
+        </div>
 
-      <div class="mb-6">
-        <label class="block text-sm mb-1">
-          Confirmar Senha
-        </label>
+        <p id="erro" class="text-red-500 text-sm mb-3"></p>
 
-        <input
-          type="password"
-          placeholder="Confirme sua senha"
-          class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
-          id="confirma_senha"
-        >
-      </div>
+        <botao-principal
+          label="Cadastrar"
+          button-type="submit"
+          width="100%"
+        ></botao-principal>
+      </form>
 
-      <p id="erro" class="text-red-500 text-sm mb-3"></p>
+      <p class="text-sm text-center mt-4">
+        Ja tem conta?
+        <a href="login.html" class="text-blue-500 hover:underline">
+          Fazer login
+        </a>
+      </p>
+    </div>
+  </main>
 
-      <button
-        type="submit"
-        class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
-      >
-        Cadastrar
-      </button>
-
-    </form>
-
-    <p class="text-sm text-center mt-4">
-      Já tem conta?
-      <a href="login.html" class="text-blue-500 hover:underline">
-        Fazer login
-      </a>
-    </p>
-
-  </div>
-
+  <economizai-footer></economizai-footer>
 </body>
 </html>

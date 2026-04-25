@@ -2,68 +2,71 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Economizai</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECONOMIZAI | Login</title>
+  <link rel="stylesheet" href="css/styles.css">
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="./JS/auth.js"></script>
-
+  <script src="js/components/LayoutCompartilhado.js" defer></script>
+  <script src="js/components/BotaoPrincipal.js" defer></script>
+  <script src="js/auth.js" defer></script>
 </head>
 
-<body class="bg-gray-100 flex items-center justify-center h-screen">
+<body>
+  <economizai-header></economizai-header>
 
-  <div class="bg-white p-8 rounded-lg shadow-md w-80">
+  <main class="w-full">
+    <div class="bg-white p-8 rounded-lg shadow-md w-80">
+      <h1 class="text-2xl font-bold text-center mb-6">
+        Login
+      </h1>
 
-    <h1 class="text-2xl font-bold text-center mb-6">
-      Login
-    </h1>
+      <form onsubmit="login(); return false;">
+        <div class="mb-4">
+          <label class="block text-sm mb-1" for="user">
+            Usuario
+          </label>
 
-    <form onsubmit="login(); return false;">
-      
-      <div class="mb-4">
-        <label class="block text-sm mb-1">
-          Usuário
-        </label>
+          <input
+            id="user"
+            type="text"
+            placeholder="Digite seu usuario"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
+            autocomplete="username"
+          >
+        </div>
 
-        <input 
-          id="user"
-          type="text"
-          placeholder="Digite seu usuário"
-          class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
-        >
-      </div>
+        <div class="mb-6">
+          <label class="block text-sm mb-1" for="senha">
+            Senha
+          </label>
 
-      <div class="mb-6">
-        <label class="block text-sm mb-1">
-          Senha
-        </label>
+          <input
+            id="senha"
+            type="password"
+            placeholder="Digite sua senha"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
+            autocomplete="current-password"
+          >
+        </div>
 
-        <input 
-          id="senha"
-          type="password"
-          placeholder="Digite sua senha"
-          class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
-        >
-      </div>
+        <p id="erro" class="text-red-500 text-sm mb-3"></p>
 
-      <p id="erro" class="text-red-500 text-sm mb-3"></p>
+        <botao-principal
+          label="Entrar"
+          button-type="submit"
+          width="100%"
+        ></botao-principal>
+      </form>
 
-      <button 
-        type="submit"
-        class="w-full bg-green-500 text-white py-2 rounded hover:bg-green-600 transition"
-      >
-        Entrar
-      </button>
+      <p class="text-sm text-center mt-4">
+        Nao tem conta?
+        <a href="cadastro.html" class="text-yellow-400 hover:underline">
+          Criar conta
+        </a>
+      </p>
+    </div>
+  </main>
 
-    </form>
-
-    <p class="text-sm text-center mt-4">
-      Não tem conta?
-      <a href="cadastro.html" class="text-yellow-400 hover:underline">
-        Criar conta
-      </a>
-    </p>
-
-  </div>
-
+  <economizai-footer></economizai-footer>
 </body>
 </html>

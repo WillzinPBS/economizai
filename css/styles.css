@@ -23,6 +23,7 @@ main {
     align-items: center;
     min-height: calc(100vh - 72px);
     padding: 32px 16px;
+    background-color: #EFF6FF;
 }
 
 header {
@@ -45,6 +46,7 @@ footer {
     align-items: center;
     width: 100%;
     height: 72px;
+    margin-top: auto;
     background-color: #ffffff;
     box-shadow: 1px 0 1px 0 rgba(0, 0, 0, 0.40);
 }
@@ -104,6 +106,11 @@ nav a:hover {
     align-items: center;
 }
 
+.login .botao-principal {
+    width: auto;
+    height: auto;
+}
+
 footer div {
     width: min(1120px, calc(100% - 32px));
     text-align: center;
@@ -141,8 +148,17 @@ footer span {
     transition: 0.2s ease;
 }
 
+botao-principal {
+    display: inline-block;
+}
+
+.botao-principal:visited {
+    color: #ffffff;
+}
+
 .botao-principal:hover {
     filter: brightness(0.9);
+    color: #ffffff;
 }
 
 .botao-principal:active {
@@ -153,6 +169,13 @@ footer span {
     width: 18px;
     height: 18px;
     /* color: ${iconColor}; */
+    flex-shrink: 0;
+}
+
+.botao-principal svg {
+    width: 18px;
+    height: 18px;
+    color: var(--botao-icon-color, currentColor);
     flex-shrink: 0;
 }
 
