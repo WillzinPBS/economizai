@@ -148,10 +148,6 @@ footer span {
     transition: 0.2s ease;
 }
 
-botao-principal {
-    display: inline-block;
-}
-
 .botao-principal:visited {
     color: #ffffff;
 }
