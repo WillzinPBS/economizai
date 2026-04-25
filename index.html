@@ -12,8 +12,67 @@
 
 <body>
     <economizai-header active-page="home"></economizai-header>
-    <main>
+    <main class="w-full">
+        <section class="w-full max-w-6xl px-4 py-10 space-y-14">
+            <section class="text-center space-y-6">
+                <h1 class="text-5xl font-extrabold text-slate-900">Bem-vindo ao Economizai</h1>
+                <p class="max-w-3xl mx-auto text-2xl text-slate-700">
+                    Ajudamos voce a economizar tempo e dinheiro comparando precos de produtos em
+                    diversos supermercados da sua regiao.
+                </p>
+                <a
+                    href="produto.html"
+                    class="inline-flex items-center justify-center px-10 py-4 rounded-xl bg-emerald-600 text-white text-xl font-semibold hover:brightness-95 transition"
+                >
+                    Comecar a Comparar Precos
+                </a>
+            </section>
 
+            <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <article class="bg-white rounded-2xl p-10 shadow-md min-h-80">
+                    <h2 class="text-4xl font-bold text-slate-900 mb-5">Nossa Missao</h2>
+                    <p class="text-xl leading-9 text-slate-700">
+                        Democratizar o acesso a informacao sobre precos de produtos, permitindo que
+                        todas as pessoas facam compras mais inteligentes e economicas.
+                    </p>
+                </article>
+
+                <article class="bg-white rounded-2xl p-10 shadow-md min-h-80">
+                    <h2 class="text-4xl font-bold text-slate-900 mb-5">Nossa Visao</h2>
+                    <p class="text-xl leading-9 text-slate-700">
+                        Ser a plataforma de referencia em comparacao de precos no Brasil,
+                        reconhecida pela confiabilidade e facilidade de uso.
+                    </p>
+                </article>
+            </section>
+
+            <section class="bg-emerald-50 rounded-2xl p-10">
+                <h2 class="text-4xl font-bold text-center text-slate-900 mb-10">Como Funciona</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <article class="text-center space-y-4">
+                        <span class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-600 text-white text-3xl font-bold">1</span>
+                        <h3 class="text-3xl font-bold text-slate-900">Escolha os Produtos</h3>
+                        <p class="text-lg leading-8 text-slate-700">
+                            Navegue pelo catalogo e adicione os produtos que deseja comprar.
+                        </p>
+                    </article>
+                    <article class="text-center space-y-4">
+                        <span class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-600 text-white text-3xl font-bold">2</span>
+                        <h3 class="text-3xl font-bold text-slate-900">Compare Precos</h3>
+                        <p class="text-lg leading-8 text-slate-700">
+                            Comparamos automaticamente os precos em diferentes supermercados.
+                        </p>
+                    </article>
+                    <article class="text-center space-y-4">
+                        <span class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-emerald-600 text-white text-3xl font-bold">3</span>
+                        <h3 class="text-3xl font-bold text-slate-900">Economize Dinheiro</h3>
+                        <p class="text-lg leading-8 text-slate-700">
+                            Descubra o melhor preco total da sua compra e economize mais.
+                        </p>
+                    </article>
+                </div>
+            </section>
+        </section>
     </main>
     <economizai-footer></economizai-footer>
 </body>
