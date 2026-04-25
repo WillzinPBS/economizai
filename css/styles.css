@@ -124,8 +124,8 @@ footer span {
 #visitando {
     padding: 8px 14px;
     border-radius: 8px;
-    background-color: #63b8fd4f;
-    color: #275ae7;
+    background-color: #dcfce7;
+    color: #166534;
 }
 
 .botao-principal {
@@ -139,13 +139,25 @@ footer span {
     padding: 8px 14px 8px 14px;
     border: none;
     border-radius: 8px;
-    background: #2563eb;
+    background: #16a34a;
     color: #ffffff;
     font-size: 14px;
     font-weight: 400;
     cursor: pointer;
     /* margin: ${margin}; */
     transition: 0.2s ease;
+}
+
+.botao-principal-inline {
+    width: auto;
+    height: auto;
+}
+
+button.botao-principal,
+a.botao-principal {
+    background: #16a34a;
+    color: #ffffff;
+    text-decoration: none;
 }
 
 .botao-principal:visited {
