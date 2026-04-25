@@ -28,14 +28,14 @@
     font-size: clamp(42px, 5vw, 64px);
     font-weight: 800;
     line-height: 1.05;
-    color: #0f2350;
+    color: #1f2937;
 }
 
 .cf-apresentacao p {
     max-width: 860px;
     font-size: clamp(20px, 2vw, 23px);
     line-height: 1.45;
-    color: #40557d;
+    color: #4b5563;
 }
 
 .cf-passos {
@@ -74,7 +74,7 @@
 .cf-passo-cabecalho h2 {
     font-size: clamp(28px, 3.2vw, 42px);
     font-weight: 800;
-    color: #0f2350;
+    color: #1f2937;
 }
 
 .cf-passo-numero {
@@ -90,12 +90,8 @@
     flex-shrink: 0;
 }
 
-.cf-passo-numero-azul {
-    background-color: #2563eb;
-}
-
 .cf-passo-numero-verde {
-    background-color: #00b84f;
+    background-color: #16a34a;
 }
 
 .cf-passo-numero-roxo {
@@ -109,7 +105,7 @@
 .cf-passo-conteudo p {
     font-size: 18px;
     line-height: 1.65;
-    color: #40557d;
+    color: #4b5563;
 }
 
 .cf-lista-detalhes {
@@ -124,7 +120,7 @@
     padding-left: 38px;
     font-size: 18px;
     line-height: 1.5;
-    color: #233251;
+    color: #1f2937;
 }
 
 .cf-lista-detalhes li::before {
@@ -134,7 +130,7 @@
     left: 0;
     width: 22px;
     height: 22px;
-    border: 2px solid #00b84f;
+    border: 2px solid #16a34a;
     border-radius: 50%;
 }
 
@@ -145,8 +141,8 @@
     left: 6px;
     width: 10px;
     height: 5px;
-    border-left: 2px solid #00b84f;
-    border-bottom: 2px solid #00b84f;
+    border-left: 2px solid #16a34a;
+    border-bottom: 2px solid #16a34a;
     transform: rotate(-45deg);
 }
 
@@ -195,7 +191,7 @@
 }
 
 .cf-passo-icone-verde {
-    color: #00b84f;
+    color: #16a34a;
 }
 
 .cf-passo-icone-roxo {
@@ -216,7 +212,7 @@
     text-align: center;
     font-size: clamp(34px, 4vw, 50px);
     font-weight: 800;
-    color: #0f2350;
+    color: #1f2937;
 }
 
 .cf-grade-beneficios {
@@ -229,7 +225,7 @@
     background-color: #ffffff;
     border-radius: 16px;
     padding: 24px;
-    box-shadow: 0 8px 24px rgba(15, 35, 80, 0.10);
+    box-shadow: 0 8px 24px rgba(31, 41, 55, 0.10);
     display: flex;
     flex-direction: column;
     gap: 18px;
@@ -244,14 +240,9 @@
     justify-content: center;
 }
 
-.cf-cartao-beneficio-icone-azul {
-    background-color: #dbeafe;
-    color: #2563eb;
-}
-
 .cf-cartao-beneficio-icone-verde {
     background-color: #dcfce7;
-    color: #00b84f;
+    color: #16a34a;
 }
 
 .cf-cartao-beneficio-icone-roxo {
@@ -269,11 +260,6 @@
     color: #ef4444;
 }
 
-.cf-cartao-beneficio-icone-anil {
-    background-color: #e0e7ff;
-    color: #4f46e5;
-}
-
 .cf-cartao-beneficio-simbolo {
     width: 24px;
     height: 24px;
@@ -282,17 +268,17 @@
 .cf-cartao-beneficio h3 {
     font-size: 20px;
     font-weight: 800;
-    color: #0f2350;
+    color: #1f2937;
 }
 
 .cf-cartao-beneficio p {
     font-size: 18px;
     line-height: 1.6;
-    color: #40557d;
+    color: #4b5563;
 }
 
 .cf-chamada-acao {
-    background: linear-gradient(180deg, #16a34a 0%, #16a34a 100%);
+    background: #dcfce7;
     border-radius: 16px;
     padding: 56px 24px;
     display: flex;
@@ -304,7 +290,7 @@
 
 .cf-chamada-acao h2,
 .cf-chamada-acao p {
-    color: #ffffff;
+    color: #14532d;
 }
 
 .cf-chamada-acao h2 {
@@ -315,23 +301,6 @@
 .cf-chamada-acao p {
     font-size: 18px;
     line-height: 1.6;
-}
-
-.cf-botao-acao {
-    margin-top: 8px;
-    min-width: 270px;
-    padding: 16px 24px;
-    border-radius: 14px;
-    background-color: #ffffff;
-    color: #16a34a;
-    font-size: 18px;
-    font-weight: 700;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.cf-botao-acao:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 14px 28px rgba(15, 35, 80, 0.20);
 }
 
 @media (max-width: 900px) {
@@ -406,7 +375,7 @@
         padding: 40px 20px;
     }
 
-    .cf-botao-acao {
+    .cf-chamada-acao .botao-principal-inline {
         width: 100%;
         min-width: 0;
     }

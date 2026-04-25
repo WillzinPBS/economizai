@@ -64,7 +64,7 @@ a {
 }
 
 #list a:hover {
-    color: #2563eb;
+    color: #16a34a;
 }
 
 #list {
@@ -124,7 +124,7 @@ a {
 }
 
 #perguntas:hover {
-    color: #2563eb;
+    color: #16a34a;
 }
 
 
@@ -160,19 +160,4 @@ textarea {
     height: 180px;
     width: 40rem;
     resize: none;
-}
-
-/* botão */
-button {
-    background-color: #16a34a;
-    color: white;
-    padding: 14px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-button:hover {
-    background-color: #16a34a;
 }

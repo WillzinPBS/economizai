@@ -112,8 +112,8 @@ class EconomizaiHeader extends HTMLElement {
         #visitando {
           padding: 8px 14px;
           border-radius: 8px;
-          background-color: #63b8fd4f;
-          color: #275ae7;
+          background-color: #dcfce7;
+          color: #166534;
         }
 
         .botao-principal {
@@ -127,7 +127,7 @@ class EconomizaiHeader extends HTMLElement {
           padding: 8px 14px;
           border: none;
           border-radius: 8px;
-          background: #2563eb;
+          background: #16a34a;
           color: #ffffff;
           font-size: 14px;
           font-weight: 400;
@@ -199,7 +199,8 @@ class EconomizaiHeader extends HTMLElement {
               <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                 viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                 stroke-linecap="round" stroke-linejoin="round">
-                <path d="M13.832 16.568a1 1 0 0 0 1.213-.303l.355-.465A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-.8 1.6l-.468.351a1 1 0 0 0-.292 1.233 14 14 0 0 0 6.392 6.384"/>
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
               </svg>
               <span>Entrar</span>
             </a>
