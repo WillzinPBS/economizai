@@ -163,8 +163,8 @@ textarea {
 }
 
 /* botão */
-/* button {
-    background-color: #2563eb;
+button {
+    background-color: #16a34a;
     color: white;
     padding: 14px;
     border: none;
@@ -174,5 +174,5 @@ textarea {
 }
 
 button:hover {
-    background-color: #1d4ed8;
-} */
+    background-color: #16a34a;
+}
