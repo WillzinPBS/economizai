@@ -25,7 +25,7 @@
 }
 
 .cf-apresentacao h1 {
-    font-size: clamp(42px, 5vw, 64px);
+    font-size: clamp(2.625rem, 5vw, 4rem);
     font-weight: 800;
     line-height: 1.05;
     color: var(--cor-texto);
@@ -33,7 +33,7 @@
 
 .cf-apresentacao p {
     max-width: 860px;
-    font-size: clamp(20px, 2vw, 23px);
+    font-size: clamp(1.25rem, 2vw, 1.4375rem);
     line-height: 1.45;
     color: var(--cor-texto-secundario);
 }
@@ -72,7 +72,7 @@
 }
 
 .cf-passo-cabecalho h2 {
-    font-size: clamp(28px, 3.2vw, 42px);
+    font-size: clamp(1.75rem, 3.2vw, 2.625rem);
     font-weight: 800;
     color: var(--cor-texto);
 }
@@ -85,7 +85,7 @@
     align-items: center;
     justify-content: center;
     color: #ffffff;
-    font-size: 24px;
+    font-size: 1.5rem;
     font-weight: 700;
     flex-shrink: 0;
 }
@@ -107,7 +107,7 @@
 }
 
 .cf-passo-conteudo p {
-    font-size: 18px;
+    font-size: 1.125rem;
     line-height: 1.65;
     color: var(--cor-texto-secundario);
 }
@@ -122,7 +122,7 @@
 .cf-lista-detalhes li {
     position: relative;
     padding-left: 38px;
-    font-size: 18px;
+    font-size: 1.125rem;
     line-height: 1.5;
     color: var(--cor-texto);
 }
@@ -214,7 +214,7 @@
 
 .cf-beneficios h2 {
     text-align: center;
-    font-size: clamp(34px, 4vw, 50px);
+    font-size: clamp(2.125rem, 4vw, 3.125rem);
     font-weight: 800;
     color: var(--cor-texto);
 }
@@ -270,13 +270,13 @@
 }
 
 .cf-cartao-beneficio h3 {
-    font-size: 20px;
+    font-size: 1.25rem;
     font-weight: 800;
     color: var(--cor-texto);
 }
 
 .cf-cartao-beneficio p {
-    font-size: 18px;
+    font-size: 1.125rem;
     line-height: 1.6;
     color: var(--cor-texto-secundario);
 }
@@ -298,12 +298,12 @@
 }
 
 .cf-chamada-acao h2 {
-    font-size: clamp(36px, 4vw, 52px);
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
     font-weight: 800;
 }
 
 .cf-chamada-acao p {
-    font-size: 18px;
+    font-size: 1.125rem;
     line-height: 1.6;
 }
 
@@ -343,7 +343,7 @@
     }
 
     .cf-apresentacao h1 {
-        font-size: 34px;
+        font-size: 2.125rem;
     }
 
     .cf-apresentacao p,
@@ -351,7 +351,7 @@
     .cf-lista-detalhes li,
     .cf-cartao-beneficio p,
     .cf-chamada-acao p {
-        font-size: 16px;
+        font-size: 1rem;
     }
 
     .cf-passo-cabecalho {
@@ -359,7 +359,7 @@
     }
 
     .cf-passo-cabecalho h2 {
-        font-size: 24px;
+        font-size: 1.5rem;
     }
 
     .cf-passo-visual {
