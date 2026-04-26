@@ -26,9 +26,16 @@ function aplicarTema(tema, salvar = true) {
     }
   }
 
-  window.dispatchEvent(new CustomEvent("economizai-theme-change", {
-    detail: { theme: temaNormalizado }
-  }));
+  document.querySelectorAll("economizai-header").forEach((header) => {
+    if (typeof header.sincronizarTema === "function") {
+      header.sincronizarTema(temaNormalizado);
+    }
+  });
+}
+
+function alternarTema() {
+  const novoTema = obterTemaAtual() === "dark" ? "light" : "dark";
+  aplicarTema(novoTema);
 }
 
 aplicarTema(obterTemaSalvo(), false);
@@ -41,21 +48,9 @@ class EconomizaiHeader extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    this.handleThemeChange = (event) => {
-      this.sincronizarTema(event.detail?.theme || obterTemaAtual());
-    };
   }
 
   connectedCallback() {
-    window.addEventListener("economizai-theme-change", this.handleThemeChange);
-    this.render();
-  }
-
-  disconnectedCallback() {
-    window.removeEventListener("economizai-theme-change", this.handleThemeChange);
-  }
-
-  attributeChangedCallback() {
     this.render();
   }
 
@@ -64,7 +59,7 @@ class EconomizaiHeader extends HTMLElement {
   }
 
   getNavLink(page, href, label) {
-    const activeAttribute = this.isActive(page) ? ' id="visitando" aria-current="page"' : "";
+    const activeAttribute = this.isActive(page) ? ' id="visitando"' : "";
     return `<a href="${href}"${activeAttribute}>${label}</a>`;
   }
 
@@ -324,9 +319,7 @@ class EconomizaiHeader extends HTMLElement {
     `;
 
     const botaoTema = this.shadowRoot.querySelector(".botao-tema");
-    botaoTema.addEventListener("click", () => {
-      aplicarTema(obterTemaAtual() === "dark" ? "light" : "dark");
-    });
+    botaoTema.addEventListener("click", alternarTema);
 
     this.sincronizarTema(temaAtual);
   }
@@ -341,8 +334,6 @@ class EconomizaiHeader extends HTMLElement {
     }
 
     const estaEscuro = temaNormalizado === "dark";
-    botaoTema.setAttribute("aria-pressed", String(estaEscuro));
-    botaoTema.setAttribute("aria-label", estaEscuro ? "Ativar tema claro" : "Ativar tema escuro");
     botaoTema.setAttribute("title", estaEscuro ? "Ativar tema claro" : "Ativar tema escuro");
   }
 }
