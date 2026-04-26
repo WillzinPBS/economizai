@@ -213,6 +213,21 @@ html[data-theme="dark"] .produtos-filtros .text-dark {
     font-weight: 700;
     white-space: nowrap;
 }
+.carrinho{
+    border-radius: 15px;
+}
+.img-animada {
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    width: 80px; 
+    height: 80px; 
+    object-fit: cover;
+}
+
+.img-animada:hover {
+    transform: translateY(-5px) scale(1.0);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
 
 @media (max-width: 900px) {
     .produtos {

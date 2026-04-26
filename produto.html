@@ -17,8 +17,8 @@
 <body>
     <economizai-header active-page="produtos"></economizai-header>
 
-    <main class="produtos-conteudo">
-        <div class="produtos-pagina">
+    <main class="produtos-conteudo py-4">
+        <section class="produtos-pagina mb-5">
             <h1 class="mt-3">Produtos disponíveis</h1>
 
             <div class="input-group pesquisa mt-3 mb-3">
@@ -71,7 +71,40 @@
 
             <p class="produtos-contador" id="produtos-contador"></p>
             <div class="produtos" id="produtos"></div>
+
+            <hr class="my-5 text-muted opacity-25"> 
+    <section class="carrinho-secao">
+        <div class="card border-0 shadow-sm p-4 carrinho">
+            
+            <div class="d-flex align-items-center mb-4">
+                <i class="bi bi-cart3 fs-3 text-success me-2"></i> 
+                <h4 class="fw-bold mb-0 me-2">Minha Lista de Compras</h4>
+                <span class="badge rounded-pill bg-success px-3">1 item</span>
+            </div>
+
+            <div class="bg-light p-3 rounded-4 d-flex flex-wrap align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <img src="img/cocacola.jpg" class="rounded-3 me-3 img-animada" alt="Coca">
+                    <div>
+                        <h6 class="mb-0 fw-bold">Coca-Cola 2L</h6>
+                        <small class="text-muted">Bebidas</small>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <div class="d-flex align-items-center border rounded-3 bg-white me-3">
+                        <button class="btn btn-sm border-0 px-3">-</button>
+                        <span class="px-2 fw-bold">1</span>
+                        <button class="btn btn-sm border-0 px-3">+</button>
+                    </div>
+                    <button class="btn text-danger p-0">
+                        <i class="bi bi-trash3 fs-5"></i>
+                    </button>
+                </div>
+            </div>
         </div>
+        </section>
+
     </main>
 
     <economizai-footer></economizai-footer>
