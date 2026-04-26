@@ -162,7 +162,7 @@ textarea {
     border: 1px solid var(--cor-campo-borda);
     background-color: var(--cor-campo);
     color: var(--cor-texto);
-    font-size: 15px;
+    font-size: 0.9375rem;
 }
 
 /* textarea maior */

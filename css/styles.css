@@ -67,7 +67,7 @@ body {
     flex-direction: column;
     min-height: 100vh;
     padding-top: 72px;
-    font-size: 14px;
+    font-size: 0.875rem;
     background-color: var(--cor-fundo);
     color: var(--cor-texto);
 }
@@ -174,7 +174,7 @@ footer div {
 }
 
 footer span {
-    font-size: 13px;
+    font-size: 0.8125rem;
     line-height: 1.5;
 }
 
@@ -198,7 +198,7 @@ footer span {
     border-radius: 8px;
     background: var(--cor-botao-principal);
     color: #ffffff;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: 400;
     cursor: pointer;
     /* margin: ${margin}; */

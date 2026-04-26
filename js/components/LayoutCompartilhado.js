@@ -1,4 +1,19 @@
 const ECONOMIZAI_THEME_STORAGE_KEY = "economizai-theme";
+const ECONOMIZAI_FONT_STORAGE_KEY = "economizai-font-size";
+const TAMANHO_FONTE_PADRAO = 100;
+const TAMANHO_FONTE_MINIMO = 90;
+const TAMANHO_FONTE_MAXIMO = 120;
+const TAMANHO_FONTE_PASSO = 10;
+
+function limitarTamanhoFonte(tamanho) {
+  const numero = Number(tamanho);
+
+  if (Number.isNaN(numero)) {
+    return TAMANHO_FONTE_PADRAO;
+  }
+
+  return Math.min(TAMANHO_FONTE_MAXIMO, Math.max(TAMANHO_FONTE_MINIMO, numero));
+}
 
 function obterTemaAtual() {
   return document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light";
@@ -26,12 +41,62 @@ function aplicarTema(tema, salvar = true) {
     }
   }
 
-  window.dispatchEvent(new CustomEvent("economizai-theme-change", {
-    detail: { theme: temaNormalizado }
-  }));
+  document.querySelectorAll("economizai-header").forEach((header) => {
+    if (typeof header.sincronizarTema === "function") {
+      header.sincronizarTema(temaNormalizado);
+    }
+  });
+}
+
+function alternarTema() {
+  const novoTema = obterTemaAtual() === "dark" ? "light" : "dark";
+  aplicarTema(novoTema);
+}
+
+function obterTamanhoFonteAtual() {
+  const tamanhoAtual = document.documentElement.getAttribute("data-font-size");
+  return limitarTamanhoFonte(tamanhoAtual || TAMANHO_FONTE_PADRAO);
+}
+
+function obterTamanhoFonteSalvo() {
+  try {
+    const tamanhoSalvo = localStorage.getItem(ECONOMIZAI_FONT_STORAGE_KEY);
+    return limitarTamanhoFonte(tamanhoSalvo || TAMANHO_FONTE_PADRAO);
+  } catch {
+    return TAMANHO_FONTE_PADRAO;
+  }
+}
+
+function aplicarTamanhoFonte(tamanho, salvar = true) {
+  const tamanhoNormalizado = limitarTamanhoFonte(tamanho);
+  document.documentElement.setAttribute("data-font-size", tamanhoNormalizado);
+  document.documentElement.style.fontSize = `${tamanhoNormalizado}%`;
+
+  if (salvar) {
+    try {
+      localStorage.setItem(ECONOMIZAI_FONT_STORAGE_KEY, tamanhoNormalizado);
+    } catch {
+      // A fonte continua funcionando mesmo se o navegador bloquear o localStorage.
+    }
+  }
+
+  document.querySelectorAll("economizai-header").forEach((header) => {
+    if (typeof header.sincronizarFonte === "function") {
+      header.sincronizarFonte(tamanhoNormalizado);
+    }
+  });
+}
+
+function diminuirFonte() {
+  aplicarTamanhoFonte(obterTamanhoFonteAtual() - TAMANHO_FONTE_PASSO);
+}
+
+function aumentarFonte() {
+  aplicarTamanhoFonte(obterTamanhoFonteAtual() + TAMANHO_FONTE_PASSO);
 }
 
 aplicarTema(obterTemaSalvo(), false);
+aplicarTamanhoFonte(obterTamanhoFonteSalvo(), false);
 
 class EconomizaiHeader extends HTMLElement {
   static get observedAttributes() {
@@ -41,21 +106,9 @@ class EconomizaiHeader extends HTMLElement {
   constructor() {
     super();
     this.attachShadow({ mode: "open" });
-    this.handleThemeChange = (event) => {
-      this.sincronizarTema(event.detail?.theme || obterTemaAtual());
-    };
   }
 
   connectedCallback() {
-    window.addEventListener("economizai-theme-change", this.handleThemeChange);
-    this.render();
-  }
-
-  disconnectedCallback() {
-    window.removeEventListener("economizai-theme-change", this.handleThemeChange);
-  }
-
-  attributeChangedCallback() {
     this.render();
   }
 
@@ -64,12 +117,13 @@ class EconomizaiHeader extends HTMLElement {
   }
 
   getNavLink(page, href, label) {
-    const activeAttribute = this.isActive(page) ? ' id="visitando" aria-current="page"' : "";
+    const activeAttribute = this.isActive(page) ? ' id="visitando"' : "";
     return `<a href="${href}"${activeAttribute}>${label}</a>`;
   }
 
   render() {
     const temaAtual = obterTemaAtual();
+    const tamanhoFonteAtual = obterTamanhoFonteAtual();
     this.setAttribute("theme", temaAtual);
 
     this.shadowRoot.innerHTML = `
@@ -77,7 +131,7 @@ class EconomizaiHeader extends HTMLElement {
         :host {
           display: block;
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          font-size: 14px;
+          font-size: 0.875rem;
         }
 
         *,
@@ -157,7 +211,14 @@ class EconomizaiHeader extends HTMLElement {
           gap: 10px;
         }
 
-        .botao-tema {
+        .controle-fonte {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .botao-tema,
+        .botao-fonte {
           width: 38px;
           height: 38px;
           border: 1px solid var(--cor-borda, #e5e7eb);
@@ -171,9 +232,21 @@ class EconomizaiHeader extends HTMLElement {
           transition: 0.2s ease;
         }
 
-        .botao-tema:hover {
+        .botao-tema:hover,
+        .botao-fonte:hover:not(:disabled) {
           background-color: var(--cor-realce-verde-suave, rgba(0, 0, 0, 0.03));
           color: var(--cor-texto, rgba(0, 0, 0, 0.80));
+        }
+
+        .botao-fonte {
+          font-size: 0.875rem;
+          font-weight: 700;
+          line-height: 1;
+        }
+
+        .botao-fonte:disabled {
+          opacity: 0.45;
+          cursor: not-allowed;
         }
 
         .botao-tema svg {
@@ -225,7 +298,7 @@ class EconomizaiHeader extends HTMLElement {
           border-radius: 8px;
           background: var(--cor-botao-principal, #16a34a);
           color: #ffffff;
-          font-size: 14px;
+          font-size: 0.875rem;
           font-weight: 400;
           line-height: normal;
           cursor: pointer;
@@ -291,6 +364,10 @@ class EconomizaiHeader extends HTMLElement {
             ${this.getNavLink("contato", "contato.html", "Contato")}
           </nav>
           <div class="acoes-header">
+            <div class="controle-fonte" aria-label="Tamanho da fonte">
+              <button class="botao-fonte botao-diminuir-fonte" type="button" aria-label="Diminuir fonte" title="Diminuir fonte">A-</button>
+              <button class="botao-fonte botao-aumentar-fonte" type="button" aria-label="Aumentar fonte" title="Aumentar fonte">A+</button>
+            </div>
             <button class="botao-tema" type="button" aria-label="Alternar tema" title="Alternar tema">
               <svg class="icone-tema icone-lua" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>
@@ -324,11 +401,15 @@ class EconomizaiHeader extends HTMLElement {
     `;
 
     const botaoTema = this.shadowRoot.querySelector(".botao-tema");
-    botaoTema.addEventListener("click", () => {
-      aplicarTema(obterTemaAtual() === "dark" ? "light" : "dark");
-    });
+    const botaoDiminuirFonte = this.shadowRoot.querySelector(".botao-diminuir-fonte");
+    const botaoAumentarFonte = this.shadowRoot.querySelector(".botao-aumentar-fonte");
+
+    botaoTema.addEventListener("click", alternarTema);
+    botaoDiminuirFonte.addEventListener("click", diminuirFonte);
+    botaoAumentarFonte.addEventListener("click", aumentarFonte);
 
     this.sincronizarTema(temaAtual);
+    this.sincronizarFonte(tamanhoFonteAtual);
   }
 
   sincronizarTema(tema) {
@@ -341,9 +422,21 @@ class EconomizaiHeader extends HTMLElement {
     }
 
     const estaEscuro = temaNormalizado === "dark";
-    botaoTema.setAttribute("aria-pressed", String(estaEscuro));
-    botaoTema.setAttribute("aria-label", estaEscuro ? "Ativar tema claro" : "Ativar tema escuro");
     botaoTema.setAttribute("title", estaEscuro ? "Ativar tema claro" : "Ativar tema escuro");
+  }
+
+  sincronizarFonte(tamanho) {
+    const tamanhoNormalizado = limitarTamanhoFonte(tamanho);
+
+    const botaoDiminuirFonte = this.shadowRoot?.querySelector(".botao-diminuir-fonte");
+    const botaoAumentarFonte = this.shadowRoot?.querySelector(".botao-aumentar-fonte");
+
+    if (!botaoDiminuirFonte || !botaoAumentarFonte) {
+      return;
+    }
+
+    botaoDiminuirFonte.disabled = tamanhoNormalizado <= TAMANHO_FONTE_MINIMO;
+    botaoAumentarFonte.disabled = tamanhoNormalizado >= TAMANHO_FONTE_MAXIMO;
   }
 }
 
@@ -364,7 +457,7 @@ class EconomizaiFooter extends HTMLElement {
           display: block;
           margin-top: auto;
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-          font-size: 14px;
+          font-size: 0.875rem;
         }
 
         *,
@@ -392,7 +485,7 @@ class EconomizaiFooter extends HTMLElement {
 
         footer span {
           color: var(--cor-texto-secundario, rgba(0, 0, 0, 0.70));
-          font-size: 13px;
+          font-size: 0.8125rem;
           line-height: 1.5;
         }
 
