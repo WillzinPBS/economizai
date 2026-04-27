@@ -13,16 +13,14 @@
 <body>
   <economizai-header></economizai-header>
 
-  <main class="w-full bg-gradient-to-b from-emerald-50 to-green-100">
-    <div class="bg-white/95 border border-emerald-200 p-10 rounded-2xl shadow-xl w-full max-w-lg">
-      <img src="img/logoecom.png" alt="Logo do ECONOMIZAI" class="w-32 h-auto mx-auto mb-4">
-      <h1 class="text-3xl font-bold text-center text-emerald-900 mb-6">
-        Login
-      </h1>
+  <main class="auth-page">
+    <div class="auth-card auth-card--login">
+      <img src="img/logoecom.png" alt="Logo do ECONOMIZAI" class="auth-logo">
+      <h1 class="auth-title">Login</h1>
 
-      <form onsubmit="login(); return false;">
-        <div class="mb-4">
-          <label class="block text-sm mb-1" for="user">
+      <form class="auth-form" onsubmit="login(); return false;">
+        <div class="auth-field">
+          <label class="auth-label" for="login">
             Usuario
           </label>
 
@@ -30,13 +28,13 @@
             id="login"
             type="text"
             placeholder="Digite seu usuario"
-            class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
+            class="auth-control"
             autocomplete="username"
           >
         </div>
 
-        <div class="mb-6">
-          <label class="block text-sm font-medium text-emerald-900 mb-1" for="senha">
+        <div class="auth-field">
+          <label class="auth-label" for="senha">
             Senha
           </label>
 
@@ -44,21 +42,21 @@
             id="senha"
             type="password"
             placeholder="Digite sua senha"
-            class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
+            class="auth-control"
             autocomplete="current-password"
           >
         </div>
 
-        <p id="mensagem-auth" class="text-sm mb-3"></p>
+        <p id="mensagem-auth" class="auth-message"></p>
 
-        <button class="botao-principal !bg-emerald-600 hover:!bg-emerald-700 !rounded-lg !py-2.5 !font-semibold" type="submit">
+        <button class="botao-principal auth-submit" type="submit">
           Enviar
         </button>
       </form>
 
-      <p class="text-sm text-center mt-4">
+      <p class="auth-switch">
         Nao tem conta?
-        <a href="cadastro.html" class="text-yellow-400 hover:underline">
+        <a href="cadastro.html" class="auth-link">
           Criar conta
         </a>
       </p>

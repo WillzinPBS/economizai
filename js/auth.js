@@ -11,7 +11,9 @@ function mostrarMensagem(texto, sucesso) {
   if (!mensagem) return;
 
   mensagem.innerText = texto;
-  mensagem.className = sucesso ? "text-green-600 text-sm mb-3 mt-4" : "text-red-500 text-sm mb-3 mt-4";
+  mensagem.className = sucesso
+    ? "auth-message auth-message--sucesso"
+    : "auth-message auth-message--erro";
 }
 
 function valor(id) {
