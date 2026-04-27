@@ -13,29 +13,30 @@
 <body>
   <economizai-header></economizai-header>
 
-  <main class="w-full">
-    <div class="bg-white p-8 rounded-lg shadow-md w-80">
-      <h1 class="text-2xl font-bold text-center mb-6">
+  <main class="w-full bg-gradient-to-b from-emerald-50 to-green-100">
+    <div class="bg-white/95 border border-emerald-200 p-10 rounded-2xl shadow-xl w-full max-w-lg">
+      <img src="img/logoecom.png" alt="Logo do ECONOMIZAI" class="w-32 h-auto mx-auto mb-4">
+      <h1 class="text-3xl font-bold text-center text-emerald-900 mb-6">
         Login
       </h1>
 
       <form onsubmit="login(); return false;">
         <div class="mb-4">
           <label class="block text-sm mb-1" for="user">
-            Usuário
+            Usuario
           </label>
 
           <input
-            id="user"
+            id="login"
             type="text"
-            placeholder="Digite seu usuário"
-            class="w-full border rounded px-3 py-2 focus:outline-none focus:border-green-600"
+            placeholder="Digite seu usuario"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
             autocomplete="username"
           >
         </div>
 
         <div class="mb-6">
-          <label class="block text-sm mb-1" for="senha">
+          <label class="block text-sm font-medium text-emerald-900 mb-1" for="senha">
             Senha
           </label>
 
@@ -43,20 +44,20 @@
             id="senha"
             type="password"
             placeholder="Digite sua senha"
-            class="w-full border rounded px-3 py-2 focus:outline-none focus:border-green-600"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:border-blue-500"
             autocomplete="current-password"
           >
         </div>
 
-        <p id="erro" class="text-red-500 text-sm mb-3"></p>
+        <p id="mensagem-auth" class="text-sm mb-3"></p>
 
-        <button class="botao-principal" type="submit">
-          Entrar
+        <button class="botao-principal !bg-emerald-600 hover:!bg-emerald-700 !rounded-lg !py-2.5 !font-semibold" type="submit">
+          Enviar
         </button>
       </form>
 
       <p class="text-sm text-center mt-4">
-        Não tem conta?
+        Nao tem conta?
         <a href="cadastro.html" class="text-yellow-400 hover:underline">
           Criar conta
         </a>
