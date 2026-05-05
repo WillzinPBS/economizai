@@ -52,7 +52,7 @@ function obterForcaSenha(senha) {
 
   let pontos = 0;
 
-  // Coerente com validarSenha: somente letras e numeros.
+  
   if (/^[A-Za-z0-9]+$/.test(senha)) pontos += 1;
   if (senha.length >= 8) pontos += 1;
   if (senha.length >= 12) pontos += 1;
@@ -266,3 +266,5 @@ document.addEventListener("DOMContentLoaded", function () {
     atualizarForcaSenhaCadastro();
   }
 });
+
+
