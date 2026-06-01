@@ -1,4 +1,4 @@
-:root {
+﻿:root {
     color-scheme: light;
     --cor-fundo: #EFF6FF;
     --cor-superficie: #ffffff;
@@ -530,3 +530,60 @@ html[data-theme="dark"] .text-muted {
         width: 132px;
     }
 }
+
+.auth-opcoes-login {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.auth-caixa-selecao {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--cor-texto-secundario);
+    font-size: 0.875rem;
+    cursor: pointer;
+}
+
+.auth-caixa-selecao input {
+    width: 1rem;
+    height: 1rem;
+    margin: 0;
+    accent-color: var(--cor-botao-principal);
+}
+
+.auth-link--pequeno {
+    font-size: 0.8125rem;
+    font-weight: 600;
+}
+
+.auth-texto-auxiliar {
+    margin: 0 0 1rem;
+    color: var(--cor-texto-secundario);
+    text-align: center;
+    line-height: 1.5;
+}
+
+.auth-forca-senha {
+    min-height: 1rem;
+    margin: 0.25rem 0 0;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+.auth-forca-senha--fraca {
+    color: #dc2626;
+}
+
+.auth-forca-senha--media {
+    color: #d97706;
+}
+
+.auth-forca-senha--forte {
+    color: #15803d;
+}
+
