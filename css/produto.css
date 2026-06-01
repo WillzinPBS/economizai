@@ -213,9 +213,20 @@ html[data-theme="dark"] .produtos-filtros .text-dark {
     font-weight: 700;
     white-space: nowrap;
 }
-.carrinho{
-    border-radius: 15px;
+
+.carrinho-secao{
+    width: 100%;
 }
+
+.carrinho{
+    width: 100%;
+}
+
+#contador-carrinho{
+    font-size: .85rem;
+    padding: 8px 14px;
+}
+
 .img-animada {
     transition: transform 0.3s ease;
     cursor: pointer;

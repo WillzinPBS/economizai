@@ -314,6 +314,18 @@ html[data-theme="dark"] .form-control::placeholder {
     flex-shrink: 0;
 }
 
+html[data-theme="dark"] .bg-light {
+    background-color: var(--cor-superficie-elevada) !important;
+}
+
+html[data-theme="dark"] .bg-white {
+    background-color: var(--cor-superficie) !important;
+}
+
+html[data-theme="dark"] .text-muted {
+    color: var(--cor-texto-secundario) !important;
+}
+
 @media (max-width: 900px) {
     body {
         padding-top: 128px;

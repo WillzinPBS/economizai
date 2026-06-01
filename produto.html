@@ -74,38 +74,53 @@
 
             <hr class="my-5 text-muted opacity-25"> 
     <section class="carrinho-secao">
-        <div class="card border-0 shadow-sm p-4 carrinho">
-            
-            <div class="d-flex align-items-center mb-4">
-                <i class="bi bi-cart3 fs-3 text-success me-2"></i> 
-                <h4 class="fw-bold mb-0 me-2">Minha Lista de Compras</h4>
-                <span class="badge rounded-pill bg-success px-3">1 item</span>
-            </div>
+    <div class="card border-0 shadow-sm p-4 carrinho">
 
-            <div class="bg-light p-3 rounded-4 d-flex flex-wrap align-items-center justify-content-between">
-                <div class="d-flex align-items-center">
-                    <img src="img/cocacola.jpg" class="rounded-3 me-3 img-animada" alt="Coca">
-                    <div>
-                        <h6 class="mb-0 fw-bold">Coca-Cola 2L</h6>
-                        <small class="text-muted">Bebidas</small>
-                    </div>
-                </div>
+        <div class="d-flex align-items-center mb-4">
+            <i class="bi bi-cart3 fs-3 text-success me-2"></i>
+            <h4 class="fw-bold mb-0 me-2">Minha Lista de Compras</h4>
 
-                <div class="d-flex align-items-center">
-                    <div class="d-flex align-items-center border rounded-3 bg-white me-3">
-                        <button class="btn btn-sm border-0 px-3">-</button>
-                        <span class="px-2 fw-bold">1</span>
-                        <button class="btn btn-sm border-0 px-3">+</button>
-                    </div>
-                    <button class="btn text-danger p-0">
-                        <i class="bi bi-trash3 fs-5"></i>
-                    </button>
-                </div>
-            </div>
+            <span
+                id="contador-carrinho"
+                class="badge rounded-pill bg-success px-3">
+                0 itens
+            </span>
         </div>
-        </section>
+
+        <div id="lista-carrinho">
+           
+        </div>
+
+        <div id="resumo-carrinho" class="mt-4 d-none">
+
+            <hr>
+
+            <div class="d-flex justify-content-between mb-2">
+                <span>Total estimado</span>
+                <strong id="total-carrinho">
+                    R$ 0,00
+                </strong>
+            </div>
+
+            <button
+                id="btn-comparar"
+                class="btn btn-success w-100 mt-3">
+                Comparar Mercados
+            </button>
+
+            <section
+                id="resultado-comparacao"
+                class="mt-4 d-none">
+            </section>
+
+        </div>
+
+    </div>
+</section>
 
     </main>
+
+    
 
     <economizai-footer></economizai-footer>
 </body>
@@ -116,6 +131,7 @@
 <script type="application/json" id="produtos-json">
     [
         {
+            "id": 1,
             "nome": "Coca-Cola 2 L",
             "categoria": "Bebidas",
             "imagem": "img/cocacola.jpg",
@@ -129,6 +145,7 @@
             ]
         },
         {
+            "id": 2,
             "nome": "Arroz branco 5 kg",
             "categoria": "Alimentos Básicos",
             "imagem": "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=800&q=80",
@@ -142,6 +159,7 @@
             ]
         },
         {
+            "id": 3,
             "nome": "Feijão preto 1 kg",
             "categoria": "Alimentos Básicos",
             "imagem": "https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?auto=format&fit=crop&w=800&q=80",
@@ -155,6 +173,7 @@
             ]
         },
         {
+            "id": 4,
             "nome": "Óleo de soja 900 ml",
             "categoria": "Alimentos Básicos",
             "imagem": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=800&q=80",
@@ -168,6 +187,7 @@
             ]
         },
         {
+            "id": 5,
             "nome": "Leite integral 1 L",
             "categoria": "Laticínios",
             "imagem": "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=800&q=80",
@@ -181,6 +201,7 @@
             ]
         },
         {
+            "id": 6,
             "nome": "Café torrado 500 g",
             "categoria": "Mercearia",
             "imagem": "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80",
@@ -194,6 +215,7 @@
             ]
         },
         {
+            "id": 7,
             "nome": "Macarrão penne 500 g",
             "categoria": "Massas",
             "imagem": "https://images.unsplash.com/photo-1551462147-ff29053bfc14?auto=format&fit=crop&w=800&q=80",
@@ -207,6 +229,7 @@
             ]
         },
         {
+            "id": 8,
             "nome": "Detergente 500 ml",
             "categoria": "Limpeza",
             "imagem": "https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?auto=format&fit=crop&w=800&q=80",
@@ -222,65 +245,4 @@
     ]
 </script>
 
-<script>
-    const produtosMock = JSON.parse(document.getElementById("produtos-json").textContent);
-    const listaProdutos = document.getElementById("produtos");
-    const contadorProdutos = document.getElementById("produtos-contador");
-
-    function criarProdutoCard(produto) {
-        const seloMenorPreco = produto.menorPreco
-            ? '<span class="produto-selo">Menor preço</span>'
-            : "";
-
-        const outrosMercados = produto.outrosMercados.map((mercado) => `
-            <div class="outro-mercado">
-                <span><i class="bi bi-cart3" aria-hidden="true"></i>${mercado.nome}</span>
-                <strong>${mercado.preco}</strong>
-            </div>
-        `).join("");
-
-        return `
-            <article class="produto-card">
-                <div class="imagem">
-                    <img src="${produto.imagem}" alt="${produto.nome}" loading="lazy">
-                    ${seloMenorPreco}
-                </div>
-
-                <div class="descricao">
-                    <p class="produto-categoria">${produto.categoria}</p>
-                    <h2>${produto.nome}</h2>
-
-                    <div class="precificacao">
-                        <div class="precos">
-                            <strong class="produto-preco">${produto.preco}</strong>
-                            <p class="produto-tipo">${produto.tipo}</p>
-                        </div>
-
-                        <p class="produto-mercado">
-                            <i class="bi bi-building" aria-hidden="true"></i>
-                            ${produto.mercado}
-                        </p>
-                    </div>
-
-                    <button class="botao-principal produto-adicionar" type="button">
-                        <span aria-hidden="true">+</span>
-                        <span>Adicionar</span>
-                    </button>
-
-                    <hr>
-
-                    <p class="outros-mercados-titulo">Outros mercados:</p>
-                    <div class="outros-mercados">
-                        ${outrosMercados}
-                    </div>
-                </div>
-            </article>
-        `;
-    }
-
-    contadorProdutos.textContent = `${produtosMock.length} produtos encontrados`;
-
-    produtosMock.forEach((produto) => {
-        listaProdutos.insertAdjacentHTML("beforeend", criarProdutoCard(produto));
-    });
-</script>
+<script src="js/produtos.js"></script>
