@@ -355,7 +355,7 @@ class EconomizaiHeader extends HTMLElement {
       <header>
         <div class="menu">
           <a class="logo-link" href="index.html" aria-label="Ir para a página inicial do Economizai">
-            <img src="img/logoecom.png" alt="Logo Economizai">
+            <img src="img/logoecom.png" id="logoSrc" alt="Logo Economizai">
           </a>
           <nav aria-label="Navegação principal">
             ${this.getNavLink("home", "index.html", "Início")}
@@ -415,6 +415,15 @@ class EconomizaiHeader extends HTMLElement {
   sincronizarTema(tema) {
     const temaNormalizado = tema === "dark" ? "dark" : "light";
     this.setAttribute("theme", temaNormalizado);
+    
+    const logoEconomiza = this.shadowRoot.querySelector('#logoSrc');
+    console.log(logoEconomiza)
+
+    if (temaNormalizado === "dark") {
+      logoEconomiza.src = 'img/logobranca.png';
+    } else {
+      logoEconomiza.src = 'img/logoecom.png';
+    }
 
     const botaoTema = this.shadowRoot?.querySelector(".botao-tema");
     if (!botaoTema) {

@@ -214,6 +214,10 @@ html[data-theme="dark"] .produtos-filtros .text-dark {
     white-space: nowrap;
 }
 
+.invisiveis {
+    display: none;
+}
+
 @media (max-width: 900px) {
     .produtos {
         grid-template-columns: repeat(2, minmax(0, 1fr));
