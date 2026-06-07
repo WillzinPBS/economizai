@@ -18,8 +18,8 @@
 <body>
     <economizai-header active-page="produtos"></economizai-header>
 
-    <main class="produtos-conteudo">
-        <div class="produtos-pagina">
+    <main class="produtos-conteudo py-4">
+        <section class="produtos-pagina mb-5">
             <h1 class="mt-3">Produtos disponíveis</h1>
 
             <div class="input-group pesquisa mt-3 mb-3">
@@ -74,7 +74,41 @@
             <div class="produtos" id="produtos"></div>
             <div class="invisiveis" id="invisiveis"></div>
         </div>
+
+        <div id="lista-carrinho">
+           
+        </div>
+
+        <div id="resumo-carrinho" class="mt-4 d-none">
+
+            <hr>
+
+            <div class="d-flex justify-content-between mb-2">
+                <span>Total estimado</span>
+                <strong id="total-carrinho">
+                    R$ 0,00
+                </strong>
+            </div>
+
+            <button
+                id="btn-comparar"
+                class="btn btn-success w-100 mt-3">
+                Comparar Mercados
+            </button>
+
+            <section
+                id="resultado-comparacao"
+                class="mt-4 d-none">
+            </section>
+
+        </div>
+
+    </div>
+</section>
+
     </main>
+
+    
 
     <economizai-footer></economizai-footer>
 </body>
@@ -85,6 +119,7 @@
 <script type="application/json" id="produtos-json">
     [
         {
+            "id": 1,
             "nome": "Coca-Cola 2 L",
             "categoria": "Bebidas",
             "imagem": "img/cocacola.jpg",
@@ -98,6 +133,7 @@
             ]
         },
         {
+            "id": 2,
             "nome": "Arroz branco 5 kg",
             "categoria": "Alimentos Básicos",
             "imagem": "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=800&q=80",
@@ -111,6 +147,7 @@
             ]
         },
         {
+            "id": 3,
             "nome": "Feijão preto 1 kg",
             "categoria": "Alimentos Básicos",
             "imagem": "https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?auto=format&fit=crop&w=800&q=80",
@@ -124,6 +161,7 @@
             ]
         },
         {
+            "id": 4,
             "nome": "Óleo de soja 900 ml",
             "categoria": "Alimentos Básicos",
             "imagem": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=800&q=80",
@@ -137,6 +175,7 @@
             ]
         },
         {
+            "id": 5,
             "nome": "Leite integral 1 L",
             "categoria": "Laticínios",
             "imagem": "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=800&q=80",
@@ -150,6 +189,7 @@
             ]
         },
         {
+            "id": 6,
             "nome": "Café torrado 500 g",
             "categoria": "Mercearia",
             "imagem": "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80",
@@ -163,6 +203,7 @@
             ]
         },
         {
+            "id": 7,
             "nome": "Macarrão penne 500 g",
             "categoria": "Massas",
             "imagem": "https://images.unsplash.com/photo-1551462147-ff29053bfc14?auto=format&fit=crop&w=800&q=80",
@@ -176,6 +217,7 @@
             ]
         },
         {
+            "id": 8,
             "nome": "Detergente 500 ml",
             "categoria": "Limpeza",
             "imagem": "https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?auto=format&fit=crop&w=800&q=80",
@@ -191,6 +233,7 @@
     ]
 </script>
 
+<<<<<<< HEAD
 <script>
     const produtosMock = JSON.parse(document.getElementById("produtos-json").textContent);
     const listaProdutos = document.getElementById("produtos");
@@ -253,3 +296,6 @@
         listaProdutos.insertAdjacentHTML("beforeend", criarProdutoCard(produto));
     });
 </script>
+=======
+<script src="js/produtos.js"></script>
+>>>>>>> 1f0d99ccdec9521afc821db7e0dba425811cfe47

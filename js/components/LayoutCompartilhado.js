@@ -271,6 +271,14 @@ class EconomizaiHeader extends HTMLElement {
         .login {
           display: flex;
           align-items: center;
+          gap: 8px;
+        }
+
+        .usuario-bemvindo {
+          color: var(--cor-texto-secundario, rgba(0, 0, 0, 0.70));
+          font-size: 0.875rem;
+          font-weight: 600;
+          white-space: nowrap;
         }
 
         .login .botao-principal {
@@ -384,7 +392,7 @@ class EconomizaiHeader extends HTMLElement {
                 <path d="m19.07 4.93-1.41 1.41"/>
               </svg>
             </button>
-            <div class="login">
+            <div class="login" id="user-div">
               <a class="botao-principal" href="login.html">
                 <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -410,6 +418,7 @@ class EconomizaiHeader extends HTMLElement {
 
     this.sincronizarTema(temaAtual);
     this.sincronizarFonte(tamanhoFonteAtual);
+    this.sincronizarUsuario();
   }
 
   sincronizarTema(tema) {
@@ -446,6 +455,46 @@ class EconomizaiHeader extends HTMLElement {
 
     botaoDiminuirFonte.disabled = tamanhoNormalizado <= TAMANHO_FONTE_MINIMO;
     botaoAumentarFonte.disabled = tamanhoNormalizado >= TAMANHO_FONTE_MAXIMO;
+  }
+
+  sincronizarUsuario() {
+    const usuarioArea = this.shadowRoot?.querySelector("#user-div");
+    if (!usuarioArea) {
+      return;
+    }
+
+    let usuario = null;
+
+    if (typeof window.verificarLogin === "function") {
+      usuario = window.verificarLogin({
+        redirecionarSeAusente: false,
+        targetElement: usuarioArea
+      });
+    } else {
+      usuario = localStorage.getItem("usuarioLogado");
+    }
+
+    if (!usuario) {
+      usuarioArea.innerHTML = `
+        <a class="botao-principal" href="login.html">
+          <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+          <span>Entrar</span>
+        </a>
+      `;
+      return;
+    }
+
+    const usuarioSeguro = String(usuario)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
+
+    usuarioArea.innerHTML = `<span class="usuario-bemvindo">Bem-vindo, ${usuarioSeguro}!</span>`;
   }
 }
 
@@ -522,3 +571,5 @@ if (!customElements.get("economizai-header")) {
 if (!customElements.get("economizai-footer")) {
   customElements.define("economizai-footer", EconomizaiFooter);
 }
+
+
