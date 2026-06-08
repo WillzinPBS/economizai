@@ -33,7 +33,6 @@ function criarProdutoCard(produto) {
                     <p class="produto-categoria">${produto.categoria}</p>
                     <h2>${produto.nome}</h2>
 
-                    
                     <div class="blur">
                         <div class="precificacao">
                             <div class="precos">
@@ -80,6 +79,7 @@ function converterPreco(preco) {
 
 document.addEventListener("click", (event) => {
   const botao = event.target.closest(".produto-adicionar");
+  const getusuario = localStorage.getItem("usuarioLogado");
 
   if (!botao) return;
 
@@ -98,7 +98,11 @@ document.addEventListener("click", (event) => {
     });
   }
 
-  renderizarCarrinho();
+  if (getusuario) {
+    renderizarCarrinho();
+  } else {
+    window.location.href = "login.html";
+  }
 
   console.log("Carrinho:", carrinho);
 });

@@ -112,6 +112,7 @@ html[data-theme="dark"] .produtos-filtros .text-dark {
 }
 
 .blur {
+  position: relative;
   filter: blur(6px);
   user-select: none;
   pointer-events: none;
