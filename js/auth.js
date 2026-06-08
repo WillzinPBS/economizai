@@ -34,7 +34,7 @@ function validarNome(nome) {
 }
 
 function validarTelefone(telefone) {
-  return true;
+  return false;
 }
 
 function validarLogin(login) {
