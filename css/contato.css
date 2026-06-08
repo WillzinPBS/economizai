@@ -1,0 +1,173 @@
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* título */
+h1 {
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    margin-top: 60px;
+    font-size: 3rem
+}
+
+.duvida {
+    text-align: center;
+    color: var(--cor-texto-secundario);
+    font-size: 1.25rem;
+    max-width: 768px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* layout */
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    max-width: 1100px;
+    margin: auto auto;
+    padding: 40px;
+    align-items: flex-start;
+}
+
+.contact-left {
+    flex: 1;
+    flex: 0 0 300px;
+}
+
+.contact-right {
+    flex: 2;
+    display: flex;
+    justify-content: center;
+}
+
+.contact-right .card {
+    width: 100%;
+    max-width: 750px;
+    padding: 30px;
+}
+
+/* cards */
+.card {
+    background-color: var(--cor-superficie-elevada);
+    border-radius: 10px;
+    padding: 24px 24px 24px 35px;
+    box-shadow: 0 4px 10px var(--cor-sombra);
+}
+
+/* links */
+a {
+    color: var(--cor-texto-secundario);
+    text-decoration: none;
+    display: block;
+}
+
+#list a:hover {
+    color: var(--cor-link-hover);
+}
+
+#list {
+    list-style: none;
+    padding-left: 0;
+}
+
+#list li {
+    position: relative;
+    padding-left: -20px;
+    margin-left: -10;
+    margin-bottom: 15px;
+}
+
+/* Ícones */
+#list {
+    list-style: none;
+    padding-left: 0;
+}
+
+#list li {
+    position: relative;
+    padding-left: 20px;
+    margin-left: 0;
+    margin-bottom: 15px;
+}
+
+/* Ícones */
+#E-mail::before,
+#Telefone::before,
+#Endereco::before,
+#Horas::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+#E-mail::before {
+    background-image: url(../img/mail.svg);
+}
+
+#Telefone::before {
+    background-image: url(../img/phone.svg);
+}
+
+#Endereco::before {
+    background-image: url(../img/map-pin.svg);
+}
+
+#Horas::before {
+    background-image: url(../img/message-square.svg);
+}
+
+html[data-theme="dark"] #E-mail::before,
+html[data-theme="dark"] #Telefone::before,
+html[data-theme="dark"] #Endereco::before,
+html[data-theme="dark"] #Horas::before {
+    filter: invert(1) brightness(1.4);
+    opacity: 0.86;
+}
+
+#perguntas:hover {
+    color: var(--cor-link-hover);
+}
+
+
+
+/* formulário */
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.row {
+    display: flex;
+    gap: 20px;
+}
+
+.row input {
+    flex: 1;
+}
+
+/* inputs */
+input,
+textarea {
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    border: 1px solid var(--cor-campo-borda);
+    background-color: var(--cor-campo);
+    color: var(--cor-texto);
+    font-size: 0.9375rem;
+}
+
+/* textarea maior */
+textarea {
+    height: 180px;
+    width: 40rem;
+    resize: none;
+}

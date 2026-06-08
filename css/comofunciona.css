@@ -1,0 +1,386 @@
+.cf-sprite-icones {
+    display: none;
+}
+
+.cf-conteudo {
+    /* align-items: flex-start; */
+    padding-top: 56px;
+    padding-bottom: 72px;
+}
+
+.cf-pagina {
+    width: 1220px;
+    display: flex;
+    flex-direction: column;
+    gap: 72px;
+}
+
+.cf-apresentacao {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+    padding-top: 8px;
+}
+
+.cf-apresentacao h1 {
+    font-size: clamp(2.625rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.05;
+    color: var(--cor-texto);
+}
+
+.cf-apresentacao p {
+    max-width: 860px;
+    font-size: clamp(1.25rem, 2vw, 1.4375rem);
+    line-height: 1.45;
+    color: var(--cor-texto-secundario);
+}
+
+.cf-passos {
+    display: flex;
+    flex-direction: column;
+    gap: 68px;
+}
+
+.cf-passo {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 50%);
+    gap: 32px;
+    align-items: center;
+}
+
+.cf-passo-invertido .cf-passo-conteudo {
+    order: 2;
+}
+
+.cf-passo-invertido .cf-passo-visual {
+    order: 1;
+}
+
+.cf-passo-conteudo {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.cf-passo-cabecalho {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.cf-passo-cabecalho h2 {
+    font-size: clamp(1.75rem, 3.2vw, 2.625rem);
+    font-weight: 800;
+    color: var(--cor-texto);
+}
+
+.cf-passo-numero {
+    width: 48px;
+    height: 48px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.cf-passo-numero-azul {
+    background-color: #2563eb;
+}
+
+.cf-passo-numero-verde {
+    background-color: #16a34a;
+}
+
+.cf-passo-numero-roxo {
+    background-color: #9333ea;
+}
+
+.cf-passo-numero-laranja {
+    background-color: #f97316;
+}
+
+.cf-passo-conteudo p {
+    font-size: 1.125rem;
+    line-height: 1.65;
+    color: var(--cor-texto-secundario);
+}
+
+.cf-lista-detalhes {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.cf-lista-detalhes li {
+    position: relative;
+    padding-left: 38px;
+    font-size: 1.125rem;
+    line-height: 1.5;
+    color: var(--cor-texto);
+}
+
+.cf-lista-detalhes li::before {
+    content: "";
+    position: absolute;
+    top: 1px;
+    left: 0;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #16a34a;
+    border-radius: 50%;
+}
+
+.cf-lista-detalhes li::after {
+    content: "";
+    position: absolute;
+    top: 8px;
+    left: 6px;
+    width: 10px;
+    height: 5px;
+    border-left: 2px solid #16a34a;
+    border-bottom: 2px solid #16a34a;
+    transform: rotate(-45deg);
+}
+
+.cf-passo-visual {
+    min-height: 224px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+}
+
+.cf-passo-visual-azul {
+    background-color: var(--cor-azul-suave);
+}
+
+.cf-passo-visual-verde {
+    background-color: var(--cor-verde-suave);
+}
+
+.cf-passo-visual-roxo {
+    background-color: var(--cor-roxo-suave);
+}
+
+.cf-passo-visual-laranja {
+    background-color: var(--cor-laranja-suave);
+}
+
+.cf-passo-icone,
+.cf-cartao-beneficio-simbolo {
+    /* display: inline-block; */
+    fill: none; /*svg sem preenchimento interno*/
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2;
+}
+
+.cf-passo-icone {
+    width: 128px;
+    height: 128px;
+}
+
+.cf-passo-icone-azul {
+    color: #2563eb;
+}
+
+.cf-passo-icone-verde {
+    color: #16a34a;
+}
+
+.cf-passo-icone-roxo {
+    color: #9333ea;
+}
+
+.cf-passo-icone-laranja {
+    color: #f97316;
+}
+
+.cf-beneficios {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.cf-beneficios h2 {
+    text-align: center;
+    font-size: clamp(2.125rem, 4vw, 3.125rem);
+    font-weight: 800;
+    color: var(--cor-texto);
+}
+
+.cf-grade-beneficios {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 24px;
+}
+
+.cf-cartao-beneficio {
+    background-color: var(--cor-superficie-elevada);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 8px 24px var(--cor-sombra);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.cf-cartao-beneficio-icone {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cf-cartao-beneficio-icone-verde {
+    background-color: var(--cor-verde-suave);
+    color: #16a34a;
+}
+
+.cf-cartao-beneficio-icone-roxo {
+    background-color: var(--cor-roxo-suave);
+    color: #9333ea;
+}
+
+.cf-cartao-beneficio-icone-laranja {
+    background-color: var(--cor-laranja-suave);
+    color: #f97316;
+}
+
+.cf-cartao-beneficio-icone-vermelho {
+    background-color: var(--cor-vermelho-suave);
+    color: #ef4444;
+}
+
+.cf-cartao-beneficio-simbolo {
+    width: 24px;
+    height: 24px;
+}
+
+.cf-cartao-beneficio h3 {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--cor-texto);
+}
+
+.cf-cartao-beneficio p {
+    font-size: 1.125rem;
+    line-height: 1.6;
+    color: var(--cor-texto-secundario);
+}
+
+.cf-chamada-acao {
+    background: var(--cor-verde-suave);
+    border-radius: 16px;
+    padding: 56px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+}
+
+.cf-chamada-acao h2,
+.cf-chamada-acao p {
+    color: var(--cor-nav-ativo-texto);
+}
+
+.cf-chamada-acao h2 {
+    font-size: clamp(2.25rem, 4vw, 3.25rem);
+    font-weight: 800;
+}
+
+.cf-chamada-acao p {
+    font-size: 1.125rem;
+    line-height: 1.6;
+}
+
+@media (max-width: 900px) {
+    .cf-conteudo {
+        padding-top: 40px;
+        padding-bottom: 56px;
+    }
+
+    .cf-pagina {
+        gap: 56px;
+    }
+
+    .cf-passo {
+        grid-template-columns: 1fr;
+    }
+
+    .cf-passo-conteudo,
+    .cf-passo-invertido .cf-passo-conteudo,
+    .cf-passo-invertido .cf-passo-visual {
+        order: initial;
+    }
+
+    .cf-grade-beneficios {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 640px) {
+    .cf-conteudo {
+        padding-top: 32px;
+        padding-bottom: 40px;
+    }
+
+    .cf-pagina {
+        gap: 44px;
+    }
+
+    .cf-apresentacao h1 {
+        font-size: 2.125rem;
+    }
+
+    .cf-apresentacao p,
+    .cf-passo-conteudo p,
+    .cf-lista-detalhes li,
+    .cf-cartao-beneficio p,
+    .cf-chamada-acao p {
+        font-size: 1rem;
+    }
+
+    .cf-passo-cabecalho {
+        align-items: flex-start;
+    }
+
+    .cf-passo-cabecalho h2 {
+        font-size: 1.5rem;
+    }
+
+    .cf-passo-visual {
+        min-height: 180px;
+    }
+
+    .cf-passo-icone {
+        width: 88px;
+        height: 88px;
+    }
+
+    .cf-grade-beneficios {
+        grid-template-columns: 1fr;
+    }
+
+    .cf-chamada-acao {
+        padding: 40px 20px;
+    }
+
+    .cf-chamada-acao .botao-principal-inline {
+        width: 100%;
+        min-width: 0;
+    }
+}

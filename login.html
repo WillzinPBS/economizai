@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECONOMIZAI | Login</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/components/LayoutCompartilhado.js" defer></script>
+  <script src="js/auth.js" defer></script>
+</head>
+
+<body>
+  <economizai-header></economizai-header>
+
+  <main class="auth-page">
+    <div class="auth-card auth-card--login">
+      <img src="img/logoecom.png" alt="Logo do ECONOMIZAI" class="auth-logo">
+      <h1 class="auth-title">Login</h1>
+
+      <form class="auth-form" id="loginForm">
+        <div class="auth-field">
+          <label class="auth-label" for="login">
+            Usuario
+          </label>
+
+          <input
+            id="login"
+            type="text"
+            placeholder="Digite seu usuario"
+            class="auth-control"
+            autocomplete="username"
+          >
+        </div>
+
+        <div class="auth-field">
+          <label class="auth-label" for="senha">
+            Senha
+          </label>
+
+          <input
+            id="senha"
+            type="password"
+            placeholder="Digite sua senha"
+            class="auth-control"
+            autocomplete="current-password"
+          >
+        </div>
+
+        <div class="auth-opcoes-login">
+          <label class="auth-caixa-selecao">
+            <input type="checkbox" id="lembrar_usuario">
+            <span>Lembrar de mim</span>
+          </label>
+
+          <a href="recuperar-senha.html" class="auth-link auth-link--pequeno">Esqueci minha senha</a>
+        </div>
+
+        <p id="mensagem-auth" class="auth-message"></p>
+
+        <button class="botao-principal auth-submit" type="submit">
+          Enviar
+        </button>
+      </form>
+
+      <p class="auth-switch">
+        Nao tem conta?
+        <a href="cadastro.html" class="auth-link">
+          Criar conta
+        </a>
+      </p>
+    </div>
+  </main>
+
+  <economizai-footer></economizai-footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      const form = document.getElementById("loginForm");
+
+      preencherLoginLembrado();
+
+      if (form) {
+        form.addEventListener("submit", function(event) {
+          event.preventDefault();
+          login();
+        });
+      }
+    });
+  </script>
+</body>
+</html>
+

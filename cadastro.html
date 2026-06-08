@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECONOMIZAI | Cadastro</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="js/components/LayoutCompartilhado.js" defer></script>
+  <script src="js/auth.js" defer></script>
+</head>
+
+<body>
+  <economizai-header></economizai-header>
+
+  <main class="auth-page">
+    <div class="auth-card auth-card--cadastro">
+      <img src="img/logoecom.png" alt="Logo do ECONOMIZAI" class="auth-logo">
+      <h1 class="auth-title">Criar Conta</h1>
+
+      <form class="auth-form" onsubmit="cadastrar(); return false;">
+        <div class="auth-grid">
+          <div class="auth-field">
+            <label class="auth-label" for="nome">
+            Nome
+            </label>
+
+            <input
+              type="text"
+              placeholder="Digite seu nome completo"
+              class="auth-control"
+              id="nome"
+              autocomplete="name"
+            >
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="data_nascimento">
+              Data de Nascimento
+            </label>
+
+            <input
+              type="date"
+              class="auth-control"
+              id="data_nascimento"
+            >
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="sexo">
+              Sexo
+            </label>
+
+            <select
+              id="sexo"
+              class="auth-control"
+            >
+              <option value="">Selecione</option>
+              <option value="masculino">Masculino</option>
+              <option value="feminino">Feminino</option>
+              <option value="outro">Outro</option>
+            </select>
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="nome_materno">
+              Nome Materno
+            </label>
+
+            <input
+              type="text"
+              placeholder="Digite o nome materno"
+              class="auth-control"
+              id="nome_materno"
+            >
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="cpf">
+              CPF
+            </label>
+
+            <input
+              type="text"
+              placeholder="Digite seu CPF"
+              class="auth-control"
+              id="cpf"
+            >
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="telefone_celular">
+              Telefone Celular
+            </label>
+
+            <input
+              type="text"
+              placeholder="(+55)XX-XXXXXXXXX"
+              class="auth-control"
+              id="telefone_celular"
+            >
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="telefone_fixo">
+              Telefone Fixo
+            </label>
+
+            <input
+              type="text"
+              placeholder="(+55)XX-XXXXXXXXX"
+              class="auth-control"
+              id="telefone_fixo"
+            >
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="login">
+              Login
+            </label>
+
+            <input
+              type="text"
+              placeholder="Exatamente 6 letras"
+              class="auth-control"
+              id="login"
+              autocomplete="username"
+            >
+          </div>
+
+          <div class="auth-field auth-field--full">
+            <label class="auth-label" for="endereco">
+              Endereco Completo
+            </label>
+
+            <input
+              type="text"
+              placeholder="Digite seu endereco completo"
+              class="auth-control"
+              id="endereco"
+            >
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="senha">
+              Senha
+            </label>
+
+            <input
+              type="password"
+              placeholder="Exatamente 8 letras"
+              class="auth-control"
+              id="senha"
+              autocomplete="new-password"
+            >
+
+            <p id="forca-senha-cadastro" class="auth-forca-senha" aria-live="polite"></p>
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="confirma_senha">
+              Confirma Senha
+            </label>
+
+            <input
+              type="password"
+              placeholder="Repita a senha"
+              class="auth-control"
+              id="confirma_senha"
+              autocomplete="new-password"
+            >
+          </div>
+        </div>
+
+        <p id="mensagem-auth" class="auth-message"></p>
+
+        <button class="botao-principal auth-submit" type="submit">
+          Enviar
+        </button>
+      </form>
+
+      <p class="auth-switch">
+        Ja tem conta?
+        <a href="login.html" class="auth-link">
+          Fazer login
+        </a>
+      </p>
+    </div>
+  </main>
+
+  <economizai-footer></economizai-footer>
+</body>
+</html>
+
