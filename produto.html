@@ -30,62 +30,51 @@
 
                 <i class="bi bi-funnel fs-4 text-secondary me-3"></i>
 
-                <div class="produtos-filtros d-flex gap-2 flex-wrap">
-                    <button class="btn btn-primary rounded-pill px-3 py-1 fw-medium btn-sm bg-green-600">
+                <div class="produtos-filtros d-flex gap-2 flex-wrap" id="filtro">
+                    <button class="btn btn-primary rounded-pill px-3 py-1 fw-medium btn-sm bg-green-600" id="fil-todas">
                         Todas
                     </button>
 
-                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm">
+                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm" id="fil-bebidas">
                         Bebidas
                     </button>
 
-                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm">
+                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm" id="fil-basicos">
                         Alimentos B&aacute;sicos
                     </button>
 
-                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm">
+                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm" id="fil-laticinios">
                         Latic&iacute;nios
                     </button>
 
-                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm">
-                        Higiene
+                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm" id="fil-massas">
+                        Massas
                     </button>
 
-                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm">
-                        Limpeza
+                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm" id="fil-mercearia">
+                        Mercearia
                     </button>
 
-                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm">
-                        Carnes
-                    </button>
-
-                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm">
+                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm" id="fil-frutas">
                         Frutas
                     </button>
 
-                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm">
+                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm" id="fil-verduras">
                         Verduras
+                    </button>
+
+                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm" id="fil-limpeza">
+                        Limpeza
                     </button>
                 </div>
             </div>
 
             <p class="produtos-contador" id="produtos-contador"></p>
             <div class="produtos" id="produtos"></div>
-
-            <hr class="my-5 text-muted opacity-25"> 
-    <section class="carrinho-secao">
-    <div class="card border-0 shadow-sm p-4 carrinho">
-
-        <div class="d-flex align-items-center mb-4">
-            <i class="bi bi-cart3 fs-3 text-success me-2"></i>
-            <h4 class="fw-bold mb-0 me-2">Minha Lista de Compras</h4>
-
-            <span
-                id="contador-carrinho"
-                class="badge rounded-pill bg-success px-3">
-                0 itens
-            </span>
+            <div class="invisiveis" id="invisiveis"></div>
         </div>
+
+        <p id="contador-carrinho">0 itens</p>
 
         <div id="lista-carrinho">
            
@@ -245,4 +234,68 @@
     ]
 </script>
 
-<script src="js/produtos.js"></script>
+<script src="js/produtos.js" defer></script>
+<script src="js/filtro.js" ></script>
+
+<!-- <script>
+    const produtosMock = JSON.parse(document.getElementById("produtos-json").textContent);
+    const listaProdutos = document.getElementById("produtos");
+    const contadorProdutos = document.getElementById("produtos-contador");
+
+    function criarProdutoCard(produto) {
+        const seloMenorPreco = produto.menorPreco
+            ? '<span class="produto-selo">Menor preço</span>'
+            : "";
+
+        const outrosMercados = produto.outrosMercados.map((mercado) => `
+            <div class="outro-mercado">
+                <span><i class="bi bi-cart3" aria-hidden="true"></i>${mercado.nome}</span>
+                <strong>${mercado.preco}</strong>
+            </div>
+        `).join("");
+
+        return `
+            <article class="produto-card" data-categoria="${produto.categoria}">
+                <div class="imagem">
+                    <img src="${produto.imagem}" alt="${produto.nome}" loading="lazy">
+                    ${seloMenorPreco}
+                </div>
+
+                <div class="descricao">
+                    <p class="produto-categoria">${produto.categoria}</p>
+                    <h2>${produto.nome}</h2>
+
+                    <div class="precificacao">
+                        <div class="precos">
+                            <strong class="produto-preco">${produto.preco}</strong>
+                            <p class="produto-tipo">${produto.tipo}</p>
+                        </div>
+
+                        <p class="produto-mercado">
+                            <i class="bi bi-building" aria-hidden="true"></i>
+                            ${produto.mercado}
+                        </p>
+                    </div>
+
+                    <button class="botao-principal produto-adicionar" type="button">
+                        <span aria-hidden="true">+</span>
+                        <span>Adicionar</span>
+                    </button>
+
+                    <hr>
+
+                    <p class="outros-mercados-titulo">Outros mercados:</p>
+                    <div class="outros-mercados">
+                        ${outrosMercados}
+                    </div>
+                </div>
+            </article>
+        `;
+    }
+
+    contadorProdutos.textContent = `${produtosMock.length} produtos encontrados`;
+
+    produtosMock.forEach((produto) => {
+        listaProdutos.insertAdjacentHTML("beforeend", criarProdutoCard(produto));
+    });
+</script> -->

@@ -10,6 +10,7 @@
     <script src="https://kit.fontawesome.com/4620774d96.js"></script>
     <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <script src="js/components/LayoutCompartilhado.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -24,19 +25,53 @@
 
         <div class="contact-left">
             <div class="card">
-                <h3><strong>Informações de contato</strong></h3>
+
 
                 <ul id="list">
-                    <li id="E-mail"><strong>E-mail</strong></li>
-                    <a href="#">contato@comparapreco.com.br</a>
-                    <li id="Telefone"><strong>Telefone</strong></li>
-                    <a href="#">(11) 4000-4000</a>
-                    <li id="Endereco"><strong>Endereço</strong></li>
-                    <a href="#">Rio de Janeiro, RJ, Brasil</a>
-                    <li id="Horas"><strong>Horário de atendimento</strong></li>
+
+                    <h3><strong>Informações de contato</strong></h3>
+
+                    <li id="email"><strong style="margin-left: 0.5rem;">E-mail</strong></li>
+                    <a href="gmail.com" class="copiar" target="_blank" data-copy="contato@comparapreco.com.br">
+                        contato@comparapreco.com.br
+                    </a>
+
+                    <li id="telefone"><strong style="margin-left: 0.5rem;">Telefone</strong></li>
+                    <a href="https://web.whatsapp.com/" target="_blank" class="copiar" data-copy="(11) 4000-4000">
+                        (11) 4000-4000
+                    </a>
+
+                    <li id="endereco"><strong style="margin-left: 0.5rem;">Endereço</strong></li>
+                    <a href="https://maps.google.com/?q=Rio+de+Janeiro+RJ+Brasil" target="_blank" class="copiar"
+                        data-copy="Rio de Janeiro, RJ, Brasil">
+                        Rio de Janeiro, RJ, Brasil
+                    </a>
+
+                    <li id="horas"><strong style="margin-left: 0.5rem;">Horário de atendimento</strong></li>
                     <p class="hora">Segunda a sexta: 9h às 18h<br>
                         Sábado: 9h às 13h</p>
                 </ul>
+
+                <script>
+                    const links = document.querySelectorAll(".copiar");
+
+                    links.forEach(link => {
+                        link.addEventListener("click", () => {
+
+                            const texto = link.dataset.copy;
+
+                            navigator.clipboard.writeText(texto)
+                                .then(() => {
+                                    Swal.fire("Copiado: " + texto);
+                                    // alert("Copiado: " + texto);
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                });
+
+                        });
+                    });
+                </script>
 
             </div>
 
@@ -46,28 +81,28 @@
                     <li>Como posso sugerir novos mercados?</li>
                     <li>O serviço é gratuito?</li>
                     <li>Os preços são atualizados em tempo real?</li>
-                    <a id="perguntas" href="#">Ver todas as perguntas →</a>
+                    <!-- <a id="perguntas" href="#">Ver todas as perguntas →</a> -->
                 </ul>
             </div>
 
         </div>
 
         <div class="contact-right">
-            <div class="card">
-                <h3><strong>Envie sua mensagem</strong></h3>
+            <div class="card card-right">
+                <h3 id="right"><strong>Envie sua mensagem</strong></h3>
 
                 <form class="form">
 
                     <div class="row">
-                        <input type="text" placeholder="Seu nome completo">
-                        <input type="email" placeholder="seu@email.com">
+                        <input type="text" placeholder="Seu nome completo" required>
+                        <input type="email" placeholder="seu@email.com" required>
                     </div>
 
-                    <input type="text" placeholder="Assunto">
+                    <input type="text" placeholder="Assunto" required>
 
                     <textarea placeholder="Digite sua mensagem aqui..."></textarea>
 
-                    <button class="botao-principal" type="submit" >
+                    <button class="botao-principal" type="submit">
                         Enviar mensagem
                     </button>
                 </form>
