@@ -17,7 +17,7 @@
         `).join("");
 
         return `
-            <article class="produto-card">
+            <article class="produto-card" data-categoria="${produto.categoria}">
                 <div class="imagem">
                     <img src="${produto.imagem}" alt="${produto.nome}" loading="lazy">
                     ${seloMenorPreco}
