@@ -34,7 +34,7 @@ function validarNome(nome) {
 }
 
 function validarTelefone(telefone) {
-  return false;
+  return true;
 }
 
 function validarLogin(login) {
@@ -305,5 +305,15 @@ document.addEventListener("DOMContentLoaded", function () {
   if (senhaCadastro) {
     senhaCadastro.addEventListener("input", atualizarForcaSenhaCadastro);
     atualizarForcaSenhaCadastro();
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  const usuario = localStorage.getItem("usuarioLogado");
+
+  if (usuario) {
+    document.querySelectorAll(".blur").forEach((el) => {
+      el.classList.remove("blur");
+    });
   }
 });

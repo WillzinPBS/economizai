@@ -111,6 +111,12 @@ html[data-theme="dark"] .produtos-filtros .text-dark {
   flex-direction: column;
 }
 
+.blur {
+  filter: blur(6px);
+  user-select: none;
+  pointer-events: none;
+}
+
 .produto-categoria {
   margin: 0 0 6px;
   color: var(--cor-texto-secundario);
