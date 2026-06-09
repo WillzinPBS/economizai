@@ -7,9 +7,25 @@ const listaProdutos = document.getElementById("produtos");
 const contadorProdutos = document.getElementById("produtos-contador");
 
 function criarProdutoCard(produto) {
-  const seloMenorPreco = produto.menorPreco
-    ? '<span class="produto-selo">Menor preço</span>'
-    : "";
+  const selos = {
+  seloMenorPreco: `
+    <span class="produto-selo">
+      <i class="fa-solid fa-compass"></i> Menor preço
+    </span>
+  `,
+  seloQueima: `
+    <span class="produto-seloQueima">
+      <i class="fa-solid fa-fire"></i> Últimas unidades
+    </span>
+  `,
+  seloUltimos: `
+    <span class="produto-seloUltimos">
+      <i class="fa-solid fa-bolt"></i> Oferta relâmpago
+    </span>
+  `
+};
+
+const selo = selos[produto.selo] || "";
 
   const outrosMercados = produto.outrosMercados
     .map(
@@ -26,15 +42,16 @@ function criarProdutoCard(produto) {
             <article class="produto-card" data-categoria="${produto.categoria}">
                 <div class="imagem">
                     <img src="${produto.imagem}" alt="${produto.nome}" loading="lazy">
-                    ${seloMenorPreco}
+                    ${selo}
                 </div>
 
                 <div class="descricao">
                     <p class="produto-categoria">${produto.categoria}</p>
                     <h2>${produto.nome}</h2>
 
-                    <div class="blur">
-                        <div class="precificacao">
+                    
+                    <div class="container-precificacao">
+                        <div class="precificacao" id="blur">
                             <div class="precos">
                                 <strong class="produto-preco">${produto.preco}</strong>
                                 <p class="produto-tipo">${produto.tipo}</p>
@@ -45,7 +62,14 @@ function criarProdutoCard(produto) {
                                 ${produto.mercado}
                             </p>
                         </div>
+
+                        <div class="container-alert">
+                        <i class="fa-solid fa-lock"></i>
+                        <h3>Faça login para ter acesso</h3>
+                      </div>
                     </div>
+                    
+                    
 
                     <button class="botao-principal produto-adicionar" type="button" data-id="${produto.id}">
                         <span aria-hidden="true">+</span>
@@ -99,7 +123,9 @@ document.addEventListener("click", (event) => {
   }
 
   if (getusuario) {
+    const resultados = compararMercados();
     renderizarCarrinho();
+    configurarComparador(resultados)
   } else {
     window.location.href = "login.html";
   }
@@ -120,7 +146,9 @@ document.addEventListener("click", (event) => {
 
   item.quantidade++;
 
+  const resultados = compararMercados();
   renderizarCarrinho();
+  configurarComparador(resultados)
 });
 
 document.addEventListener("click", (event) => {
@@ -140,7 +168,9 @@ document.addEventListener("click", (event) => {
     carrinho = carrinho.filter((item) => item.produto.id !== id);
   }
 
+  const resultados = compararMercados();
   renderizarCarrinho();
+  configurarComparador(resultados)
 });
 
 document.addEventListener("click", (event) => {
@@ -271,9 +301,14 @@ renderizarCarrinho();
 
 const btnComparar = document.getElementById("btn-comparar");
 
+
 btnComparar.addEventListener("click", () => {
   const resultado = compararMercados();
 
+  configurarComparador(resultado)
+});
+
+function configurarComparador(resultado) {
   const melhorMercado = resultado.melhorMercado;
 
   const mercados = resultado.mercados;
@@ -336,7 +371,7 @@ btnComparar.addEventListener("click", () => {
 
     </div>
 `;
-});
+}
 
 renderizarCarrinho();
 
@@ -421,3 +456,10 @@ function compararMercados() {
     mercados,
   };
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (carrinho.length > 0) {
+    const resultado = compararMercados();
+    configurarComparador(resultado);
+  }
+});

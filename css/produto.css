@@ -104,6 +104,34 @@ html[data-theme="dark"] .produtos-filtros .text-dark {
   line-height: 1;
 }
 
+.produto-seloQueima {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background-color: #e92e2e;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.produto-seloUltimos {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  padding: 5px 9px;
+  border-radius: 999px;
+  background-color: #ff771c;
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
 .descricao {
   padding: 16px;
   display: flex;
@@ -111,11 +139,41 @@ html[data-theme="dark"] .produtos-filtros .text-dark {
   flex-direction: column;
 }
 
-.blur {
+#blur {
   position: relative;
   filter: blur(6px);
   user-select: none;
   pointer-events: none;
+}
+
+.container-precificacao {
+  position: relative;
+  margin: 12px 0;
+}
+
+.container-alert {
+  position: absolute;
+  inset: 0;
+  display: flex; /* troque inline-flex por flex */
+  align-items: center;
+  justify-content: center;
+  z-index: 99;
+  gap: 12px;
+  
+}
+
+.container-alert h3 {
+  margin: 0;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+  color: green;
+}
+
+.container-alert i {
+  font-size: 16px;
+  color: green;
+  margin: 0;
 }
 
 .produto-categoria {

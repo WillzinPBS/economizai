@@ -312,8 +312,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const usuario = localStorage.getItem("usuarioLogado");
 
   if (usuario) {
-    document.querySelectorAll(".blur").forEach((el) => {
-      el.classList.remove("blur");
+    document.querySelectorAll("#blur").forEach(elemento => {
+      elemento.removeAttribute("id");
+    });
+
+    document.querySelectorAll(".container-alert").forEach(alerta => {
+      alerta.remove();
     });
   }
 });
