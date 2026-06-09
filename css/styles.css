@@ -586,3 +586,7 @@ html[data-theme="dark"] .text-muted {
 .auth-forca-senha--forte {
     color: #15803d;
 }
+
+#aumentar,#diminuir {
+    color: var(--cor-texto);
+}

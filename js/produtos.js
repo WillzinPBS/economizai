@@ -10,17 +10,17 @@ function criarProdutoCard(produto) {
   const selos = {
   seloMenorPreco: `
     <span class="produto-selo">
-      <i class="fa-solid fa-compass"></i> Menor preço
+      <i class="bi bi-arrow-down-left-circle-fill"></i> Menor preço
     </span>
   `,
   seloQueima: `
     <span class="produto-seloQueima">
-      <i class="fa-solid fa-fire"></i> Últimas unidades
+      <i class="bi bi-fire"></i> Últimas unidades
     </span>
   `,
   seloUltimos: `
     <span class="produto-seloUltimos">
-      <i class="fa-solid fa-bolt"></i> Oferta relâmpago
+      <i class="bi bi-lightning-fill"></i> Oferta relâmpago
     </span>
   `
 };
@@ -267,7 +267,8 @@ function renderizarCarrinho() {
 
                 <button
                     class="btn btn-sm border-0 px-3 diminuir-item"
-                    data-id="${item.produto.id}">
+                    data-id="${item.produto.id}" id="diminuir">
+                    
                     -
                 </button>
 
@@ -277,7 +278,8 @@ function renderizarCarrinho() {
 
                 <button
                     class="btn btn-sm border-0 px-3 aumentar-item"
-                    data-id="${item.produto.id}">
+                    data-id="${item.produto.id}" id="aumentar">
+                    
                     +
                 </button>
 
