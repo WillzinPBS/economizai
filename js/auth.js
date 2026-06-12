@@ -34,7 +34,7 @@ function validarNome(nome) {
 }
 
 function validarTelefone(telefone) {
-  return /^\(?\+?55\)?\s?\d{2}\s?-?\s?\d{8,9}$/.test(telefone);
+  return true;
 }
 
 function validarLogin(login) {
@@ -52,7 +52,6 @@ function obterForcaSenha(senha) {
 
   let pontos = 0;
 
-  
   if (/^[A-Za-z0-9]+$/.test(senha)) pontos += 1;
   if (senha.length >= 8) pontos += 1;
   if (senha.length >= 12) pontos += 1;
@@ -61,11 +60,17 @@ function obterForcaSenha(senha) {
   if (/\d/.test(senha)) pontos += 1;
 
   if (pontos <= 3) {
-    return { classe: "auth-forca-senha--fraca", texto: "Forca da senha: fraca" };
+    return {
+      classe: "auth-forca-senha--fraca",
+      texto: "Forca da senha: fraca",
+    };
   }
 
   if (pontos <= 5) {
-    return { classe: "auth-forca-senha--media", texto: "Forca da senha: media" };
+    return {
+      classe: "auth-forca-senha--media",
+      texto: "Forca da senha: media",
+    };
   }
 
   return { classe: "auth-forca-senha--forte", texto: "Forca da senha: forte" };
@@ -98,30 +103,51 @@ function cadastrar() {
   const confirmaSenha = valor("confirma_senha");
 
   if (
-    !nome || !dataNascimento || !sexo || !nomeMaterno || !cpf ||
-    !telefoneCelular || !telefoneFixo || !endereco || !login || !senha || !confirmaSenha
+    !nome ||
+    !dataNascimento ||
+    !sexo ||
+    !nomeMaterno ||
+    !cpf ||
+    !telefoneCelular ||
+    !telefoneFixo ||
+    !endereco ||
+    !login ||
+    !senha ||
+    !confirmaSenha
   ) {
     mostrarMensagem("Preencha todos os campos obrigatorios.", false);
     return;
   }
 
   if (!validarNome(nome)) {
-    mostrarMensagem("Nome deve ter entre 3 e 60 caracteres alfabeticos.", false);
+    mostrarMensagem(
+      "Nome deve ter entre 3 e 60 caracteres alfabeticos.",
+      false
+    );
     return;
   }
 
   if (!validarTelefone(telefoneCelular) || !validarTelefone(telefoneFixo)) {
-    mostrarMensagem("Telefone celular e fixo devem estar no formato (+55) XX XXXXX-XXXX.", false);
+    mostrarMensagem(
+      "Telefone celular e fixo devem estar no formato (+55) XX XXXXX-XXXX.",
+      false
+    );
     return;
   }
 
   if (!validarLogin(login)) {
-    mostrarMensagem("Login deve ter no minimo 6 caracteres (letras ou numeros).", false);
+    mostrarMensagem(
+      "Login deve ter no minimo 6 caracteres (letras ou numeros).",
+      false
+    );
     return;
   }
 
   if (!validarSenha(senha)) {
-    mostrarMensagem("Senha deve ter no minimo 8 caracteres (letras ou numeros).", false);
+    mostrarMensagem(
+      "Senha deve ter no minimo 8 caracteres (letras ou numeros).",
+      false
+    );
     return;
   }
 
@@ -132,7 +158,11 @@ function cadastrar() {
 
   const usuarios = obterUsuarios();
   const loginNormalizado = login.toLowerCase();
-  const existe = usuarios.some((usuario) => typeof usuario.login === "string" && usuario.login.toLowerCase() === loginNormalizado);
+  const existe = usuarios.some(
+    (usuario) =>
+      typeof usuario.login === "string" &&
+      usuario.login.toLowerCase() === loginNormalizado
+  );
 
   if (existe) {
     mostrarMensagem("Login ja cadastrado.", false);
@@ -149,11 +179,14 @@ function cadastrar() {
     telefoneFixo,
     endereco,
     login: loginNormalizado,
-    senha
+    senha,
   });
 
   salvarUsuarios(usuarios);
-  mostrarMensagem("Cadastro realizado com sucesso. Redirecionando para login...", true);
+  mostrarMensagem(
+    "Cadastro realizado com sucesso. Redirecionando para login...",
+    true
+  );
   setTimeout(function () {
     window.location.href = "login.html";
   }, 800);
@@ -170,18 +203,28 @@ function login() {
   }
 
   if (!validarLogin(loginDigitado)) {
-    mostrarMensagem("Login deve ter no minimo 6 caracteres (letras ou numeros).", false);
+    mostrarMensagem(
+      "Login deve ter no minimo 6 caracteres (letras ou numeros).",
+      false
+    );
     return;
   }
 
   if (!validarSenha(senha)) {
-    mostrarMensagem("Senha deve ter no minimo 8 caracteres (letras ou numeros).", false);
+    mostrarMensagem(
+      "Senha deve ter no minimo 8 caracteres (letras ou numeros).",
+      false
+    );
     return;
   }
 
   const usuarios = obterUsuarios();
   const loginNormalizado = loginDigitado.toLowerCase();
-  const usuario = usuarios.find((item) => typeof item.login === "string" && item.login.toLowerCase() === loginNormalizado);
+  const usuario = usuarios.find(
+    (item) =>
+      typeof item.login === "string" &&
+      item.login.toLowerCase() === loginNormalizado
+  );
 
   if (!usuario || usuario.senha !== senha) {
     mostrarMensagem("Login ou senha invalidos.", false);
@@ -210,7 +253,8 @@ function preencherLoginLembrado() {
     return;
   }
 
-  const lembrarAtivo = localStorage.getItem(LEMBRAR_USUARIO_ATIVO_CHAVE) === "true";
+  const lembrarAtivo =
+    localStorage.getItem(LEMBRAR_USUARIO_ATIVO_CHAVE) === "true";
   const loginSalvo = localStorage.getItem(LEMBRAR_USUARIO_CHAVE) || "";
 
   lembrarUsuario.checked = lembrarAtivo && Boolean(loginSalvo);
@@ -221,10 +265,7 @@ function preencherLoginLembrado() {
 }
 
 function verificarLogin(opcoes = {}) {
-  const {
-    redirecionarSeAusente = true,
-    targetElement = null
-  } = opcoes;
+  const { redirecionarSeAusente = true, targetElement = null } = opcoes;
 
   const usuario = localStorage.getItem("usuarioLogado");
 
@@ -267,4 +308,16 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  const usuario = localStorage.getItem("usuarioLogado");
 
+  if (usuario) {
+    document.querySelectorAll("#blur").forEach(elemento => {
+      elemento.removeAttribute("id");
+    });
+
+    document.querySelectorAll(".container-alert").forEach(alerta => {
+      alerta.remove();
+    });
+  }
+});
