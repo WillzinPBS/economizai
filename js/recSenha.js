@@ -22,11 +22,11 @@ function valorRecuperacao(id) {
 }
 
 function validarLoginRecuperacao(login) {
-  return /^[A-Za-z0-9]{6,}$/.test(login);
+  return /^[A-Za-z0-9]{4,30}$/.test(login);
 }
 
 function validarSenhaRecuperacao(senha) {
-  return /^[A-Za-z0-9]{8,}$/.test(senha);
+  return senha.length >= 8;
 }
 
 function obterForcaSenhaRecuperacao(senha) {
@@ -34,23 +34,15 @@ function obterForcaSenhaRecuperacao(senha) {
     return { classe: "", texto: "" };
   }
 
-  let pontos = 0;
-
-  if (senha.length >= 8) pontos += 1;
-  if (/[A-Z]/.test(senha)) pontos += 1;
-  if (/[a-z]/.test(senha)) pontos += 1;
-  if (/\d/.test(senha)) pontos += 1;
-  if (/[^A-Za-z0-9]/.test(senha)) pontos += 1;
-
-  if (pontos <= 2) {
-    return { classe: "auth-forca-senha--fraca", texto: "Forca da senha: fraca" };
-  }
-
-  if (pontos <= 4) {
-    return { classe: "auth-forca-senha--media", texto: "Forca da senha: media" };
-  }
-
-  return { classe: "auth-forca-senha--forte", texto: "Forca da senha: forte" };
+  return validarSenhaRecuperacao(senha)
+    ? {
+        classe: "auth-forca-senha--forte",
+        texto: "Senha valida: minimo de 8 caracteres.",
+      }
+    : {
+        classe: "auth-forca-senha--fraca",
+        texto: "A senha deve ter no minimo 8 caracteres.",
+      };
 }
 
 function atualizarForcaSenhaRecuperacao() {
@@ -67,27 +59,33 @@ function atualizarForcaSenhaRecuperacao() {
 }
 
 function recuperarSenhaLocal() {
+  const formulario = document.getElementById("recuperarSenhaForm");
+  limparErrosFormulario(formulario);
+
+  if (!validarCamposObrigatorios(formulario)) {
+    mostrarMensagemRecuperacao("Preencha os campos obrigatorios destacados.", false);
+    return;
+  }
+
   const login = valorRecuperacao("login_recuperacao");
   const nomeMaterno = valorRecuperacao("nome_materno_recuperacao");
   const novaSenha = valorRecuperacao("nova_senha_recuperacao");
   const confirmaSenha = valorRecuperacao("confirma_senha_recuperacao");
 
-  if (!login || !nomeMaterno || !novaSenha || !confirmaSenha) {
-    mostrarMensagemRecuperacao("Preencha todos os campos.", false);
-    return;
-  }
-
   if (!validarLoginRecuperacao(login)) {
-    mostrarMensagemRecuperacao("Login deve ter no minimo 6 caracteres (letras ou numeros).", false);
+    definirErroCampo("login_recuperacao", "Use entre 4 e 30 letras ou numeros.");
+    mostrarMensagemRecuperacao("Revise o login informado.", false);
     return;
   }
 
   if (!validarSenhaRecuperacao(novaSenha)) {
-    mostrarMensagemRecuperacao("A nova senha deve ter no minimo 8 caracteres (letras ou numeros).", false);
+    definirErroCampo("nova_senha_recuperacao", "A senha deve ter no minimo 8 caracteres.");
+    mostrarMensagemRecuperacao("Revise a nova senha informada.", false);
     return;
   }
 
   if (novaSenha !== confirmaSenha) {
+    definirErroCampo("confirma_senha_recuperacao", "A confirmacao deve ser igual a nova senha.");
     mostrarMensagemRecuperacao("Nova senha e confirmacao devem ser iguais.", false);
     return;
   }
@@ -105,6 +103,8 @@ function recuperarSenhaLocal() {
   });
 
   if (indiceUsuario === -1) {
+    definirErroCampo("login_recuperacao", "Confira o login informado.");
+    definirErroCampo("nome_materno_recuperacao", "Confira o nome materno informado.");
     mostrarMensagemRecuperacao("Dados de recuperacao invalidos.", false);
     return;
   }

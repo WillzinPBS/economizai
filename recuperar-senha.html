@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/styles.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="js/components/LayoutCompartilhado.js" defer></script>
+  <script src="js/validation.js" defer></script>
   <script src="js/recSenha.js" defer></script>
 </head>
 
@@ -22,10 +23,10 @@
         Confirme seus dados para redefinir a senha da sua conta.
       </p>
 
-      <form class="auth-form" id="recuperarSenhaForm">
+      <form class="auth-form" id="recuperarSenhaForm" novalidate>
         <div class="auth-field">
           <label class="auth-label" for="login_recuperacao">
-            Login
+            Login <span class="auth-required" aria-hidden="true">*</span>
           </label>
 
           <input
@@ -34,12 +35,15 @@
             placeholder="Digite seu login"
             class="auth-control"
             autocomplete="username"
+            minlength="4"
+            maxlength="30"
+            required
           >
         </div>
 
         <div class="auth-field">
           <label class="auth-label" for="nome_materno_recuperacao">
-            Nome materno
+            Nome materno <span class="auth-required" aria-hidden="true">*</span>
           </label>
 
           <input
@@ -48,12 +52,13 @@
             placeholder="Digite o nome materno"
             class="auth-control"
             autocomplete="name"
+            required
           >
         </div>
 
         <div class="auth-field">
           <label class="auth-label" for="nova_senha_recuperacao">
-            Nova senha
+            Nova senha <span class="auth-required" aria-hidden="true">*</span>
           </label>
 
           <input
@@ -62,6 +67,8 @@
             placeholder="Digite a nova senha"
             class="auth-control"
             autocomplete="new-password"
+            minlength="8"
+            required
           >
 
           <p id="forca-senha-recuperacao" class="auth-forca-senha" aria-live="polite"></p>
@@ -69,7 +76,7 @@
 
         <div class="auth-field">
           <label class="auth-label" for="confirma_senha_recuperacao">
-            Confirmar nova senha
+            Confirmar nova senha <span class="auth-required" aria-hidden="true">*</span>
           </label>
 
           <input
@@ -78,6 +85,8 @@
             placeholder="Repita a nova senha"
             class="auth-control"
             autocomplete="new-password"
+            minlength="8"
+            required
           >
         </div>
 

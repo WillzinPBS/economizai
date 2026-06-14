@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/styles.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="js/components/LayoutCompartilhado.js" defer></script>
+  <script src="js/validation.js" defer></script>
   <script src="js/auth.js" defer></script>
 </head>
 
@@ -18,10 +19,10 @@
       <img src="img/logoecom.png" alt="Logo do ECONOMIZAI" class="auth-logo">
       <h1 class="auth-title">Login</h1>
 
-      <form class="auth-form" id="loginForm">
+      <form class="auth-form" id="loginForm" novalidate>
         <div class="auth-field">
           <label class="auth-label" for="login">
-            Usuario
+            Usuario <span class="auth-required" aria-hidden="true">*</span>
           </label>
 
           <input
@@ -30,12 +31,15 @@
             placeholder="Digite seu usuario"
             class="auth-control"
             autocomplete="username"
+            minlength="4"
+            maxlength="30"
+            required
           >
         </div>
 
         <div class="auth-field">
           <label class="auth-label" for="senha">
-            Senha
+            Senha <span class="auth-required" aria-hidden="true">*</span>
           </label>
 
           <input
@@ -44,6 +48,8 @@
             placeholder="Digite sua senha"
             class="auth-control"
             autocomplete="current-password"
+            minlength="8"
+            required
           >
         </div>
 
@@ -66,7 +72,7 @@
       <p class="auth-switch">
         Nao tem conta?
         <a href="cadastro.html" class="auth-link">
-          Criar conta
+          Cadastrar novo usuario
         </a>
       </p>
     </div>

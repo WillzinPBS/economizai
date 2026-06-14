@@ -74,7 +74,7 @@ a {
     padding-left: 0;
 }
 
-#list li {
+#list .contact-title {
     position: relative;
     padding-left: -20px;
     /* margin-left: -10;
@@ -90,7 +90,7 @@ a {
     padding-left: 0;
 }
 
-#list li {
+#list .contact-title {
     position: relative;
     padding-left: 20px;
     margin-left: 0;

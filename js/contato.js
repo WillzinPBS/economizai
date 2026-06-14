@@ -7,7 +7,9 @@ links.forEach(link => {
 
         navigator.clipboard.writeText(texto)
             .then(() => {
-                alert("Copiado: " + texto);
+                if (window.Swal) {
+                    Swal.fire("Copiado: " + texto);
+                }
             })
             .catch(err => {
                 console.error(err);
