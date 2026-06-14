@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ECONOMIZAI</title>
-    <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/produto.css" />
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/produto.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="js/components/LayoutCompartilhado.js" defer></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
@@ -78,7 +78,7 @@
         </section>
         <!-- end third section -->
 
-        <section class="bg-white rounded-3xl p-8 mt-10">
+        <section class="bg-white rounded-3xl p-8 mt-10" id="produtos-destaque">
           <h3 class="text-4xl font-bold text-center text-slate-800 mb-16">
             Produtos em Destaque
           </h3>
@@ -90,7 +90,7 @@
                   src="https://gbarbosa.vtexassets.com/arquivos/ids/222661/6553637106598519a772f520.jpg?v=638355605656700000"
                   alt="${produto.nome}"
                   loading="lazy"
-                />
+                >
                 ${seloMenorPreco}
               </div>
 
@@ -112,14 +112,14 @@
 
                 <a
                   class="botao-principal produto-adicionar demonstracao"
-                  type="button"
+                  href="produto.html"
                   data-id="${produto.id}"
                 >
                   <span aria-hidden="true">+</span>
                   <span>Adicionar</span>
               </a>
 
-                <hr />
+                <hr>
 
                 <p class="outros-mercados-titulo">Outros mercados:</p>
 
@@ -136,13 +136,13 @@
             </article>
 
             <article class="produto-card" data-categoria="${produto.categoria}">
-              
+
               <div class="imagem">
                 <img
                   src="https://wessel.com.br/cdn/shop/files/Origem_PicanhadeTira_1000x750_2f754bcd-2642-4c73-8e1d-568e71053e89.jpg?v=1757082053&width=1920"
                   alt="${produto.nome}"
                   loading="lazy"
-                />
+                >
                 <span class="produto-selo">
         <i class="fa-solid fa-compass"></i> Menor preço
       </span>
@@ -166,14 +166,14 @@
 
                 <a
                   class="botao-principal produto-adicionar demonstracao"
-                  type="button"
+                  href="produto.html"
                   data-id="${produto.id}"
                 >
                   <span aria-hidden="true">+</span>
                   <span>Adicionar</span>
               </a>
 
-                <hr />
+                <hr>
 
                 <p class="outros-mercados-titulo">Outros mercados:</p>
 
@@ -194,7 +194,7 @@
                   src="https://images.tcdn.com.br/img/img_prod/1234949/cafe_a_vacuo_pilao_500g_3576_2_b9ca481d542d3c57ba18aa2ebec9c996.jpg"
                   alt="${produto.nome}"
                   loading="lazy"
-                />
+                >
                 ${seloMenorPreco}
               </div>
 
@@ -216,14 +216,14 @@
 
                 <a
                   class="botao-principal produto-adicionar demonstracao"
-                  type="button"
+                  href="produto.html"
                   data-id="${produto.id}"
                 >
                   <span aria-hidden="true">+</span>
                   <span>Adicionar</span>
               </a>
 
-                <hr />
+                <hr>
 
                 <p class="outros-mercados-titulo">Outros mercados:</p>
 
@@ -272,7 +272,7 @@
                 financeiro das famílias brasileiras.
               </p>
             </article>
-  
+
             <article
               class="bg-white rounded-3xl p-12 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-50"
             >
@@ -452,14 +452,13 @@
       </section>
     </main>
     <economizai-footer></economizai-footer>
-  </body>
-
-  <script>
+    <script>
     const usuario = localStorage.getItem("usuarioLogado");
     const botoes = document.querySelectorAll('.demonstracao');
 
     botoes.forEach(botao => {
-      botao.addEventListener('click', function() {
+      botao.addEventListener('click', function(event) {
+        event.preventDefault();
         if (usuario) {
           window.location.href = "produto.html";
         } else {
@@ -467,5 +466,6 @@
         }
       });
     });
-  </script>
+    </script>
+  </body>
 </html>

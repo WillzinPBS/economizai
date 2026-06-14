@@ -27,30 +27,30 @@
             <div class="card">
 
 
-                <ul id="list">
+                <div id="list">
 
                     <h3><strong>Informações de contato</strong></h3>
 
-                    <li id="email"><strong style="margin-left: 0.5rem;">E-mail</strong></li>
+                    <div class="contact-title" id="email"><strong>E-mail</strong></div>
                     <a href="gmail.com" class="copiar" target="_blank" data-copy="contato@comparapreco.com.br">
                         contato@comparapreco.com.br
                     </a>
 
-                    <li id="telefone"><strong style="margin-left: 0.5rem;">Telefone</strong></li>
+                    <div class="contact-title" id="telefone"><strong>Telefone</strong></div>
                     <a href="https://web.whatsapp.com/" target="_blank" class="copiar" data-copy="(11) 4000-4000">
                         (11) 4000-4000
                     </a>
 
-                    <li id="endereco"><strong style="margin-left: 0.5rem;">Endereço</strong></li>
+                    <div class="contact-title" id="endereco"><strong>Endereço</strong></div>
                     <a href="https://maps.google.com/?q=Rio+de+Janeiro+RJ+Brasil" target="_blank" class="copiar"
                         data-copy="Rio de Janeiro, RJ, Brasil">
                         Rio de Janeiro, RJ, Brasil
                     </a>
 
-                    <li id="horas"><strong style="margin-left: 0.5rem;">Horário de atendimento</strong></li>
+                    <div class="contact-title" id="horas"><strong>Horário de atendimento</strong></div>
                     <p class="hora">Segunda a sexta: 9h às 18h<br>
                         Sábado: 9h às 13h</p>
-                </ul>
+                </div>
 
                 <script>
                     const links = document.querySelectorAll(".copiar");
@@ -63,7 +63,6 @@
                             navigator.clipboard.writeText(texto)
                                 .then(() => {
                                     Swal.fire("Copiado: " + texto);
-                                    // alert("Copiado: " + texto);
                                 })
                                 .catch(err => {
                                     console.error(err);
@@ -75,7 +74,7 @@
 
             </div>
 
-            <div class="frequente">
+            <div class="frequente" id="perguntas-frequentes">
                 <!-- <ul>
                     <li>Como funciona a comparação de preços?</li>
                     <li>Como posso sugerir novos mercados?</li>

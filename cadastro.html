@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="css/styles.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="js/components/LayoutCompartilhado.js" defer></script>
+  <script src="js/validation.js" defer></script>
   <script src="js/auth.js" defer></script>
 </head>
 
@@ -18,11 +19,11 @@
       <img src="img/logoecom.png" alt="Logo do ECONOMIZAI" class="auth-logo">
       <h1 class="auth-title">Criar Conta</h1>
 
-      <form class="auth-form" onsubmit="cadastrar(); return false;">
+      <form class="auth-form" id="cadastroForm" novalidate>
         <div class="auth-grid">
           <div class="auth-field">
             <label class="auth-label" for="nome">
-            Nome
+            Nome <span class="auth-required" aria-hidden="true">*</span>
             </label>
 
             <input
@@ -31,29 +32,32 @@
               class="auth-control"
               id="nome"
               autocomplete="name"
+              required
             >
           </div>
 
           <div class="auth-field">
             <label class="auth-label" for="data_nascimento">
-              Data de Nascimento
+              Data de Nascimento <span class="auth-required" aria-hidden="true">*</span>
             </label>
 
             <input
               type="date"
               class="auth-control"
               id="data_nascimento"
+              required
             >
           </div>
 
           <div class="auth-field">
             <label class="auth-label" for="sexo">
-              Sexo
+              Sexo <span class="auth-required" aria-hidden="true">*</span>
             </label>
 
             <select
               id="sexo"
               class="auth-control"
+              required
             >
               <option value="">Selecione</option>
               <option value="masculino">Masculino</option>
@@ -64,7 +68,7 @@
 
           <div class="auth-field">
             <label class="auth-label" for="nome_materno">
-              Nome Materno
+              Nome Materno <span class="auth-required" aria-hidden="true">*</span>
             </label>
 
             <input
@@ -72,12 +76,13 @@
               placeholder="Digite o nome materno"
               class="auth-control"
               id="nome_materno"
+              required
             >
           </div>
 
           <div class="auth-field">
             <label class="auth-label" for="cpf">
-              CPF
+              CPF <span class="auth-required" aria-hidden="true">*</span>
             </label>
 
             <input
@@ -85,73 +90,185 @@
               placeholder="Digite seu CPF"
               class="auth-control"
               id="cpf"
+              required
             >
           </div>
 
           <div class="auth-field">
             <label class="auth-label" for="telefone_celular">
-              Telefone Celular
+              Telefone Celular <span class="auth-required" aria-hidden="true">*</span>
             </label>
 
             <input
               type="text"
-              placeholder="(+55)XX-XXXXXXXXX"
+              placeholder="21 98480-7030"
               class="auth-control"
               id="telefone_celular"
+              required
             >
           </div>
 
           <div class="auth-field">
             <label class="auth-label" for="telefone_fixo">
-              Telefone Fixo
+              Telefone Fixo <span class="auth-required" aria-hidden="true">*</span>
             </label>
 
             <input
               type="text"
-              placeholder="(+55)XX-XXXXXXXXX"
+              placeholder="(+55) 21 3333-4444"
               class="auth-control"
               id="telefone_fixo"
+              required
             >
           </div>
 
           <div class="auth-field">
             <label class="auth-label" for="login">
-              Login
+              Login <span class="auth-required" aria-hidden="true">*</span>
             </label>
 
             <input
               type="text"
-              placeholder="Exatamente 6 letras"
+              placeholder="Entre 4 e 30 letras ou numeros"
               class="auth-control"
               id="login"
               autocomplete="username"
+              minlength="4"
+              maxlength="30"
+              required
+            >
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="cep">
+              CEP <span class="auth-required" aria-hidden="true">*</span>
+            </label>
+
+            <input
+              type="text"
+              inputmode="numeric"
+              placeholder="00000-000"
+              class="auth-control"
+              id="cep"
+              autocomplete="postal-code"
+              maxlength="9"
+              required
+            >
+            <p id="cep-status" class="auth-field-hint" aria-live="polite">
+              O endereco sera preenchido ao informar o CEP.
+            </p>
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="logradouro">
+              Logradouro <span class="auth-required" aria-hidden="true">*</span>
+            </label>
+
+            <input
+              type="text"
+              class="auth-control"
+              id="logradouro"
+              autocomplete="address-line1"
+              required
+            >
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="numero">
+              Numero <span class="auth-required" aria-hidden="true">*</span>
+            </label>
+
+            <input
+              type="text"
+              class="auth-control"
+              id="numero"
+              autocomplete="address-line2"
+              required
+            >
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="complemento">
+              Complemento
+            </label>
+
+            <input
+              type="text"
+              class="auth-control"
+              id="complemento"
+              autocomplete="address-line3"
+            >
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="bairro">
+              Bairro <span class="auth-required" aria-hidden="true">*</span>
+            </label>
+
+            <input
+              type="text"
+              class="auth-control"
+              id="bairro"
+              required
+            >
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="cidade">
+              Cidade <span class="auth-required" aria-hidden="true">*</span>
+            </label>
+
+            <input
+              type="text"
+              class="auth-control"
+              id="cidade"
+              autocomplete="address-level2"
+              required
+            >
+          </div>
+
+          <div class="auth-field">
+            <label class="auth-label" for="estado">
+              Estado <span class="auth-required" aria-hidden="true">*</span>
+            </label>
+
+            <input
+              type="text"
+              class="auth-control"
+              id="estado"
+              autocomplete="address-level1"
+              maxlength="2"
+              required
             >
           </div>
 
           <div class="auth-field auth-field--full">
             <label class="auth-label" for="endereco">
-              Endereco Completo
+              Endereco Completo <span class="auth-required" aria-hidden="true">*</span>
             </label>
 
             <input
               type="text"
-              placeholder="Digite seu endereco completo"
               class="auth-control"
               id="endereco"
+              readonly
+              required
             >
           </div>
 
           <div class="auth-field">
             <label class="auth-label" for="senha">
-              Senha
+              Senha <span class="auth-required" aria-hidden="true">*</span>
             </label>
 
             <input
               type="password"
-              placeholder="Exatamente 8 letras"
+              placeholder="Minimo de 8 caracteres"
               class="auth-control"
               id="senha"
               autocomplete="new-password"
+              minlength="8"
+              required
             >
 
             <p id="forca-senha-cadastro" class="auth-forca-senha" aria-live="polite"></p>
@@ -159,7 +276,7 @@
 
           <div class="auth-field">
             <label class="auth-label" for="confirma_senha">
-              Confirma Senha
+              Confirma Senha <span class="auth-required" aria-hidden="true">*</span>
             </label>
 
             <input
@@ -168,6 +285,8 @@
               class="auth-control"
               id="confirma_senha"
               autocomplete="new-password"
+              minlength="8"
+              required
             >
           </div>
         </div>
@@ -191,4 +310,3 @@
   <economizai-footer></economizai-footer>
 </body>
 </html>
-

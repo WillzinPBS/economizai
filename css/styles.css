@@ -310,6 +310,12 @@ a.botao-principal {
     font-weight: 600;
 }
 
+.auth-required {
+    margin-left: 0.2rem;
+    color: var(--cor-erro);
+    font-weight: 800;
+}
+
 .auth-control {
     width: 100%;
     min-height: 2.75rem;
@@ -331,6 +337,32 @@ a.botao-principal {
 .auth-control:focus {
     border-color: var(--cor-botao-principal);
     box-shadow: 0 0 0 3px var(--cor-foco-sombra);
+}
+
+.auth-control--invalido,
+.auth-control--invalido:focus {
+    border-color: var(--cor-erro);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.16);
+}
+
+.auth-field-error {
+    margin: 0;
+    color: var(--cor-erro);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.auth-field-hint {
+    margin: 0;
+    color: var(--cor-texto-secundario);
+    font-size: 0.75rem;
+    line-height: 1.35;
+}
+
+.auth-control[readonly] {
+    cursor: default;
+    opacity: 0.88;
 }
 
 .auth-submit {
