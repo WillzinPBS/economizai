@@ -34,7 +34,7 @@ function validarNome(nome) {
 }
 
 function validarTelefone(telefone) {
-  return true;
+  return /^\(\+55\)\s\d{2}\s\d{4,5}-\d{4}$/.test(telefone);
 }
 
 function validarLogin(login) {
@@ -294,10 +294,84 @@ function verificarLogin(opcoes = {}) {
   return usuario;
 }
 
+function aplicarMascaraTelefone(input) {
+  input.addEventListener("input", () => {
+    // Remove tudo que não for número
+    let numeros = input.value.replace(/\D/g, "");
+
+    // Se o usuário tentar digitar 55 no começo, remove
+    if (numeros.startsWith("55")) {
+      numeros = numeros.slice(2);
+    }
+
+    // DDD (2) + número (9) = 11 dígitos
+    numeros = numeros.slice(0, 11);
+
+    let resultado = "(+55) ";
+
+    if (numeros.length >= 2) {
+      resultado += numeros.slice(0, 2);
+
+      const telefone = numeros.slice(2);
+
+      if (telefone.length > 0) {
+        if (telefone.length <= 8) {
+          resultado +=
+            " " +
+            telefone.replace(/(\d{4})(\d{0,4})/, "$1-$2");
+        } else {
+          resultado +=
+            " " +
+            telefone.replace(/(\d{5})(\d{0,4})/, "$1-$2");
+        }
+      }
+    } else {
+      resultado += numeros;
+    }
+
+    input.value = resultado;
+  });
+
+  input.addEventListener("focus", () => {
+    if (!input.value) {
+      input.value = "(+55) ";
+    }
+  });
+}
+
+function aplicarMascaraCPF(input) {
+  input.addEventListener("input", () => {
+    let valor = input.value.replace(/\D/g, "");
+
+    valor = valor.substring(0, 11);
+
+    valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
+    valor = valor.replace(/(\d{3})(\d)/, "$1.$2");
+    valor = valor.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+
+    input.value = valor;
+  });
+}
+
 function logout() {
   localStorage.removeItem("usuarioLogado");
   window.location.href = "login.html";
 }
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const celular = document.getElementById("telefone_celular");
+  const fixo = document.getElementById("telefone_fixo");
+
+  if (celular) aplicarMascaraTelefone(celular);
+  if (fixo) aplicarMascaraTelefone(fixo);
+
+  const cpf = document.getElementById("cpf");
+
+  if (cpf) {
+    aplicarMascaraCPF(cpf);
+  }
+});
 
 document.addEventListener("DOMContentLoaded", function () {
   const senhaCadastro = document.getElementById("senha");
@@ -307,6 +381,8 @@ document.addEventListener("DOMContentLoaded", function () {
     atualizarForcaSenhaCadastro();
   }
 });
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
   const usuario = localStorage.getItem("usuarioLogado");
