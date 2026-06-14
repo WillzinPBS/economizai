@@ -111,8 +111,7 @@
                 </div>
 
                 <a
-                  class="botao-principal produto-adicionar"
-                  href="login.html"
+                  class="botao-principal produto-adicionar demonstracao"
                   type="button"
                   data-id="${produto.id}"
                 >
@@ -166,8 +165,7 @@
                 </div>
 
                 <a
-                  class="botao-principal produto-adicionar"
-                  href="login.html"
+                  class="botao-principal produto-adicionar demonstracao"
                   type="button"
                   data-id="${produto.id}"
                 >
@@ -217,8 +215,7 @@
                 </div>
 
                 <a
-                  class="botao-principal produto-adicionar"
-                  href="login.html"
+                  class="botao-principal produto-adicionar demonstracao"
                   type="button"
                   data-id="${produto.id}"
                 >
@@ -456,4 +453,19 @@
     </main>
     <economizai-footer></economizai-footer>
   </body>
+
+  <script>
+    const usuario = localStorage.getItem("usuarioLogado");
+    const botoes = document.querySelectorAll('.demonstracao');
+
+    botoes.forEach(botao => {
+      botao.addEventListener('click', function() {
+        if (usuario) {
+          window.location.href = "produto.html";
+        } else {
+          window.location.href = "login.html";
+        }
+      });
+    });
+  </script>
 </html>
