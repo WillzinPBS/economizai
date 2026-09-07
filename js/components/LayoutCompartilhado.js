@@ -121,11 +121,16 @@ class EconomizaiHeader extends HTMLElement {
     return `<a href="${href}"${activeAttribute}>${label}</a>`;
   }
 
+
+
+
   render() {
     const temaAtual = obterTemaAtual();
     const tamanhoFonteAtual = obterTamanhoFonteAtual();
     this.setAttribute("theme", temaAtual);
 
+
+    
     this.shadowRoot.innerHTML = `
       <style>
         :host {
@@ -232,6 +237,26 @@ class EconomizaiHeader extends HTMLElement {
           transition: 0.2s ease;
         }
 
+        .drop-box {
+          width: 38px;
+          height: 38px;
+          border: 1px solid var(--cor-borda, #e5e7eb);
+          border-radius: 999px;
+          background-color: transparent;
+          color: var(--cor-texto-secundario, rgba(0, 0, 0, 0.70));
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: 0.2s ease;
+        }
+
+        .drop-box:hover,
+        .drop-box:hover:not(:disabled) {
+          background-color: var(--cor-realce-verde-suave, rgba(0, 0, 0, 0.03));
+          color: var(--cor-texto, rgba(0, 0, 0, 0.80));
+        }
+
         .botao-tema:hover,
         .botao-fonte:hover:not(:disabled) {
           background-color: var(--cor-realce-verde-suave, rgba(0, 0, 0, 0.03));
@@ -293,6 +318,140 @@ class EconomizaiHeader extends HTMLElement {
           color: var(--cor-nav-ativo-texto, #166534);
         }
 
+        .pesquisa  {
+          display: flex;
+          align-items: center;
+          gap: 24px;
+          padding: 8px 32px;
+          border: solid 1px;
+          box-sizing: border-box; 
+          border-radius: 8px;
+          border-color: rgba(66, 65, 65, 0.4);
+          transition: 0.2s ease;
+        }
+
+        .pesquisa:hover  {
+          display: flex;
+          align-items: center;
+          gap: 24px;
+          padding: 8px 32px;
+          border: solid 1px;
+          box-sizing: border-box; 
+          border-radius: 8px;
+          border-color: rgba(148, 202, 126, 0.4);
+          transition: 0.2s ease;
+        }
+
+        .pesquisa input {
+          border: none;
+          outline: none;
+          background: transparent;
+        }
+
+        .pesquisa button {
+          background-color: transparent;
+          border: none;
+          outline: none;
+        }
+        
+        .pesquisa i {
+          color: var(--cor-texto, black);
+        }
+
+        .botao-postar {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          width: 100%;
+          height: 100%;
+          padding: 8px 14px;
+          border: none;
+          border-radius: 12px;
+          color: var(--cor-texto, black);
+          font-size: 0.875rem;
+          font-weight: 600;
+          line-height: normal;
+          cursor: pointer;
+          text-decoration: none;
+          transition: 0.2s ease;
+        }
+
+        .botao-postar:hover {
+          color: var(--cor-botao-principal, #16a34a);
+        }
+
+        .botao-postar i {
+          color: #16a34a
+        }
+
+        .acessibilidade {
+          position: relative;
+        }
+
+        .menu-acessibilidade {
+          display: none;
+          position: absolute;
+          top: 48px;
+          right: 0;
+          width: 240px;
+          max-width: calc(100vw - 24px);
+          padding: 16px;
+          background: var(--cor-header-bg, #fff);
+          border: 1px solid var(--cor-borda, #e5e7eb);
+          border-radius: 12px;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+          z-index: 1000;
+        }
+
+        .acessibilidade.aberto .menu-acessibilidade {
+          display: block;
+        }
+
+        .menu-acessibilidade strong {
+          display: block;
+          margin-bottom: 14px;
+          color: var(--cor-texto, #111);
+        }
+
+        .menu-acessibilidade .controle-fonte {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+          margin-bottom: 12px;
+        }
+
+        .menu-acessibilidade .controle-fonte span {
+          flex: 1;
+          font-size: 0.85rem;
+          color: var(--cor-texto-secundario, #555);
+          text-align: center;
+        }
+
+        .menu-acessibilidade .botao-fonte {
+          flex-shrink: 0;
+          width: 36px;
+          height: 32px;
+          border-radius: 8px;
+        }
+
+        .opcao-acessibilidade {
+          width: 100%;
+          min-height: 40px;
+          padding: 10px;
+          border: 1px solid var(--cor-borda, #e5e7eb);
+          border-radius: 8px;
+          background: transparent;
+          color: var(--cor-texto, #111);
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+
         .botao-principal {
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           display: inline-flex;
@@ -303,7 +462,7 @@ class EconomizaiHeader extends HTMLElement {
           height: 100%;
           padding: 8px 14px;
           border: none;
-          border-radius: 8px;
+          border-radius: 12px;
           background: var(--cor-botao-principal, #16a34a);
           color: #ffffff;
           font-size: 0.875rem;
@@ -335,9 +494,17 @@ class EconomizaiHeader extends HTMLElement {
           flex-shrink: 0;
         }
 
+        .fechar-acessibilidade {
+          display: none;
+        }
+
         @media (max-width: 900px) {
           header {
             height: auto;
+          }
+
+          .menu-acessibilidade {
+            right: -10px;
           }
 
           .menu {
@@ -358,8 +525,70 @@ class EconomizaiHeader extends HTMLElement {
           .menu img {
             width: 132px;
           }
+
+          .menu-acessibilidade {
+            position: fixed;
+            top: 70px;
+            right: 12px;
+            left: 12px;
+            width: auto;
+            max-width: none;
+          }
+
+          .fechar-acessibilidade {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--cor-texto, #111);
+            cursor: pointer;
+            font-size: 16px;
+          }
+
+          .fechar-acessibilidade:hover {
+            background: var(--cor-realce-verde-suave, rgba(0, 0, 0, 0.05));
+          }
+
+          .menu-acessibilidade {
+            padding-top: 50px;
+          }
+
+          .menu-acessibilidade .controle-fonte {
+            gap: 6px;
+          }
+
+          .menu-acessibilidade .controle-fonte span {
+            font-size: 0.8rem;
+          }
+
+          .menu-acessibilidade .botao-fonte {
+            width: 40px;
+            height: 36px;
+          }
+
+        @media (max-width: 380px) {
+          .menu-acessibilidade {
+            top: 65px;
+            right: 8px;
+            left: 8px;
+            padding: 12px;
+          }
+
+          .menu-acessibilidade .controle-fonte span {
+            font-size: 0.75rem;
+          }
         }
       </style>
+      <head>
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+      </head>
       <header>
         <div class="menu">
           <a class="logo-link" href="index.html" aria-label="Ir para a página inicial do Economizai">
@@ -368,30 +597,49 @@ class EconomizaiHeader extends HTMLElement {
           <nav aria-label="Navegação principal">
             ${this.getNavLink("home", "index.html", "Início")}
             ${this.getNavLink("produtos", "produto.html", "Produtos")}
-            ${this.getNavLink("como-funciona", "comofunciona.html", "Como funciona")}
+            <div class="container">
+              <form class="pesquisa">
+              <input type="text" placeholder="Busque promoções e mercados">
+              <button type="submit"><i class="bi bi-search"></i></button>
+              </form>
+            </div>
+
+            <!-- ${this.getNavLink("como-funciona", "comofunciona.html", "Como funciona")} -->
             ${this.getNavLink("contato", "contato.html", "Contato")}
           </nav>
           <div class="acoes-header">
-            <div class="controle-fonte" aria-label="Tamanho da fonte">
-              <button class="botao-fonte botao-diminuir-fonte" type="button" aria-label="Diminuir fonte" title="Diminuir fonte">A-</button>
-              <button class="botao-fonte botao-aumentar-fonte" type="button" aria-label="Aumentar fonte" title="Aumentar fonte">A+</button>
+            <div class="acessibilidade">
+              <button class="drop-box" type="button" aria-label="Acessibilidades" title="Acessibilidades">
+                <i class="bi bi-universal-access-circle"></i>
+              </button>
+
+              <div class="menu-acessibilidade">
+                <strong>Acessibilidade</strong>
+
+                <button class="fechar-acessibilidade" type="button" aria-label="Fechar acessibilidade">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+
+                <div class="controle-fonte">
+                  <button class="botao-fonte botao-diminuir-fonte" type="button">A−</button>
+                  <span>Tamanho da fonte</span>
+                  <button class="botao-fonte botao-aumentar-fonte" type="button">A+</button>
+                </div>
+
+                <button class="opcao-acessibilidade botao-tema" type="button">
+                  <i class="bi bi-moon"></i>
+                  <span>Modo escuro</span>
+                </button>
+              </div>
             </div>
-            <button class="botao-tema" type="button" aria-label="Alternar tema" title="Alternar tema">
-              <svg class="icone-tema icone-lua" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>
-              </svg>
-              <svg class="icone-tema icone-sol" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="4"/>
-                <path d="M12 2v2"/>
-                <path d="M12 20v2"/>
-                <path d="m4.93 4.93 1.41 1.41"/>
-                <path d="m17.66 17.66 1.41 1.41"/>
-                <path d="M2 12h2"/>
-                <path d="M20 12h2"/>
-                <path d="m6.34 17.66-1.41 1.41"/>
-                <path d="m19.07 4.93-1.41 1.41"/>
-              </svg>
-            </button>
+
+            <div class="postar">
+              <a class="botao-postar" href="">
+                <i class="bi bi-plus-circle"></i>
+                <span>Postar</span>
+              </a>
+            </div>
+
             <div class="login" id="user-div">
               <a class="botao-principal" href="login.html">
                 <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -408,13 +656,31 @@ class EconomizaiHeader extends HTMLElement {
       </header>
     `;
 
-    const botaoTema = this.shadowRoot.querySelector(".botao-tema");
-    const botaoDiminuirFonte = this.shadowRoot.querySelector(".botao-diminuir-fonte");
-    const botaoAumentarFonte = this.shadowRoot.querySelector(".botao-aumentar-fonte");
 
-    botaoTema.addEventListener("click", alternarTema);
-    botaoDiminuirFonte.addEventListener("click", diminuirFonte);
-    botaoAumentarFonte.addEventListener("click", aumentarFonte);
+    
+
+const botaoTema = this.shadowRoot.querySelector(".botao-tema");
+const botaoDiminuirFonte = this.shadowRoot.querySelector(".botao-diminuir-fonte");
+const botaoAumentarFonte = this.shadowRoot.querySelector(".botao-aumentar-fonte");
+
+const botaoAcessibilidade = this.shadowRoot.querySelector(".drop-box");
+const acessibilidade = this.shadowRoot.querySelector(".acessibilidade");
+
+const botaoFecharAcessibilidade =
+  this.shadowRoot.querySelector(".fechar-acessibilidade");
+
+botaoFecharAcessibilidade.addEventListener("click", () => {
+  acessibilidade.classList.remove("aberto");
+});
+
+botaoAcessibilidade.addEventListener("click", (event) => {
+    event.stopPropagation();
+    acessibilidade.classList.toggle("aberto");
+});
+
+botaoTema.addEventListener("click", alternarTema);
+botaoDiminuirFonte.addEventListener("click", diminuirFonte);
+botaoAumentarFonte.addEventListener("click", aumentarFonte);
 
     this.sincronizarTema(temaAtual);
     this.sincronizarFonte(tamanhoFonteAtual);
@@ -571,5 +837,3 @@ if (!customElements.get("economizai-header")) {
 if (!customElements.get("economizai-footer")) {
   customElements.define("economizai-footer", EconomizaiFooter);
 }
-
-

@@ -1,12 +1,12 @@
 ﻿:root {
     color-scheme: light;
-    --cor-fundo: #EFF6FF;
+    --cor-fundo: #f7faff;
     --cor-superficie: #ffffff;
     --cor-superficie-elevada: #ffffff;
     --cor-texto: #0f172a;
     --cor-texto-secundario: #4b5563;
     --cor-borda: #e5e7eb;
-    --cor-sombra: rgba(31, 41, 55, 0.12);
+    --cor-sombra: rgba(31, 41, 55, 0.09);
     --cor-campo: #ffffff;
     --cor-campo-borda: #d1d5db;
     --cor-botao-principal: #16a34a;
@@ -26,8 +26,8 @@
     --cor-vermelho-suave: #fee2e2;
     --cor-header-bg: #ffffff;
     --cor-footer-bg: #ffffff;
-    --cor-header-sombra: rgba(0, 0, 0, 0.40);
-    --cor-footer-sombra: rgba(0, 0, 0, 0.40);
+    --cor-header-sombra: rgba(0, 0, 0, 0.1);
+    --cor-footer-sombra: rgba(0, 0, 0, 0.1);
     --cor-auth-gradiente-inicio: #ecfdf5;
     --cor-auth-gradiente-fim: #dcfce7;
     --filtro-logo-tema: none;
@@ -373,6 +373,25 @@ a.botao-principal {
 .auth-link:hover {
     color: var(--cor-link-hover);
     text-decoration: underline;
+}
+
+.icon-mercados {
+    border-radius: 20px;
+    box-shadow: 0 8px 8px var(--cor-sombra);
+}
+
+.flutuando {
+    animation: flutuar 4s ease-in-out infinite;
+}
+
+@keyframes flutuar {
+    0%, 100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-20px);
+    }
 }
 
 html[data-theme="dark"] .bg-white,
