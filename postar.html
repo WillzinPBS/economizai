@@ -1,0 +1,148 @@
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet"  href="css/postar.css">
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="js/components/LayoutCompartilhado.js" defer></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body>
+    <economizai-header active-page="home"></economizai-header>
+    <main class="w-full min-h-screen bg-slate-50 flex justify-center py-10 px-4">
+        <section class="w-full max-w-2xl">
+            <!-- Cabeçalho -->
+            <div class="mb-6">
+                <div class="flex items-center gap-4">
+                    <div class="w-14 h-14 bg-emerald-100 text-emerald-600 rounded-full
+                                flex items-center justify-center text-2xl shadow-sm">
+                        <i class="bi bi-box-seam"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-bold text-slate-800">
+                            Criando sua promoção
+                        </h1>
+                        <p class="text-sm text-slate-500 mt-1">
+                            Preencha as informações para publicar sua oferta.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulário -->
+            <article class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+                <form class="space-y-6">
+                    <!-- Link -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700">
+                            <i class="text-emerald-600 bi bi-link-45deg mr-1"></i>
+                            Link da promoção
+                        </label>
+                        <input
+                            class="inputPostar"
+                            type="url"
+                            placeholder="https://exemplo.com/produto"
+                            required
+                        >
+                    </div>
+
+
+                    <!-- Foto -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700">
+                            <i class="text-emerald-600 bi bi-image mr-1"></i>
+                            Foto do produto
+                        </label>
+                        <input
+                            class="inputPostar file:mr-4 file:py-2 file:px-4
+                                file:rounded-lg file:border-0
+                                file:bg-emerald-100 file:text-emerald-700
+                                hover:file:bg-emerald-200"
+                            type="file"
+                            accept="image/*"
+                            required
+                        >
+                        <p class="text-xs text-slate-400">
+                            Prefira imagens nítidas e que mostrem bem o produto.
+                        </p>
+                    </div>
+
+
+                    <!-- Preço -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700">
+                            <i class="text-emerald-600 bi bi-currency-dollar mr-1"></i>
+                            Preço da promoção
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2
+                                        text-sm font-semibold text-slate-400">
+                                R$
+                            </span>
+                            <input
+                                class="inputPostar pl-10"
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                placeholder="0,00"
+                                required
+                            >
+                        </div>
+                    </div>
+
+
+                    <!-- Cupom -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700">
+                            <i class="text-emerald-600 bi bi-ticket-perforated mr-1"></i>
+                            Código do cupom
+
+                            <span class="text-xs text-slate-400 font-normal">
+                                (opcional)
+                            </span>
+                        </label>
+                        <input
+                            class="inputPostar"
+                            type="text"
+                            placeholder="Ex: ECONOMIZA10"
+                        >
+                    </div>
+
+
+                    <!-- Descrição -->
+                    <div class="space-y-2">
+                        <label class="text-sm font-semibold text-slate-700">
+                            <i class="text-emerald-600 bi bi-chat-left-text mr-1"></i>
+                            Por que essa promoção vale a pena?
+                        </label>
+                        <textarea
+                            class="inputPostar resize-none min-h-28"
+                            placeholder="Conte por que essa promoção é interessante..."
+                            minlength="15"
+                            required
+                        ></textarea>
+                        <div class="flex justify-between text-xs text-slate-400">
+                            <span>Mínimo de 15 caracteres</span>
+                            <span>0 / 500</span>
+                        </div>
+                    </div>
+                    <button
+                        type="submit"
+                        class="w-full bg-emerald-500 hover:bg-emerald-600
+                            active:bg-emerald-700 text-white font-bold
+                            py-3 px-6 rounded-xl transition-all duration-200
+                            shadow-sm hover:shadow-md
+                            flex items-center justify-center gap-2">
+                        <i class="bi bi-send"></i>
+                        PUBLICAR PROMOÇÃO
+                    </button>
+                </form>
+            </article>
+
+        </section>
+    </main>
+    <economizai-footer></economizai-footer>
+</body>
+</html>

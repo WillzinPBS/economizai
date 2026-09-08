@@ -634,7 +634,7 @@ class EconomizaiHeader extends HTMLElement {
             </div>
 
             <div class="postar">
-              <a class="botao-postar" href="">
+              <a class="botao-postar" href="postar.html">
                 <i class="bi bi-plus-circle"></i>
                 <span>Postar</span>
               </a>
