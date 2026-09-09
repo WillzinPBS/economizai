@@ -10,6 +10,7 @@
     <script src="https://kit.fontawesome.com/4620774d96.js"></script>
     <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <script src="js/components/LayoutCompartilhado.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -24,50 +25,99 @@
 
         <div class="contact-left">
             <div class="card">
-                <h3><strong>Informações de contato</strong></h3>
 
-                <ul id="list">
-                    <li id="E-mail"><strong>E-mail</strong></li>
-                    <a href="#">contato@comparapreco.com.br</a>
-                    <li id="Telefone"><strong>Telefone</strong></li>
-                    <a href="#">(11) 4000-4000</a>
-                    <li id="Endereco"><strong>Endereço</strong></li>
-                    <a href="#">Rio de Janeiro, RJ, Brasil</a>
-                    <li id="Horas"><strong>Horário de atendimento</strong></li>
+
+                <div id="list">
+
+                    <h3><strong>Informações de contato</strong></h3>
+
+                    <div class="contact-title" id="email"><strong>E-mail</strong></div>
+                    <a href="gmail.com" class="copiar" target="_blank" data-copy="contato@comparapreco.com.br">
+                        contato@comparapreco.com.br
+                    </a>
+
+                    <div class="contact-title" id="telefone"><strong>Telefone</strong></div>
+                    <a href="https://web.whatsapp.com/" target="_blank" class="copiar" data-copy="(11) 4000-4000">
+                        (11) 4000-4000
+                    </a>
+
+                    <div class="contact-title" id="endereco"><strong>Endereço</strong></div>
+                    <a href="https://maps.google.com/?q=Rio+de+Janeiro+RJ+Brasil" target="_blank" class="copiar"
+                        data-copy="Rio de Janeiro, RJ, Brasil">
+                        Rio de Janeiro, RJ, Brasil
+                    </a>
+
+                    <div class="contact-title" id="horas"><strong>Horário de atendimento</strong></div>
                     <p class="hora">Segunda a sexta: 9h às 18h<br>
                         Sábado: 9h às 13h</p>
-                </ul>
+                </div>
+
+                <script>
+                    const links = document.querySelectorAll(".copiar");
+
+                    links.forEach(link => {
+                        link.addEventListener("click", () => {
+
+                            const texto = link.dataset.copy;
+
+                            navigator.clipboard.writeText(texto)
+                                .then(() => {
+                                    Swal.fire("Copiado: " + texto);
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                });
+
+                        });
+                    });
+                </script>
 
             </div>
 
-            <div class="frequente">
-                <ul>
+            <div class="frequente" id="perguntas-frequentes">
+                <!-- <ul>
                     <li>Como funciona a comparação de preços?</li>
                     <li>Como posso sugerir novos mercados?</li>
                     <li>O serviço é gratuito?</li>
                     <li>Os preços são atualizados em tempo real?</li>
-                    <a id="perguntas" href="#">Ver todas as perguntas →</a>
-                </ul>
+                    <a id="perguntas" href="#">Ver todas as perguntas →</a> 
+                </ul> -->
+
+                <details>
+                    <summary class="pergunta">Como funciona a comparação de preços?</summary>
+                    <p> Nossa plataforma coleta informações de preços de diferentes mercados cadastrados e apresenta os valores de forma organizada para facilitar a comparação. Assim, o usuário pode encontrar rapidamente a melhor oferta disponível para o produto desejado.</p>
+                </details>
+
+                <details>
+                    <summary class="pergunta">O serviço é gratuito?</summary>
+                    <p>Sim. A plataforma é totalmente gratuita para os usuários. Nosso objetivo é ajudar consumidores a economizar tempo e dinheiro ao comparar preços entre diferentes mercados.</p>
+                </details>
+
+                <details>
+                    <summary class="pergunta">Os preços são atualizados em tempo real?</summary>
+                    <p>Os preços são atualizados periodicamente conforme novas informações são recebidas dos mercados cadastrados. Apesar dos esforços para manter os dados atualizados, podem ocorrer pequenas diferenças entre os preços exibidos na plataforma e os encontrados na loja.</p>
+                </details>
+
             </div>
 
         </div>
 
         <div class="contact-right">
-            <div class="card">
-                <h3><strong>Envie sua mensagem</strong></h3>
+            <div class="card card-right">
+                <h3 id="right"><strong>Envie sua mensagem</strong></h3>
 
                 <form class="form">
 
                     <div class="row">
-                        <input type="text" placeholder="Seu nome completo">
-                        <input type="email" placeholder="seu@email.com">
+                        <input type="text" placeholder="Seu nome completo" required>
+                        <input type="email" placeholder="seu@email.com" required>
                     </div>
 
-                    <input type="text" placeholder="Assunto">
+                    <input type="text" placeholder="Assunto" required>
 
                     <textarea placeholder="Digite sua mensagem aqui..."></textarea>
 
-                    <button class="botao-principal" type="submit" >
+                    <button class="botao-principal" type="submit">
                         Enviar mensagem
                     </button>
                 </form>

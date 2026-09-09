@@ -7,6 +7,7 @@
     <title>ECONOMIZAI | Produtos</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/produto.css">
+    <script src="js/auth.js"></script>
     <script src="https://kit.fontawesome.com/4620774d96.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="js/components/LayoutCompartilhado.js" defer></script>
@@ -16,6 +17,8 @@
 
 <body>
     <economizai-header active-page="produtos"></economizai-header>
+
+    <!-- Toast Notification -->
 
     <main class="produtos-conteudo py-4">
         <section class="produtos-pagina mb-5">
@@ -30,129 +33,104 @@
 
                 <i class="bi bi-funnel fs-4 text-secondary me-3"></i>
 
-                <div class="produtos-filtros d-flex gap-2 flex-wrap">
-                    <button class="btn btn-primary rounded-pill px-3 py-1 fw-medium btn-sm bg-green-600">
+                <div class="produtos-filtros d-flex gap-2 flex-wrap" id="filtro">
+                    <button class="btn btn-primary rounded-pill px-3 py-1 fw-medium btn-sm bg-green-600" id="fil-todas" type="button">
                         Todas
                     </button>
 
-                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm">
+                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm" id="fil-bebidas" type="button">
                         Bebidas
                     </button>
 
-                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm">
+                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm" id="fil-basicos" type="button">
                         Alimentos B&aacute;sicos
                     </button>
 
-                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm">
+                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm" id="fil-laticinios" type="button">
                         Latic&iacute;nios
                     </button>
 
-                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm">
-                        Higiene
+                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm" id="fil-massas" type="button">
+                        Massas
                     </button>
 
-                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm">
-                        Limpeza
+                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm" id="fil-mercearia" type="button">
+                        Mercearia
                     </button>
 
-                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm">
-                        Carnes
-                    </button>
-
-                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm">
+                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm" id="fil-frutas" type="button">
                         Frutas
                     </button>
 
-                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm">
+                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm" id="fil-verduras" type="button">
                         Verduras
+                    </button>
+
+                    <button class="btn btn-light rounded-pill px-3 py-1 fw-medium text-dark btn-sm" id="fil-limpeza" type="button">
+                        Limpeza
                     </button>
                 </div>
             </div>
 
             <p class="produtos-contador" id="produtos-contador"></p>
             <div class="produtos" id="produtos"></div>
+            <div class="invisiveis" id="invisiveis"></div>
 
-            <hr class="my-5 text-muted opacity-25"> 
-    <section class="carrinho-secao">
-    <div class="card border-0 shadow-sm p-4 carrinho">
+        <section class="container-cart">
+            <h1>Seu Carrinho</h1>
+            <div id="decoration"></div>
+        </section>
+        <p id="contador-carrinho">0 itens</p>
 
-        <div class="d-flex align-items-center mb-4">
-            <i class="bi bi-cart3 fs-3 text-success me-2"></i>
-            <h4 class="fw-bold mb-0 me-2">Minha Lista de Compras</h4>
-
-            <span
-                id="contador-carrinho"
-                class="badge rounded-pill bg-success px-3">
-                0 itens
-            </span>
-        </div>
-
-        <div id="lista-carrinho">
-           
-        </div>
+        <div id="lista-carrinho"></div>
 
         <div id="resumo-carrinho" class="mt-4 d-none">
 
             <hr>
 
             <div class="d-flex justify-content-between mb-2">
-                <span>Total estimado</span>
+                <span>Total pelos menores pre&ccedil;os</span>
                 <strong id="total-carrinho">
                     R$ 0,00
                 </strong>
             </div>
 
-            <button
-                id="btn-comparar"
-                class="btn btn-success w-100 mt-3">
-                Comparar Mercados
-            </button>
-
-            <section
-                id="resultado-comparacao"
-                class="mt-4 d-none">
-            </section>
+            <section id="resultado-comparacao" class="mt-4 d-none" aria-live="polite"></section>
 
         </div>
 
-    </div>
 </section>
 
     </main>
 
-    
-
     <economizai-footer></economizai-footer>
-</body>
-
-</html>
-
-
 <script type="application/json" id="produtos-json">
     [
         {
             "id": 1,
             "nome": "Coca-Cola 2 L",
             "categoria": "Bebidas",
-            "imagem": "img/cocacola.jpg",
-            "preco": "R$ 7,99",
+            "imagem": "https://andinacocacola.vtexassets.com/arquivos/ids/158758-800-450?v=639156020671730000&width=800&height=450&aspect=true",
+            "preco": "R$ 7,79",
             "tipo": "por unidade",
-            "mercado": "Atacadão",
+            "mercado": "Carrefour",
             "menorPreco": true,
+            "selo": "seloUltimos",
             "outrosMercados": [
-                { "nome": "Carrefour", "preco": "R$ 8,99" },
-                { "nome": "Extra", "preco": "R$ 9,49" }
+                { "nome": "Atacadão", "preco": "R$ 7,99" },
+                { "nome": "Extra", "preco": "R$ 8,49" }
             ]
         },
         {
             "id": 2,
             "nome": "Arroz branco 5 kg",
             "categoria": "Alimentos Básicos",
-            "imagem": "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=800&q=80",
+            "imagem": "https://images.tcdn.com.br/img/img_prod/808621/arroz_branco_5kg_vo_olimpio_fardo_com_5_unidades_7462_2_d7d3acd136b2495b8c1bfc0f85995ff9.jpg",
             "preco": "R$ 22,90",
             "tipo": "por pacote",
             "mercado": "Atacadão",
             "menorPreco": true,
+            "selo": "seloQueima",
             "outrosMercados": [
                 { "nome": "Carrefour", "preco": "R$ 24,90" },
                 { "nome": "Extra", "preco": "R$ 25,49" }
@@ -162,27 +140,28 @@
             "id": 3,
             "nome": "Feijão preto 1 kg",
             "categoria": "Alimentos Básicos",
-            "imagem": "https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?auto=format&fit=crop&w=800&q=80",
-            "preco": "R$ 6,99",
+            "imagem": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4I-m9wEuMIyy1y_LuEIn09w5h1HLq6llpHw&s",
+            "preco": "R$ 6,79",
             "tipo": "por pacote",
-            "mercado": "Atacadão",
+            "mercado": "Extra",
             "menorPreco": true,
+            "selo": "seloMenorPreco",
             "outrosMercados": [
-                { "nome": "Carrefour", "preco": "R$ 7,49" },
-                { "nome": "Extra", "preco": "R$ 7,99" }
+                { "nome": "Atacadão", "preco": "R$ 6,99" },
+                { "nome": "Carrefour", "preco": "R$ 7,49" }
             ]
         },
         {
             "id": 4,
             "nome": "Óleo de soja 900 ml",
             "categoria": "Alimentos Básicos",
-            "imagem": "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=800&q=80",
-            "preco": "R$ 6,49",
+            "imagem": "https://http2.mlstatic.com/D_NQ_NP_988475-MLA104702430238_012026-O.webp",
+            "preco": "R$ 6,29",
             "tipo": "por unidade",
-            "mercado": "Atacadão",
+            "mercado": "Carrefour",
             "menorPreco": true,
             "outrosMercados": [
-                { "nome": "Carrefour", "preco": "R$ 6,99" },
+                { "nome": "Atacadão", "preco": "R$ 6,49" },
                 { "nome": "Extra", "preco": "R$ 7,49" }
             ]
         },
@@ -191,13 +170,13 @@
             "nome": "Leite integral 1 L",
             "categoria": "Laticínios",
             "imagem": "https://images.unsplash.com/photo-1563636619-e9143da7973b?auto=format&fit=crop&w=800&q=80",
-            "preco": "R$ 4,79",
+            "preco": "R$ 4,69",
             "tipo": "por unidade",
-            "mercado": "Mercado Dia",
+            "mercado": "Extra",
             "menorPreco": true,
             "outrosMercados": [
-                { "nome": "Carrefour", "preco": "R$ 5,19" },
-                { "nome": "Extra", "preco": "R$ 5,39" }
+                { "nome": "Atacadão", "preco": "R$ 4,89" },
+                { "nome": "Carrefour", "preco": "R$ 5,19" }
             ]
         },
         {
@@ -207,7 +186,7 @@
             "imagem": "https://images.unsplash.com/photo-1447933601403-0c6688de566e?auto=format&fit=crop&w=800&q=80",
             "preco": "R$ 18,90",
             "tipo": "por pacote",
-            "mercado": "Assaí",
+            "mercado": "Atacadão",
             "menorPreco": true,
             "outrosMercados": [
                 { "nome": "Carrefour", "preco": "R$ 20,90" },
@@ -219,12 +198,12 @@
             "nome": "Macarrão penne 500 g",
             "categoria": "Massas",
             "imagem": "https://images.unsplash.com/photo-1551462147-ff29053bfc14?auto=format&fit=crop&w=800&q=80",
-            "preco": "R$ 5,59",
+            "preco": "R$ 5,49",
             "tipo": "por pacote",
-            "mercado": "Atacadão",
+            "mercado": "Carrefour",
             "menorPreco": true,
             "outrosMercados": [
-                { "nome": "Carrefour", "preco": "R$ 6,29" },
+                { "nome": "Atacadão", "preco": "R$ 5,59" },
                 { "nome": "Extra", "preco": "R$ 6,59" }
             ]
         },
@@ -233,16 +212,83 @@
             "nome": "Detergente 500 ml",
             "categoria": "Limpeza",
             "imagem": "https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?auto=format&fit=crop&w=800&q=80",
-            "preco": "R$ 2,29",
+            "preco": "R$ 2,19",
             "tipo": "por unidade",
-            "mercado": "Mercado Dia",
+            "mercado": "Extra",
             "menorPreco": true,
             "outrosMercados": [
-                { "nome": "Carrefour", "preco": "R$ 2,79" },
-                { "nome": "Extra", "preco": "R$ 2,99" }
+                { "nome": "Atacadão", "preco": "R$ 2,29" },
+                { "nome": "Carrefour", "preco": "R$ 2,79" }
             ]
         }
     ]
 </script>
 
-<script src="js/produtos.js"></script>
+<script src="js/produtos.js" defer></script>
+<script src="js/filtro.js" defer></script>
+
+
+<!-- <script>
+    const produtosMock = JSON.parse(document.getElementById("produtos-json").textContent);
+    const listaProdutos = document.getElementById("produtos");
+    const contadorProdutos = document.getElementById("produtos-contador");
+
+    function criarProdutoCard(produto) {
+        const seloMenorPreco = produto.menorPreco
+            ? '<span class="produto-selo">Menor preço</span>'
+            : "";
+
+        const outrosMercados = produto.outrosMercados.map((mercado) => `
+            <div class="outro-mercado">
+                <span><i class="bi bi-cart3" aria-hidden="true"></i>${mercado.nome}</span>
+                <strong>${mercado.preco}</strong>
+            </div>
+        `).join("");
+
+        return `
+            <article class="produto-card" data-categoria="${produto.categoria}">
+                <div class="imagem">
+                    <img src="${produto.imagem}" alt="${produto.nome}" loading="lazy">
+                    ${seloMenorPreco}
+                </div>
+
+                <div class="descricao">
+                    <p class="produto-categoria">${produto.categoria}</p>
+                    <h2>${produto.nome}</h2>
+
+                    <div class="precificacao">
+                        <div class="precos">
+                            <strong class="produto-preco">${produto.preco}</strong>
+                            <p class="produto-tipo">${produto.tipo}</p>
+                        </div>
+
+                        <p class="produto-mercado">
+                            <i class="bi bi-building" aria-hidden="true"></i>
+                            ${produto.mercado}
+                        </p>
+                    </div>
+
+                    <button class="botao-principal produto-adicionar" type="button">
+                        <span aria-hidden="true">+</span>
+                        <span>Adicionar</span>
+                    </button>
+
+                    <hr>
+
+                    <p class="outros-mercados-titulo">Outros mercados:</p>
+                    <div class="outros-mercados">
+                        ${outrosMercados}
+                    </div>
+                </div>
+            </article>
+        `;
+    }
+
+    contadorProdutos.textContent = `${produtosMock.length} produtos encontrados`;
+
+    produtosMock.forEach((produto) => {
+        listaProdutos.insertAdjacentHTML("beforeend", criarProdutoCard(produto));
+    });
+</script> -->
+</body>
+</html>

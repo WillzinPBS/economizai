@@ -281,6 +281,19 @@ class EconomizaiHeader extends HTMLElement {
           white-space: nowrap;
         }
 
+        .usuario-identificacao {
+          display: flex;
+          align-items: flex-end;
+          flex-direction: column;
+          line-height: 1.2;
+        }
+
+        .usuario-login {
+          color: var(--cor-texto-secundario, rgba(0, 0, 0, 0.70));
+          font-size: 0.6875rem;
+          white-space: nowrap;
+        }
+
         .login .botao-principal {
           width: auto;
           height: auto;
@@ -352,6 +365,7 @@ class EconomizaiHeader extends HTMLElement {
             order: 3;
             width: 100%;
           }
+
         }
 
         @media (max-width: 640px) {
@@ -363,7 +377,7 @@ class EconomizaiHeader extends HTMLElement {
       <header>
         <div class="menu">
           <a class="logo-link" href="index.html" aria-label="Ir para a página inicial do Economizai">
-            <img src="img/logoecom.png" alt="Logo Economizai">
+            <img src="img/logoecom.png" id="logoSrc" alt="Logo Economizai">
           </a>
           <nav aria-label="Navegação principal">
             ${this.getNavLink("home", "index.html", "Início")}
@@ -424,6 +438,15 @@ class EconomizaiHeader extends HTMLElement {
   sincronizarTema(tema) {
     const temaNormalizado = tema === "dark" ? "dark" : "light";
     this.setAttribute("theme", temaNormalizado);
+    
+    const logoEconomiza = this.shadowRoot.querySelector('#logoSrc');
+    console.log(logoEconomiza)
+
+    if (temaNormalizado === "dark") {
+      logoEconomiza.src = 'img/logobranca.png';
+    } else {
+      logoEconomiza.src = 'img/logoecom.png';
+    }
 
     const botaoTema = this.shadowRoot?.querySelector(".botao-tema");
     if (!botaoTema) {
@@ -454,18 +477,9 @@ class EconomizaiHeader extends HTMLElement {
       return;
     }
 
-    let usuario = null;
+    const login = localStorage.getItem("usuarioLogado");
 
-    if (typeof window.verificarLogin === "function") {
-      usuario = window.verificarLogin({
-        redirecionarSeAusente: false,
-        targetElement: usuarioArea
-      });
-    } else {
-      usuario = localStorage.getItem("usuarioLogado");
-    }
-
-    if (!usuario) {
+    if (!login) {
       usuarioArea.innerHTML = `
         <a class="botao-principal" href="login.html">
           <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -480,12 +494,37 @@ class EconomizaiHeader extends HTMLElement {
       return;
     }
 
-    const usuarioSeguro = String(usuario)
+    let usuarios = [];
+    try {
+      const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios"));
+      usuarios = Array.isArray(usuariosSalvos) ? usuariosSalvos : [];
+    } catch {
+      usuarios = [];
+    }
+
+    const cadastro = usuarios.find(
+      (usuario) =>
+        typeof usuario.login === "string" &&
+        usuario.login.toLowerCase() === login.toLowerCase()
+    );
+    const primeiroNome = String(cadastro?.nome || "").trim().split(/\s+/)[0] || login;
+
+    const nomeSeguro = primeiroNome
       .replaceAll("&", "&amp;")
       .replaceAll("<", "&lt;")
       .replaceAll(">", "&gt;");
 
-    usuarioArea.innerHTML = `<span class="usuario-bemvindo">Bem-vindo, ${usuarioSeguro}!</span>`;
+    const loginSeguro = login
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
+
+    usuarioArea.innerHTML = `
+      <span class="usuario-identificacao">
+        <span class="usuario-bemvindo">Bem-vindo, ${nomeSeguro}!</span>
+        <span class="usuario-login">Login: ${loginSeguro}</span>
+      </span>
+    `;
   }
 }
 
