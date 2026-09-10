@@ -370,13 +370,15 @@ function verificarLogin(opcoes = {}) {
 
 function aplicarMascaraTelefone(input, tipo) {
   input.addEventListener("input", () => {
-    let numeros = input.value.replace(/\D/g, "");
+    // Para o telefone fixo, o campo e reformatado com o literal "(+55) " na
+    // frente. Sem remove-lo antes de extrair os digitos, o "55" desse
+    // prefixo e relido como se fosse digitado, corrompendo o DDD a cada tecla.
+    const valorSemPrefixo =
+      tipo === "fixo" ? input.value.replace(/^\(\+55\)\s*/, "") : input.value;
+
+    let numeros = valorSemPrefixo.replace(/\D/g, "");
     const quantidadeMaxima = tipo === "celular" ? 11 : 10;
     const tamanhoPrimeiroBloco = tipo === "celular" ? 5 : 4;
-
-    if (numeros.startsWith("55") && numeros.length > quantidadeMaxima) {
-      numeros = numeros.slice(2);
-    }
 
     numeros = numeros.slice(0, quantidadeMaxima);
 
