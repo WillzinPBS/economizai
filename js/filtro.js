@@ -19,14 +19,14 @@ function selecionarCategoria(categoria, botao) {
         
         if (categoria === "Todas") {
             produtos.appendChild(produto);
-            produto.style.display = 'block';
+            produto.classList.remove('produto-oculto');
             textoContado.textContent = `${itemsContador.children.length} produtos encontrados`;
         } else if (produto.dataset.categoria === categoria) {
             produtos.appendChild(produto);
-            produto.style.display = 'block';
+            produto.classList.remove('produto-oculto');
             textoContado.textContent = `${itemsContador.children.length} produtos encontrados`;
         } else {
-            produto.style.display = 'none';
+            produto.classList.add('produto-oculto');
             inv.appendChild(produto)
             textoContado.textContent = `${itemsContador.children.length} produtos encontrados`;
         }
@@ -59,10 +59,10 @@ inputPesquisa.addEventListener('input', () => {
         const nome = produto.querySelector('h2').textContent.toLowerCase();
 
         if (nome.includes(pesquisa)) {
-            produto.style.display = 'block';
+            produto.classList.remove('produto-oculto');
             produtos.appendChild(produto);
         } else {
-            produto.style.display = 'none';
+            produto.classList.add('produto-oculto');
             inv.appendChild(produto)
         }
 

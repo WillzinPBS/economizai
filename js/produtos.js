@@ -39,42 +39,51 @@ function criarProdutoCard(produto) {
     <article class="produto-card" data-categoria="${produto.categoria}">
       <div class="imagem">
         <img src="${produto.imagem}" alt="${produto.nome}" loading="lazy">
-        ${selo}
       </div>
 
       <div class="descricao">
-        <p class="produto-categoria">${produto.categoria}</p>
-        <h2>${produto.nome}</h2>
+        <div class="produto-identidade">
+          <div class="produto-identidade-topo">
+            <p class="produto-categoria">${produto.categoria}</p>
+            ${selo}
+          </div>
+          <h2>${produto.nome}</h2>
+        </div>
 
-        <div class="container-precificacao">
-          <div class="precificacao" id="blur">
-            <div class="precos">
-              <strong class="produto-preco">${produto.preco}</strong>
-              <p class="produto-tipo">${produto.tipo}</p>
+        <div class="produto-preco-info">
+          <div class="container-precificacao">
+            <div class="precificacao" id="blur">
+              <div class="precos">
+                <strong class="produto-preco">${produto.preco}</strong>
+                <p class="produto-tipo">${produto.tipo}</p>
+              </div>
+
+              <button class="produto-info-trigger" type="button" aria-expanded="false" aria-describedby="mercados-${produto.id}">
+                <i class="bi bi-building" aria-hidden="true"></i>
+                Comparar mercados
+              </button>
+
+              <div class="produto-tooltip" id="mercados-${produto.id}" role="tooltip">
+                <p class="outros-mercados-titulo">Outros mercados</p>
+                <div class="outros-mercados">
+                  ${outrosMercados}
+                </div>
+              </div>
             </div>
 
-            <p class="produto-mercado">
-              <i class="bi bi-building" aria-hidden="true"></i>
-              ${produto.mercado}
-            </p>
-          </div>
-
-          <div class="container-alert">
-            <i class="fa-solid fa-lock"></i>
-            <h3>Fa&ccedil;a login para ter acesso</h3>
+            <div class="container-alert">
+              <i class="fa-solid fa-lock"></i>
+              <h3>Fa&ccedil;a login para ter acesso</h3>
+              <a href="login.html" class="container-alert-link">Entrar</a>
+            </div>
           </div>
         </div>
 
-        <button class="botao-principal produto-adicionar" type="button" data-id="${produto.id}">
-          <span aria-hidden="true">+</span>
-          <span>Adicionar</span>
-        </button>
-
-        <hr>
-
-        <p class="outros-mercados-titulo">Outros mercados:</p>
-        <div class="outros-mercados">
-          ${outrosMercados}
+        <div class="produto-acao">
+          <button class="botao-principal produto-adicionar" type="button" data-id="${produto.id}">
+            <span aria-hidden="true">+</span>
+            <span>Adicionar</span>
+          </button>
         </div>
       </div>
     </article>
@@ -84,6 +93,24 @@ function criarProdutoCard(produto) {
 contadorProdutos.textContent = `${produtosMock.length} produtos encontrados`;
 produtosMock.forEach((produto) => {
   listaProdutos.insertAdjacentHTML("beforeend", criarProdutoCard(produto));
+});
+
+document.addEventListener("click", (event) => {
+  const trigger = event.target.closest(".produto-info-trigger");
+
+  document.querySelectorAll(".produto-tooltip.aberto").forEach((tooltip) => {
+    if (!trigger || tooltip !== trigger.nextElementSibling) {
+      tooltip.classList.remove("aberto");
+      const gatilhoAnterior = tooltip.previousElementSibling;
+      if (gatilhoAnterior) gatilhoAnterior.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  if (!trigger) return;
+
+  const tooltip = trigger.nextElementSibling;
+  const aberto = tooltip.classList.toggle("aberto");
+  trigger.setAttribute("aria-expanded", String(aberto));
 });
 
 function carregarCarrinho() {
