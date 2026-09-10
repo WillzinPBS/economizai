@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ECONOMIZAI | Login</title>
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/4620774d96.js"></script>
   <script src="js/components/LayoutCompartilhado.js" defer></script>
   <script src="js/validation.js" defer></script>
   <script src="js/auth.js" defer></script>
@@ -15,66 +18,139 @@
   <economizai-header></economizai-header>
 
   <main class="auth-page">
-    <div class="auth-card auth-card--login">
-      <img src="img/logoecom.png" alt="Logo do ECONOMIZAI" class="auth-logo">
-      <h1 class="auth-title">Login</h1>
+    <span class="auth-blob auth-blob--1" aria-hidden="true"></span>
+    <span class="auth-blob auth-blob--2" aria-hidden="true"></span>
+    <span class="auth-blob auth-blob--3" aria-hidden="true"></span>
+    <span class="auth-blob auth-blob--4" aria-hidden="true"></span>
 
-      <form class="auth-form" id="loginForm" novalidate>
-        <div class="auth-field">
-          <label class="auth-label" for="login">
-            Usuario <span class="auth-required" aria-hidden="true">*</span>
-          </label>
+    <div class="auth-shell">
+      <section class="auth-intro">
+        <span class="auth-badge">
+          <i class="fa-solid fa-chart-column" aria-hidden="true"></i>
+          Compras mais inteligentes
+        </span>
 
-          <input
-            id="login"
-            type="text"
-            placeholder="Digite seu usuario"
-            class="auth-control"
-            autocomplete="username"
-            minlength="4"
-            maxlength="30"
-            required
-          >
+        <h1 class="auth-intro-title">
+          Economize <span>mais todos os dias</span>
+        </h1>
+
+        <p class="auth-intro-desc">
+          Compare precos, encontre as melhores ofertas e faca escolhas mais inteligentes para o seu dia a dia.
+        </p>
+
+        <ul class="auth-features">
+          <li>
+            <span class="auth-features-icone"><i class="fa-solid fa-tags" aria-hidden="true"></i></span>
+            <span>
+              <strong>Melhores precos</strong>
+              <span class="auth-features-desc">Compare e escolha a opcao ideal</span>
+            </span>
+          </li>
+          <li>
+            <span class="auth-features-icone"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span>
+            <span>
+              <strong>Mais economia</strong>
+              <span class="auth-features-desc">Seu bolso agradece</span>
+            </span>
+          </li>
+          <li>
+            <span class="auth-features-icone"><i class="fa-solid fa-chart-line" aria-hidden="true"></i></span>
+            <span>
+              <strong>Compras conscientes</strong>
+              <span class="auth-features-desc">Decisoes melhores, todos os dias</span>
+            </span>
+          </li>
+        </ul>
+
+        <div class="auth-intro-decor" aria-hidden="true">
+          <span class="auth-decor-nota">Boas escolhas<br>geram grandes<br>economias</span>
+          <svg class="auth-decor-ilustracao" viewBox="0 0 100 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 8h9l9.4 44a6 6 0 0 0 6 4.8h34.6a6 6 0 0 0 5.9-4.9l5.6-26.3H24" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="34" cy="82" r="4.5" fill="currentColor"/>
+            <circle cx="64" cy="82" r="4.5" fill="currentColor"/>
+            <g transform="translate(58,2) rotate(18)">
+              <path d="M18 2H4a2 2 0 0 0-2 2v14a2 2 0 0 0 .6 1.4l17 17a2 2 0 0 0 2.8 0l14-14a2 2 0 0 0 0-2.8l-17-17A2 2 0 0 0 18 2Z" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+              <circle cx="9.5" cy="9.5" r="2.5" fill="currentColor"/>
+            </g>
+          </svg>
         </div>
+      </section>
 
-        <div class="auth-field">
-          <label class="auth-label" for="senha">
-            Senha <span class="auth-required" aria-hidden="true">*</span>
-          </label>
+      <div class="auth-card auth-card--login">
+        <img src="img/logoecom.png" alt="Logo do ECONOMIZAI" class="auth-logo">
+        <h1 class="auth-title">Bem-vindo de volta</h1>
+        <p class="auth-subtitle">Entre para continuar economizando</p>
 
-          <input
-            id="senha"
-            type="password"
-            placeholder="Digite sua senha"
-            class="auth-control"
-            autocomplete="current-password"
-            minlength="8"
-            required
-          >
-        </div>
+        <form class="auth-form" id="loginForm" novalidate>
+          <div class="auth-field">
+            <label class="auth-label" for="login">
+              Usuario <span class="auth-required" aria-hidden="true">*</span>
+            </label>
 
-        <div class="auth-opcoes-login">
-          <label class="auth-caixa-selecao">
-            <input type="checkbox" id="lembrar_usuario">
-            <span>Lembrar de mim</span>
-          </label>
+            <div class="auth-control-wrap">
+              <i class="auth-control-icone fa-solid fa-user" aria-hidden="true"></i>
+              <input
+                id="login"
+                type="text"
+                placeholder="Digite seu usuario"
+                class="auth-control auth-control--icone"
+                autocomplete="username"
+                minlength="4"
+                maxlength="30"
+                required
+              >
+            </div>
+          </div>
 
-          <a href="recuperar-senha.html" class="auth-link auth-link--pequeno">Esqueci minha senha</a>
-        </div>
+          <div class="auth-field">
+            <label class="auth-label" for="senha">
+              Senha <span class="auth-required" aria-hidden="true">*</span>
+            </label>
 
-        <p id="mensagem-auth" class="auth-message"></p>
+            <div class="auth-control-wrap">
+              <i class="auth-control-icone fa-solid fa-lock" aria-hidden="true"></i>
+              <input
+                id="senha"
+                type="password"
+                placeholder="Digite sua senha"
+                class="auth-control auth-control--icone"
+                autocomplete="current-password"
+                minlength="8"
+                required
+                style="padding-right: 2.4rem;"
+              >
+              <button type="button" class="auth-toggle-senha" data-alvo="senha" aria-label="Mostrar senha">
+                <i class="fa-solid fa-eye" aria-hidden="true"></i>
+              </button>
+            </div>
+          </div>
 
-        <button class="botao-principal auth-submit" type="submit">
-          Enviar
-        </button>
-      </form>
+          <div class="auth-opcoes-login">
+            <label class="auth-caixa-selecao">
+              <input type="checkbox" id="lembrar_usuario">
+              <span>Lembrar de mim</span>
+            </label>
 
-      <p class="auth-switch">
-        Nao tem conta?
-        <a href="cadastro.html" class="auth-link">
-          Cadastrar novo usuario
-        </a>
-      </p>
+            <a href="recuperar-senha.html" class="auth-link auth-link--pequeno">Esqueci minha senha</a>
+          </div>
+
+          <p id="mensagem-auth" class="auth-message"></p>
+
+          <button class="botao-principal auth-submit" type="submit">
+            <i class="fa-solid fa-right-to-bracket" aria-hidden="true"></i>
+            Entrar
+          </button>
+        </form>
+
+        <div class="auth-divisor">ou</div>
+
+        <p class="auth-switch">
+          Ainda nao tem conta?
+          <a href="cadastro.html" class="auth-link">
+            Criar conta
+          </a>
+        </p>
+      </div>
     </div>
   </main>
 
@@ -92,8 +168,18 @@
           login();
         });
       }
+
+      document.querySelectorAll(".auth-toggle-senha").forEach(function(botao) {
+        botao.addEventListener("click", function() {
+          const alvo = document.getElementById(botao.dataset.alvo);
+          if (!alvo) return;
+          const visivel = alvo.type === "text";
+          alvo.type = visivel ? "password" : "text";
+          botao.querySelector("i").className = visivel ? "fa-solid fa-eye" : "fa-solid fa-eye-slash";
+          botao.setAttribute("aria-label", visivel ? "Mostrar senha" : "Ocultar senha");
+        });
+      });
     });
   </script>
 </body>
 </html>
-

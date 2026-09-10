@@ -5,7 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ECONOMIZAI | Cadastro</title>
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://kit.fontawesome.com/4620774d96.js"></script>
   <script src="js/components/LayoutCompartilhado.js" defer></script>
   <script src="js/validation.js" defer></script>
   <script src="js/auth.js" defer></script>
@@ -15,298 +18,488 @@
   <economizai-header></economizai-header>
 
   <main class="auth-page">
-    <div class="auth-card auth-card--cadastro">
-      <img src="img/logoecom.png" alt="Logo do ECONOMIZAI" class="auth-logo">
-      <h1 class="auth-title">Criar Conta</h1>
+    <span class="auth-blob auth-blob--1" aria-hidden="true"></span>
+    <span class="auth-blob auth-blob--2" aria-hidden="true"></span>
+    <span class="auth-blob auth-blob--3" aria-hidden="true"></span>
+    <span class="auth-blob auth-blob--4" aria-hidden="true"></span>
 
-      <form class="auth-form" id="cadastroForm" novalidate>
-        <div class="auth-grid">
-          <div class="auth-field">
-            <label class="auth-label" for="nome">
-            Nome <span class="auth-required" aria-hidden="true">*</span>
-            </label>
+    <div class="auth-shell">
+      <section class="auth-intro">
+        <span class="auth-badge">
+          <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+          Cadastro rapido e seguro
+        </span>
 
-            <input
-              type="text"
-              placeholder="Digite seu nome completo"
-              class="auth-control"
-              id="nome"
-              autocomplete="name"
-              required
-            >
-          </div>
+        <h1 class="auth-intro-title">
+          Crie sua conta e comece a <span>economizar</span>
+        </h1>
 
-          <div class="auth-field">
-            <label class="auth-label" for="data_nascimento">
-              Data de Nascimento <span class="auth-required" aria-hidden="true">*</span>
-            </label>
+        <p class="auth-intro-desc">
+          Cadastre-se para comparar precos, organizar suas compras e tomar decisoes mais inteligentes.
+        </p>
 
-            <input
-              type="date"
-              class="auth-control"
-              id="data_nascimento"
-              required
-            >
-          </div>
+        <ul class="auth-features">
+          <li>
+            <span class="auth-features-icone"><i class="fa-solid fa-bolt" aria-hidden="true"></i></span>
+            <span>
+              <strong>Acesso facil</strong>
+              <span class="auth-features-desc">Crie sua conta em poucos minutos</span>
+            </span>
+          </li>
+          <li>
+            <span class="auth-features-icone"><i class="fa-solid fa-shield-halved" aria-hidden="true"></i></span>
+            <span>
+              <strong>Seguranca dos dados</strong>
+              <span class="auth-features-desc">Seus dados protegidos e em boas maos</span>
+            </span>
+          </li>
+          <li>
+            <span class="auth-features-icone"><i class="fa-solid fa-chart-column" aria-hidden="true"></i></span>
+            <span>
+              <strong>Melhores escolhas</strong>
+              <span class="auth-features-desc">Compare precos e economize sempre</span>
+            </span>
+          </li>
+        </ul>
 
-          <div class="auth-field">
-            <label class="auth-label" for="sexo">
-              Sexo <span class="auth-required" aria-hidden="true">*</span>
-            </label>
-
-            <select
-              id="sexo"
-              class="auth-control"
-              required
-            >
-              <option value="">Selecione</option>
-              <option value="masculino">Masculino</option>
-              <option value="feminino">Feminino</option>
-              <option value="outro">Outro</option>
-            </select>
-          </div>
-
-          <div class="auth-field">
-            <label class="auth-label" for="nome_materno">
-              Nome Materno <span class="auth-required" aria-hidden="true">*</span>
-            </label>
-
-            <input
-              type="text"
-              placeholder="Digite o nome materno"
-              class="auth-control"
-              id="nome_materno"
-              required
-            >
-          </div>
-
-          <div class="auth-field">
-            <label class="auth-label" for="cpf">
-              CPF <span class="auth-required" aria-hidden="true">*</span>
-            </label>
-
-            <input
-              type="text"
-              placeholder="Digite seu CPF"
-              class="auth-control"
-              id="cpf"
-              required
-            >
-          </div>
-
-          <div class="auth-field">
-            <label class="auth-label" for="telefone_celular">
-              Telefone Celular <span class="auth-required" aria-hidden="true">*</span>
-            </label>
-
-            <input
-              type="text"
-              placeholder="21 98480-7030"
-              class="auth-control"
-              id="telefone_celular"
-              required
-            >
-          </div>
-
-          <div class="auth-field">
-            <label class="auth-label" for="telefone_fixo">
-              Telefone Fixo <span class="auth-required" aria-hidden="true">*</span>
-            </label>
-
-            <input
-              type="text"
-              placeholder="(+55) 21 3333-4444"
-              class="auth-control"
-              id="telefone_fixo"
-              required
-            >
-          </div>
-
-          <div class="auth-field">
-            <label class="auth-label" for="login">
-              Login <span class="auth-required" aria-hidden="true">*</span>
-            </label>
-
-            <input
-              type="text"
-              placeholder="Entre 4 e 30 letras ou numeros"
-              class="auth-control"
-              id="login"
-              autocomplete="username"
-              minlength="4"
-              maxlength="30"
-              required
-            >
-          </div>
-
-          <div class="auth-field">
-            <label class="auth-label" for="cep">
-              CEP <span class="auth-required" aria-hidden="true">*</span>
-            </label>
-
-            <input
-              type="text"
-              inputmode="numeric"
-              placeholder="00000-000"
-              class="auth-control"
-              id="cep"
-              autocomplete="postal-code"
-              maxlength="9"
-              required
-            >
-            <p id="cep-status" class="auth-field-hint" aria-live="polite">
-              O endereco sera preenchido ao informar o CEP.
-            </p>
-          </div>
-
-          <div class="auth-field">
-            <label class="auth-label" for="logradouro">
-              Logradouro <span class="auth-required" aria-hidden="true">*</span>
-            </label>
-
-            <input
-              type="text"
-              class="auth-control"
-              id="logradouro"
-              autocomplete="address-line1"
-              required
-            >
-          </div>
-
-          <div class="auth-field">
-            <label class="auth-label" for="numero">
-              Numero <span class="auth-required" aria-hidden="true">*</span>
-            </label>
-
-            <input
-              type="text"
-              class="auth-control"
-              id="numero"
-              autocomplete="address-line2"
-              required
-            >
-          </div>
-
-          <div class="auth-field">
-            <label class="auth-label" for="complemento">
-              Complemento
-            </label>
-
-            <input
-              type="text"
-              class="auth-control"
-              id="complemento"
-              autocomplete="address-line3"
-            >
-          </div>
-
-          <div class="auth-field">
-            <label class="auth-label" for="bairro">
-              Bairro <span class="auth-required" aria-hidden="true">*</span>
-            </label>
-
-            <input
-              type="text"
-              class="auth-control"
-              id="bairro"
-              required
-            >
-          </div>
-
-          <div class="auth-field">
-            <label class="auth-label" for="cidade">
-              Cidade <span class="auth-required" aria-hidden="true">*</span>
-            </label>
-
-            <input
-              type="text"
-              class="auth-control"
-              id="cidade"
-              autocomplete="address-level2"
-              required
-            >
-          </div>
-
-          <div class="auth-field">
-            <label class="auth-label" for="estado">
-              Estado <span class="auth-required" aria-hidden="true">*</span>
-            </label>
-
-            <input
-              type="text"
-              class="auth-control"
-              id="estado"
-              autocomplete="address-level1"
-              maxlength="2"
-              required
-            >
-          </div>
-
-          <div class="auth-field auth-field--full">
-            <label class="auth-label" for="endereco">
-              Endereco Completo <span class="auth-required" aria-hidden="true">*</span>
-            </label>
-
-            <input
-              type="text"
-              class="auth-control"
-              id="endereco"
-              readonly
-              required
-            >
-          </div>
-
-          <div class="auth-field">
-            <label class="auth-label" for="senha">
-              Senha <span class="auth-required" aria-hidden="true">*</span>
-            </label>
-
-            <input
-              type="password"
-              placeholder="Minimo de 8 caracteres"
-              class="auth-control"
-              id="senha"
-              autocomplete="new-password"
-              minlength="8"
-              required
-            >
-
-            <p id="forca-senha-cadastro" class="auth-forca-senha" aria-live="polite"></p>
-          </div>
-
-          <div class="auth-field">
-            <label class="auth-label" for="confirma_senha">
-              Confirma Senha <span class="auth-required" aria-hidden="true">*</span>
-            </label>
-
-            <input
-              type="password"
-              placeholder="Repita a senha"
-              class="auth-control"
-              id="confirma_senha"
-              autocomplete="new-password"
-              minlength="8"
-              required
-            >
-          </div>
+        <div class="auth-intro-decor" aria-hidden="true">
+          <span class="auth-decor-nota">Pequenas escolhas<br>grandes economias</span>
+          <svg class="auth-decor-ilustracao" viewBox="0 0 100 90" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 8h9l9.4 44a6 6 0 0 0 6 4.8h34.6a6 6 0 0 0 5.9-4.9l5.6-26.3H24" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <circle cx="34" cy="82" r="4.5" fill="currentColor"/>
+            <circle cx="64" cy="82" r="4.5" fill="currentColor"/>
+            <g transform="translate(58,2) rotate(18)">
+              <path d="M18 2H4a2 2 0 0 0-2 2v14a2 2 0 0 0 .6 1.4l17 17a2 2 0 0 0 2.8 0l14-14a2 2 0 0 0 0-2.8l-17-17A2 2 0 0 0 18 2Z" fill="currentColor" opacity="0.15" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+              <circle cx="9.5" cy="9.5" r="2.5" fill="currentColor"/>
+            </g>
+          </svg>
         </div>
+      </section>
 
-        <p id="mensagem-auth" class="auth-message"></p>
+      <div class="auth-card auth-card--cadastro">
+        <img src="img/logoecom.png" alt="Logo do ECONOMIZAI" class="auth-logo">
+        <h1 class="auth-title">Criar Conta</h1>
+        <p class="auth-subtitle">Preencha seus dados para comecar</p>
 
-        <button class="botao-principal auth-submit" type="submit">
-          Enviar
-        </button>
-      </form>
+        <form class="auth-form" id="cadastroForm" novalidate>
+          <div class="auth-secao">
+            <span class="auth-secao-numero">1</span>
+            <h2 class="auth-secao-titulo">Dados pessoais</h2>
+          </div>
 
-      <p class="auth-switch">
-        Ja tem conta?
-        <a href="login.html" class="auth-link">
-          Fazer login
-        </a>
-      </p>
+          <div class="auth-grid">
+            <div class="auth-field">
+              <label class="auth-label" for="nome">
+              Nome <span class="auth-required" aria-hidden="true">*</span>
+              </label>
+
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-user" aria-hidden="true"></i>
+                <input
+                  type="text"
+                  placeholder="Digite seu nome completo"
+                  class="auth-control auth-control--icone"
+                  id="nome"
+                  autocomplete="name"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="data_nascimento">
+                Data de Nascimento <span class="auth-required" aria-hidden="true">*</span>
+              </label>
+
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-calendar-days" aria-hidden="true"></i>
+                <input
+                  type="date"
+                  class="auth-control auth-control--icone"
+                  id="data_nascimento"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="sexo">
+                Sexo <span class="auth-required" aria-hidden="true">*</span>
+              </label>
+
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-venus-mars" aria-hidden="true"></i>
+                <select
+                  id="sexo"
+                  class="auth-control auth-control--icone"
+                  required
+                >
+                  <option value="">Selecione</option>
+                  <option value="masculino">Masculino</option>
+                  <option value="feminino">Feminino</option>
+                  <option value="outro">Outro</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="nome_materno">
+                Nome Materno <span class="auth-required" aria-hidden="true">*</span>
+              </label>
+
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-user" aria-hidden="true"></i>
+                <input
+                  type="text"
+                  placeholder="Digite o nome materno"
+                  class="auth-control auth-control--icone"
+                  id="nome_materno"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="cpf">
+                CPF <span class="auth-required" aria-hidden="true">*</span>
+              </label>
+
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-id-card" aria-hidden="true"></i>
+                <input
+                  type="text"
+                  placeholder="Digite seu CPF"
+                  class="auth-control auth-control--icone"
+                  id="cpf"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="telefone_celular">
+                Telefone Celular <span class="auth-required" aria-hidden="true">*</span>
+              </label>
+
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-mobile-screen-button" aria-hidden="true"></i>
+                <input
+                  type="text"
+                  placeholder="(21) 98430-7030"
+                  class="auth-control auth-control--icone"
+                  id="telefone_celular"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="telefone_fixo">
+                Telefone Fixo <span class="auth-required" aria-hidden="true">*</span>
+              </label>
+
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-phone" aria-hidden="true"></i>
+                <input
+                  type="text"
+                  placeholder="(+55) 21 3333-4444"
+                  class="auth-control auth-control--icone"
+                  id="telefone_fixo"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="login">
+                Login <span class="auth-required" aria-hidden="true">*</span>
+              </label>
+
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-user" aria-hidden="true"></i>
+                <input
+                  type="text"
+                  placeholder="Entre 4 e 30 letras ou numeros"
+                  class="auth-control auth-control--icone"
+                  id="login"
+                  autocomplete="username"
+                  minlength="4"
+                  maxlength="30"
+                  required
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="auth-secao">
+            <span class="auth-secao-numero">2</span>
+            <h2 class="auth-secao-titulo">Endereco</h2>
+          </div>
+
+          <div class="auth-grid">
+            <div class="auth-field">
+              <label class="auth-label" for="cep">
+                CEP <span class="auth-required" aria-hidden="true">*</span>
+              </label>
+
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-location-dot" aria-hidden="true"></i>
+                <input
+                  type="text"
+                  inputmode="numeric"
+                  placeholder="00000-000"
+                  class="auth-control auth-control--icone"
+                  id="cep"
+                  autocomplete="postal-code"
+                  maxlength="9"
+                  required
+                >
+              </div>
+              <p id="cep-status" class="auth-field-hint" aria-live="polite">
+                O endereco sera preenchido ao informar o CEP.
+              </p>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="logradouro">
+                Logradouro <span class="auth-required" aria-hidden="true">*</span>
+              </label>
+
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-road" aria-hidden="true"></i>
+                <input
+                  type="text"
+                  placeholder="Digite o logradouro"
+                  class="auth-control auth-control--icone"
+                  id="logradouro"
+                  autocomplete="address-line1"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="numero">
+                Numero <span class="auth-required" aria-hidden="true">*</span>
+              </label>
+
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-hashtag" aria-hidden="true"></i>
+                <input
+                  type="text"
+                  placeholder="Digite o numero"
+                  class="auth-control auth-control--icone"
+                  id="numero"
+                  autocomplete="address-line2"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="complemento">
+                Complemento
+              </label>
+
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-building" aria-hidden="true"></i>
+                <input
+                  type="text"
+                  placeholder="Apto, bloco, etc. (opcional)"
+                  class="auth-control auth-control--icone"
+                  id="complemento"
+                  autocomplete="address-line3"
+                >
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="bairro">
+                Bairro <span class="auth-required" aria-hidden="true">*</span>
+              </label>
+
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-map" aria-hidden="true"></i>
+                <input
+                  type="text"
+                  placeholder="Digite o bairro"
+                  class="auth-control auth-control--icone"
+                  id="bairro"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="cidade">
+                Cidade <span class="auth-required" aria-hidden="true">*</span>
+              </label>
+
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-city" aria-hidden="true"></i>
+                <input
+                  type="text"
+                  placeholder="Digite a cidade"
+                  class="auth-control auth-control--icone"
+                  id="cidade"
+                  autocomplete="address-level2"
+                  required
+                >
+              </div>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="estado">
+                Estado <span class="auth-required" aria-hidden="true">*</span>
+              </label>
+
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-location-dot" aria-hidden="true"></i>
+                <select
+                  class="auth-control auth-control--icone"
+                  id="estado"
+                  autocomplete="address-level1"
+                  required
+                >
+                  <option value="">Selecione</option>
+                  <option value="AC">AC</option>
+                  <option value="AL">AL</option>
+                  <option value="AP">AP</option>
+                  <option value="AM">AM</option>
+                  <option value="BA">BA</option>
+                  <option value="CE">CE</option>
+                  <option value="DF">DF</option>
+                  <option value="ES">ES</option>
+                  <option value="GO">GO</option>
+                  <option value="MA">MA</option>
+                  <option value="MT">MT</option>
+                  <option value="MS">MS</option>
+                  <option value="MG">MG</option>
+                  <option value="PA">PA</option>
+                  <option value="PB">PB</option>
+                  <option value="PR">PR</option>
+                  <option value="PE">PE</option>
+                  <option value="PI">PI</option>
+                  <option value="RJ">RJ</option>
+                  <option value="RN">RN</option>
+                  <option value="RS">RS</option>
+                  <option value="RO">RO</option>
+                  <option value="RR">RR</option>
+                  <option value="SC">SC</option>
+                  <option value="SP">SP</option>
+                  <option value="SE">SE</option>
+                  <option value="TO">TO</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="auth-field auth-field--full">
+              <label class="auth-label" for="endereco">
+                Endereco Completo <span class="auth-required" aria-hidden="true">*</span>
+              </label>
+
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-house" aria-hidden="true"></i>
+                <input
+                  type="text"
+                  placeholder="Seu endereco completo"
+                  class="auth-control auth-control--icone"
+                  id="endereco"
+                  readonly
+                  required
+                >
+              </div>
+            </div>
+          </div>
+
+          <div class="auth-secao">
+            <span class="auth-secao-numero">3</span>
+            <h2 class="auth-secao-titulo">Acesso</h2>
+          </div>
+
+          <div class="auth-grid">
+            <div class="auth-field">
+              <label class="auth-label" for="senha">
+                Senha <span class="auth-required" aria-hidden="true">*</span>
+              </label>
+
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-lock" aria-hidden="true"></i>
+                <input
+                  type="password"
+                  placeholder="Minimo de 8 caracteres"
+                  class="auth-control auth-control--icone"
+                  id="senha"
+                  autocomplete="new-password"
+                  minlength="8"
+                  required
+                  style="padding-right: 2.4rem;"
+                >
+                <button type="button" class="auth-toggle-senha" data-alvo="senha" aria-label="Mostrar senha">
+                  <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                </button>
+              </div>
+
+              <p id="forca-senha-cadastro" class="auth-forca-senha" aria-live="polite"></p>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="confirma_senha">
+                Confirma Senha <span class="auth-required" aria-hidden="true">*</span>
+              </label>
+
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-lock" aria-hidden="true"></i>
+                <input
+                  type="password"
+                  placeholder="Repita a senha"
+                  class="auth-control auth-control--icone"
+                  id="confirma_senha"
+                  autocomplete="new-password"
+                  minlength="8"
+                  required
+                  style="padding-right: 2.4rem;"
+                >
+                <button type="button" class="auth-toggle-senha" data-alvo="confirma_senha" aria-label="Mostrar senha">
+                  <i class="fa-solid fa-eye" aria-hidden="true"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <p id="mensagem-auth" class="auth-message"></p>
+
+          <button class="botao-principal auth-submit" type="submit">
+            <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
+            Criar conta
+          </button>
+        </form>
+
+        <p class="auth-switch">
+          Ja tem conta?
+          <a href="login.html" class="auth-link">
+            Fazer login
+          </a>
+        </p>
+      </div>
     </div>
   </main>
 
   <economizai-footer></economizai-footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      document.querySelectorAll(".auth-toggle-senha").forEach(function(botao) {
+        botao.addEventListener("click", function() {
+          const alvo = document.getElementById(botao.dataset.alvo);
+          if (!alvo) return;
+          const visivel = alvo.type === "text";
+          alvo.type = visivel ? "password" : "text";
+          botao.querySelector("i").className = visivel ? "fa-solid fa-eye" : "fa-solid fa-eye-slash";
+          botao.setAttribute("aria-label", visivel ? "Mostrar senha" : "Ocultar senha");
+        });
+      });
+    });
+  </script>
 </body>
 </html>
