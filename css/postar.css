@@ -1,0 +1,40 @@
+.inputPostar {
+    width: 100%;
+    padding: 0.75rem 1rem;
+
+    background-color: #ffffff;
+
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    border-radius: 0.65rem;
+
+    outline: none;
+
+    color: #334155;
+
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        background-color 0.2s ease;
+}
+
+.inputPostar::placeholder {
+    color: #94a3b8;
+}
+
+.inputPostar:hover {
+    border-color: rgba(16, 185, 129, 0.4);
+}
+
+.inputPostar:focus {
+    border-color: #10b981;
+
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+}
+
+textarea.inputPostar {
+    line-height: 1.5;
+}
+
+button {
+    cursor: pointer;
+}

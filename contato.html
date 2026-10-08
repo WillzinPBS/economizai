@@ -11,6 +11,7 @@
     <!-- <script src="https://cdn.tailwindcss.com"></script> -->
     <script src="js/components/LayoutCompartilhado.js" defer></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="js/contato.js" defer></script>
 </head>
 
 <body>
@@ -32,12 +33,12 @@
                     <h3><strong>Informações de contato</strong></h3>
 
                     <div class="contact-title" id="email"><strong>E-mail</strong></div>
-                    <a href="gmail.com" class="copiar" target="_blank" data-copy="contato@comparapreco.com.br">
+                    <a href="mailto:contato@comparapreco.com.br" class="copiar" data-copy="contato@comparapreco.com.br">
                         contato@comparapreco.com.br
                     </a>
 
                     <div class="contact-title" id="telefone"><strong>Telefone</strong></div>
-                    <a href="https://web.whatsapp.com/" target="_blank" class="copiar" data-copy="(11) 4000-4000">
+                    <a href="tel:+551140004000" class="copiar" data-copy="(11) 4000-4000">
                         (11) 4000-4000
                     </a>
 
@@ -51,26 +52,6 @@
                     <p class="hora">Segunda a sexta: 9h às 18h<br>
                         Sábado: 9h às 13h</p>
                 </div>
-
-                <script>
-                    const links = document.querySelectorAll(".copiar");
-
-                    links.forEach(link => {
-                        link.addEventListener("click", () => {
-
-                            const texto = link.dataset.copy;
-
-                            navigator.clipboard.writeText(texto)
-                                .then(() => {
-                                    Swal.fire("Copiado: " + texto);
-                                })
-                                .catch(err => {
-                                    console.error(err);
-                                });
-
-                        });
-                    });
-                </script>
 
             </div>
 
@@ -106,19 +87,32 @@
             <div class="card card-right">
                 <h3 id="right"><strong>Envie sua mensagem</strong></h3>
 
-                <form class="form">
+                <form class="form" novalidate>
 
                     <div class="row">
-                        <input type="text" placeholder="Seu nome completo" required>
-                        <input type="email" placeholder="seu@email.com" required>
+                        <div class="campo">
+                            <label for="nome">Nome completo</label>
+                            <input type="text" id="nome" name="nome" placeholder="Seu nome completo" minlength="3" autocomplete="name" required>
+                        </div>
+                        <div class="campo">
+                            <label for="email-contato">E-mail</label>
+                            <input type="email" id="email-contato" name="email" placeholder="seu@email.com" autocomplete="email" required>
+                        </div>
                     </div>
 
-                    <input type="text" placeholder="Assunto" required>
+                    <div class="campo">
+                        <label for="assunto">Assunto</label>
+                        <input type="text" id="assunto" name="assunto" placeholder="Assunto" minlength="3" required>
+                    </div>
 
-                    <textarea placeholder="Digite sua mensagem aqui..."></textarea>
+                    <div class="campo">
+                        <label for="mensagem">Mensagem</label>
+                        <textarea id="mensagem" name="mensagem" placeholder="Digite sua mensagem aqui..." minlength="10" required></textarea>
+                    </div>
 
                     <button class="botao-principal" type="submit">
-                        Enviar mensagem
+                        <i class="fa-solid fa-lock botao-cadeado" aria-hidden="true"></i>
+                        <span class="botao-texto">Enviar mensagem</span>
                     </button>
                 </form>
             </div>
