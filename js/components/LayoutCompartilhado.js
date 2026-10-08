@@ -112,6 +112,10 @@ class EconomizaiHeader extends HTMLElement {
     this.render();
   }
 
+  disconnectedCallback() {
+    this.encerrarMenuUsuario();
+  }
+
   isActive(page) {
     return (this.getAttribute("active-page") || "").toLowerCase() === page;
   }
@@ -121,16 +125,11 @@ class EconomizaiHeader extends HTMLElement {
     return `<a href="${href}"${activeAttribute}>${label}</a>`;
   }
 
-
-
-
   render() {
     const temaAtual = obterTemaAtual();
     const tamanhoFonteAtual = obterTamanhoFonteAtual();
     this.setAttribute("theme", temaAtual);
 
-
-    
     this.shadowRoot.innerHTML = `
       <style>
         :host {
@@ -299,26 +298,6 @@ class EconomizaiHeader extends HTMLElement {
           gap: 8px;
         }
 
-        .usuario-bemvindo {
-          color: var(--cor-texto-secundario, rgba(0, 0, 0, 0.70));
-          font-size: 0.875rem;
-          font-weight: 600;
-          white-space: nowrap;
-        }
-
-        .usuario-identificacao {
-          display: flex;
-          align-items: flex-end;
-          flex-direction: column;
-          line-height: 1.2;
-        }
-
-        .usuario-login {
-          color: var(--cor-texto-secundario, rgba(0, 0, 0, 0.70));
-          font-size: 0.6875rem;
-          white-space: nowrap;
-        }
-
         .login .botao-principal {
           width: auto;
           height: auto;
@@ -385,6 +364,9 @@ class EconomizaiHeader extends HTMLElement {
           cursor: pointer;
           text-decoration: none;
           transition: 0.2s ease;
+          border: 1px solid var(--cor-borda, #e5e7eb);
+          border-radius: 12px;
+          z-index: 1000;
         }
 
         .botao-postar:hover {
@@ -460,7 +442,6 @@ class EconomizaiHeader extends HTMLElement {
           gap: 8px;
         }
 
-
         .botao-principal {
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           display: inline-flex;
@@ -502,6 +483,197 @@ class EconomizaiHeader extends HTMLElement {
           color: var(--botao-icon-color, currentColor);
           flex-shrink: 0;
         }
+
+        /* ===== Menu do usuário ===== */
+
+        /* Garante que o atributo hidden funcione mesmo com display definido em outras regras */
+        [hidden] {
+          display: none !important;
+        }
+
+        .usuario-menu {
+          position: relative;
+        }
+
+        .usuario-gatilho {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          height: 38px;
+          padding: 0 12px 0 4px;
+          border: 1px solid var(--cor-borda, #e5e7eb);
+          border-radius: 999px;
+          background-color: transparent;
+          color: var(--cor-texto, rgba(0, 0, 0, 0.80));
+          font: inherit;
+          font-weight: 600;
+          cursor: pointer;
+          transition: 0.2s ease;
+        }
+
+        .usuario-gatilho:hover,
+        .usuario-gatilho[aria-expanded="true"] {
+          background-color: var(--cor-realce-verde-suave, rgba(0, 0, 0, 0.03));
+        }
+
+        .usuario-gatilho:focus-visible,
+        .usuario-item:focus-visible {
+          outline: 2px solid var(--cor-botao-principal, #16a34a);
+          outline-offset: 2px;
+        }
+
+        .usuario-avatar {
+          display: inline-flex;
+          overflow: hidden;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          background: var(--cor-botao-principal, #16a34a);
+          color: #ffffff;
+          font-size: 0.8125rem;
+          font-weight: 700;
+          line-height: 1;
+        }
+
+        .usuario-avatar img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .usuario-avatar--grande {
+          width: 44px;
+          height: 44px;
+          font-size: 1.125rem;
+        }
+
+        .usuario-nome-curto {
+          max-width: 110px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .usuario-seta {
+          font-size: 0.75rem;
+          transition: transform 0.2s ease;
+        }
+
+        .usuario-gatilho[aria-expanded="true"] .usuario-seta {
+          transform: rotate(180deg);
+        }
+
+        .usuario-painel {
+          position: absolute;
+          top: calc(100% + 10px);
+          right: 0;
+          z-index: 1000;
+          width: 260px;
+          max-width: calc(100vw - 24px);
+          padding: 8px;
+          background: var(--cor-header-bg, #ffffff);
+          border: 1px solid var(--cor-borda, #e5e7eb);
+          border-radius: 12px;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+          animation: usuario-painel-entrada 0.15s ease;
+        }
+
+        @keyframes usuario-painel-entrada {
+          from {
+            opacity: 0;
+            transform: translateY(-6px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .usuario-painel {
+            animation: none;
+          }
+        }
+
+        .usuario-cabecalho {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 8px;
+          padding: 10px 8px 12px;
+          border-bottom: 1px solid var(--cor-borda, #e5e7eb);
+        }
+
+        .usuario-dados {
+          display: flex;
+          flex-direction: column;
+          min-width: 0;
+          line-height: 1.3;
+        }
+
+        .usuario-dados strong,
+        .usuario-dados span {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .usuario-dados strong {
+          color: var(--cor-texto, #111111);
+        }
+
+        .usuario-dados span {
+          color: var(--cor-texto-secundario, #555555);
+          font-size: 0.75rem;
+        }
+
+        .usuario-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          width: 100%;
+          padding: 10px;
+          border: none;
+          border-radius: 8px;
+          background: transparent;
+          color: var(--cor-texto, #111111);
+          font: inherit;
+          text-align: left;
+          text-decoration: none;
+          cursor: pointer;
+          transition: 0.2s ease;
+        }
+
+        .usuario-item i {
+          font-size: 1rem;
+        }
+
+        .usuario-item:hover {
+          background: var(--cor-realce-verde-suave, rgba(0, 0, 0, 0.03));
+        }
+
+        .usuario-item--sair:hover {
+          background: rgba(220, 38, 38, 0.08);
+          color: var(--cor-erro, #dc2626);
+        }
+
+
+        /* No celular, só o avatar (+ seta) para o header não estourar */
+        @media (max-width: 640px) {
+          .usuario-nome-curto {
+            display: none;
+          }
+
+          .usuario-gatilho {
+            padding-right: 10px;
+          }
+        }
+
+        /* ===== Fim do menu do usuário ===== */
 
         .fechar-acessibilidade {
           display: none;
@@ -582,6 +754,7 @@ class EconomizaiHeader extends HTMLElement {
             width: 40px;
             height: 36px;
           }
+        }
 
         @media (max-width: 380px) {
           .menu-acessibilidade {
@@ -623,7 +796,7 @@ class EconomizaiHeader extends HTMLElement {
                 <i class="bi bi-plus-circle"></i>
                 <span>Postar</span>
               </a>
-            </div> 
+            </div>
 
 
             <div class="acessibilidade">
@@ -650,8 +823,10 @@ class EconomizaiHeader extends HTMLElement {
                 </button>
               </div>
             </div>
+
             <div class="login" id="user-div">
-              <a class="botao-principal" href="login.html">
+              <!-- Visitante -->
+              <a class="botao-principal" id="botao-entrar" href="login.html">
                 <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
@@ -660,37 +835,69 @@ class EconomizaiHeader extends HTMLElement {
                 </svg>
                 <span>Entrar</span>
               </a>
+
+              <!-- Usuário logado (preenchido por sincronizarUsuario) -->
+              <div class="usuario-menu" id="usuario-menu" hidden>
+                <button class="usuario-gatilho" id="usuario-gatilho" type="button"
+                  aria-expanded="false" aria-controls="usuario-painel">
+                  <span class="usuario-avatar" id="usuario-avatar" aria-hidden="true"></span>
+                  <span class="usuario-nome-curto" id="usuario-nome-curto"></span>
+                  <i class="bi bi-chevron-down usuario-seta" aria-hidden="true"></i>
+                </button>
+
+                <div class="usuario-painel" id="usuario-painel" hidden>
+                  <div class="usuario-cabecalho">
+                    <span class="usuario-avatar usuario-avatar--grande" id="usuario-avatar-grande" aria-hidden="true"></span>
+                    <div class="usuario-dados">
+                      <strong id="usuario-nome-completo"></strong>
+                      <span id="usuario-login-texto"></span>
+                    </div>
+                  </div>
+
+                  <a class="usuario-item" href="configuracoes.html">
+                    <i class="bi bi-gear" aria-hidden="true"></i>
+                    <span>Configurações</span>
+                  </a>
+
+                  <button class="usuario-item usuario-item--sair" id="botao-sair" type="button">
+                    <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+                    <span>Sair</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </header>
     `;
 
+    const botaoTema = this.shadowRoot.querySelector(".botao-tema");
+    const botaoDiminuirFonte = this.shadowRoot.querySelector(".botao-diminuir-fonte");
+    const botaoAumentarFonte = this.shadowRoot.querySelector(".botao-aumentar-fonte");
 
-    
+    const botaoAcessibilidade = this.shadowRoot.querySelector(".drop-box");
+    const acessibilidade = this.shadowRoot.querySelector(".acessibilidade");
 
-const botaoTema = this.shadowRoot.querySelector(".botao-tema");
-const botaoDiminuirFonte = this.shadowRoot.querySelector(".botao-diminuir-fonte");
-const botaoAumentarFonte = this.shadowRoot.querySelector(".botao-aumentar-fonte");
+    const botaoFecharAcessibilidade =
+      this.shadowRoot.querySelector(".fechar-acessibilidade");
 
-const botaoAcessibilidade = this.shadowRoot.querySelector(".drop-box");
-const acessibilidade = this.shadowRoot.querySelector(".acessibilidade");
+    botaoFecharAcessibilidade.addEventListener("click", () => {
+      acessibilidade.classList.remove("aberto");
+    });
 
-const botaoFecharAcessibilidade =
-  this.shadowRoot.querySelector(".fechar-acessibilidade");
+    botaoAcessibilidade.addEventListener("click", (event) => {
+      event.stopPropagation();
+      // O stopPropagation impede o "clicar fora" do menu de usuário de rodar,
+      // então fechamos ele aqui para os dois nunca ficarem abertos juntos.
+      this.fecharMenuUsuario();
+      acessibilidade.classList.toggle("aberto");
+    });
 
-botaoFecharAcessibilidade.addEventListener("click", () => {
-  acessibilidade.classList.remove("aberto");
-});
+    botaoTema.addEventListener("click", alternarTema);
+    botaoDiminuirFonte.addEventListener("click", diminuirFonte);
+    botaoAumentarFonte.addEventListener("click", aumentarFonte);
 
-botaoAcessibilidade.addEventListener("click", (event) => {
-    event.stopPropagation();
-    acessibilidade.classList.toggle("aberto");
-});
-
-botaoTema.addEventListener("click", alternarTema);
-botaoDiminuirFonte.addEventListener("click", diminuirFonte);
-botaoAumentarFonte.addEventListener("click", aumentarFonte);
+    this.ligarMenuUsuario();
 
     this.sincronizarTema(temaAtual);
     this.sincronizarFonte(tamanhoFonteAtual);
@@ -700,7 +907,7 @@ botaoAumentarFonte.addEventListener("click", aumentarFonte);
   sincronizarTema(tema) {
     const temaNormalizado = tema === "dark" ? "dark" : "light";
     this.setAttribute("theme", temaNormalizado);
-    
+
     const logoEconomiza = this.shadowRoot.querySelector('#logoSrc');
     console.log(logoEconomiza)
 
@@ -733,29 +940,28 @@ botaoAumentarFonte.addEventListener("click", aumentarFonte);
     botaoAumentarFonte.disabled = tamanhoNormalizado >= TAMANHO_FONTE_MAXIMO;
   }
 
+  // Decide o que mostrar: botão "Entrar" (visitante) ou menu do usuário (logado).
+  // Não recria o HTML — só alterna visibilidade e preenche os textos.
   sincronizarUsuario() {
-    const usuarioArea = this.shadowRoot?.querySelector("#user-div");
-    if (!usuarioArea) {
+    const raiz = this.shadowRoot;
+    const menu = raiz?.getElementById("usuario-menu");
+    const botaoEntrar = raiz?.getElementById("botao-entrar");
+
+    if (!menu || !botaoEntrar) {
       return;
     }
 
     const login = localStorage.getItem("usuarioLogado");
 
+    // Visitante: só o botão "Entrar"
     if (!login) {
-      usuarioArea.innerHTML = `
-        <a class="botao-principal" href="login.html">
-          <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
-          </svg>
-          <span>Entrar</span>
-        </a>
-      `;
+      botaoEntrar.hidden = false;
+      menu.hidden = true;
+      this.fecharMenuUsuario();
       return;
     }
 
+    // Logado: busca o nome completo no cadastro
     let usuarios = [];
     try {
       const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios"));
@@ -769,24 +975,115 @@ botaoAumentarFonte.addEventListener("click", aumentarFonte);
         typeof usuario.login === "string" &&
         usuario.login.toLowerCase() === login.toLowerCase()
     );
-    const primeiroNome = String(cadastro?.nome || "").trim().split(/\s+/)[0] || login;
 
-    const nomeSeguro = primeiroNome
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;");
+    const nomeCompleto = String(cadastro?.nome || login).trim();
+    const primeiroNome = nomeCompleto.split(/\s+/)[0];
+    const inicial = primeiroNome.charAt(0).toUpperCase();
 
-    const loginSeguro = login
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;");
+    // textContent (e não innerHTML) para o nome nunca ser interpretado como HTML
+    const fotoValida =
+    typeof cadastro?.foto === "string" && cadastro.foto.startsWith("data:image/");
 
-    usuarioArea.innerHTML = `
-      <span class="usuario-identificacao">
-        <span class="usuario-bemvindo">Bem-vindo, ${nomeSeguro}!</span>
-        <span class="usuario-login">Login: ${loginSeguro}</span>
-      </span>
-    `;
+  ["usuario-avatar", "usuario-avatar-grande"].forEach((id) => {
+    const elemento = raiz.getElementById(id);
+    elemento.textContent = "";
+
+    if (fotoValida) {
+      const img = document.createElement("img");
+      img.src = cadastro.foto;
+      img.alt = "";
+      elemento.appendChild(img);
+    } else {
+      elemento.textContent = inicial;
+    }
+  });
+    raiz.getElementById("usuario-nome-curto").textContent = primeiroNome;
+
+    const nomeCompletoEl = raiz.getElementById("usuario-nome-completo");
+    nomeCompletoEl.textContent = nomeCompleto;
+    nomeCompletoEl.title = nomeCompleto;
+
+    raiz.getElementById("usuario-login-texto").textContent = `@${login}`;
+    raiz
+      .getElementById("usuario-gatilho")
+      .setAttribute("aria-label", `Menu do usuário ${primeiroNome}`);
+
+    botaoEntrar.hidden = true;
+    menu.hidden = false;
+  }
+
+  // Liga os eventos do menu do usuário. Roda uma vez por render().
+  ligarMenuUsuario() {
+    const raiz = this.shadowRoot;
+    const menu = raiz.getElementById("usuario-menu");
+    const gatilho = raiz.getElementById("usuario-gatilho");
+    const painel = raiz.getElementById("usuario-painel");
+    const botaoSair = raiz.getElementById("botao-sair");
+
+    if (!menu || !gatilho || !painel || !botaoSair) {
+      return;
+    }
+
+    // Evita listeners duplicados no document se o componente for renderizado de novo
+    this.encerrarMenuUsuario();
+
+    gatilho.addEventListener("click", () => {
+      if (painel.hidden) this.abrirMenuUsuario();
+      else this.fecharMenuUsuario();
+    });
+
+    botaoSair.addEventListener("click", () => this.sair());
+
+    // Fecha ao clicar fora (composedPath atravessa o shadow DOM)
+    this._cliqueForaUsuario = (evento) => {
+      if (!evento.composedPath().includes(menu)) this.fecharMenuUsuario();
+    };
+
+    // Fecha com Esc e devolve o foco ao botão
+    this._teclaUsuario = (evento) => {
+      if (evento.key === "Escape" && !painel.hidden) {
+        this.fecharMenuUsuario();
+        gatilho.focus();
+      }
+    };
+
+    document.addEventListener("click", this._cliqueForaUsuario);
+    document.addEventListener("keydown", this._teclaUsuario);
+  }
+
+  abrirMenuUsuario() {
+    const raiz = this.shadowRoot;
+    raiz.getElementById("usuario-painel").hidden = false;
+    raiz.getElementById("usuario-gatilho").setAttribute("aria-expanded", "true");
+
+    // Evita deixar o menu de acessibilidade aberto ao mesmo tempo
+    raiz.querySelector(".acessibilidade")?.classList.remove("aberto");
+  }
+
+  fecharMenuUsuario() {
+    const raiz = this.shadowRoot;
+    const painel = raiz?.getElementById("usuario-painel");
+    if (!painel || painel.hidden) return;
+
+    painel.hidden = true;
+    raiz.getElementById("usuario-gatilho").setAttribute("aria-expanded", "false");
+  }
+
+  sair() {
+    // logout() vem do auth.js: remove "usuarioLogado" e redireciona para login.html
+    if (typeof logout === "function") {
+      logout();
+      return;
+    }
+
+    // Plano B caso o auth.js não esteja carregado nesta página
+    localStorage.removeItem("usuarioLogado");
+    window.location.href = "login.html";
+  }
+
+  encerrarMenuUsuario() {
+    document.removeEventListener("click", this._cliqueForaUsuario);
+    document.removeEventListener("keydown", this._teclaUsuario);
   }
 }
 

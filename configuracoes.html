@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECONOMIZAI | CONFIGURAÇÕES</title>
+
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/configuracoes.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+
+  <!-- A ordem importa: o configuracoes.js usa funções do auth.js (ajuste o caminho se precisar) -->
+  <script src="js/components/LayoutCompartilhado.js" defer></script>
+  <script src="js/auth.js" defer></script>
+  <script src="js/configuracoes.js" defer></script>
+</head>
+
+<body>
+  <economizai-header active-page="configuracoes"></economizai-header>
+
+  <main class="auth-page">
+    <span class="auth-blob auth-blob--1" aria-hidden="true"></span>
+    <span class="auth-blob auth-blob--2" aria-hidden="true"></span>
+    <span class="auth-blob auth-blob--3" aria-hidden="true"></span>
+    <span class="auth-blob auth-blob--4" aria-hidden="true"></span>
+
+    <div class="auth-shell">
+
+      <!-- Resumo do perfil -->
+      <section class="auth-intro">
+        <span class="auth-badge"><i class="bi bi-person-gear" aria-hidden="true"></i> Minha conta</span>
+        <h1 class="auth-intro-title">Configurações da conta</h1>
+        <p class="auth-intro-desc">
+          Troque sua foto, seu nome ou sua senha quando quiser. As mudanças aparecem
+          no menu do topo assim que você salva.
+        </p>
+
+        <div class="config-perfil">
+          <div class="config-avatar" id="perfil-avatar" aria-hidden="true"></div>
+          <div class="config-perfil-dados">
+            <strong id="perfil-nome"></strong>
+            <span id="perfil-login"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Formulários -->
+      <div class="auth-card auth-card--config">
+
+        <!-- Foto -->
+        <section class="config-secao" aria-labelledby="titulo-foto">
+          <div class="auth-secao">
+            <span class="auth-secao-numero" aria-hidden="true"><i class="bi bi-camera"></i></span>
+            <h2 class="auth-secao-titulo" id="titulo-foto">Foto de perfil</h2>
+          </div>
+
+          <form class="auth-form" id="form-foto" novalidate>
+            <div class="config-foto">
+              <div class="config-avatar config-avatar--grande" id="foto-preview" aria-hidden="true"></div>
+
+              <div class="config-foto-acoes">
+                <div class="config-foto-botoes">
+                  <input class="config-arquivo" id="foto_arquivo" type="file"
+                    accept="image/png,image/jpeg,image/webp" aria-describedby="dica-foto">
+                  <label class="config-botao" for="foto_arquivo">
+                    <i class="bi bi-upload" aria-hidden="true"></i>
+                    <span>Escolher foto</span>
+                  </label>
+
+                  <button class="config-botao config-botao--perigo" id="foto-remover" type="button">
+                    <i class="bi bi-trash" aria-hidden="true"></i>
+                    <span>Remover foto</span>
+                  </button>
+                </div>
+
+                <p class="auth-field-hint" id="dica-foto">
+                  JPG, PNG ou WebP, até 5 MB. A imagem é cortada em formato quadrado.
+                </p>
+              </div>
+            </div>
+
+            <p class="auth-message" id="msg-foto" role="status" aria-live="polite"></p>
+
+            <button class="botao-principal auth-submit" id="foto-salvar" type="submit" disabled>Salvar foto</button>
+          </form>
+        </section>
+
+        <!-- Nome -->
+        <section class="config-secao" aria-labelledby="titulo-nome">
+          <div class="auth-secao">
+            <span class="auth-secao-numero" aria-hidden="true"><i class="bi bi-person"></i></span>
+            <h2 class="auth-secao-titulo" id="titulo-nome">Nome</h2>
+          </div>
+
+          <form class="auth-form" id="form-nome" novalidate>
+            <div class="auth-field">
+              <label class="auth-label" for="nome_config">Nome completo</label>
+              <div class="auth-control-wrap">
+                <i class="bi bi-person auth-control-icone" aria-hidden="true"></i>
+                <input class="auth-control auth-control--icone" id="nome_config" type="text"
+                  autocomplete="name" maxlength="60" aria-describedby="dica-nome erro-nome_config">
+              </div>
+              <p class="auth-field-hint" id="dica-nome">Entre 15 e 60 letras, sem números.</p>
+              <p class="auth-field-error" id="erro-nome_config" role="alert" hidden></p>
+            </div>
+
+            <p class="auth-message" id="msg-nome" role="status" aria-live="polite"></p>
+
+            <button class="botao-principal auth-submit" type="submit">Salvar nome</button>
+          </form>
+        </section>
+
+        <!-- Senha -->
+        <section class="config-secao" aria-labelledby="titulo-senha">
+          <div class="auth-secao">
+            <span class="auth-secao-numero" aria-hidden="true"><i class="bi bi-lock"></i></span>
+            <h2 class="auth-secao-titulo" id="titulo-senha">Senha</h2>
+          </div>
+
+          <form class="auth-form" id="form-senha" novalidate>
+            <div class="auth-field">
+              <label class="auth-label" for="senha_atual">Senha atual</label>
+              <div class="auth-control-wrap">
+                <i class="bi bi-lock auth-control-icone" aria-hidden="true"></i>
+                <input class="auth-control auth-control--icone auth-control--toggle" id="senha_atual"
+                  type="password" autocomplete="current-password" aria-describedby="erro-senha_atual">
+                <button class="auth-toggle-senha" type="button" data-alvo="senha_atual" aria-label="Mostrar senha">
+                  <i class="bi bi-eye" aria-hidden="true"></i>
+                </button>
+              </div>
+              <p class="auth-field-error" id="erro-senha_atual" role="alert" hidden></p>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="nova_senha">Nova senha</label>
+              <div class="auth-control-wrap">
+                <i class="bi bi-lock auth-control-icone" aria-hidden="true"></i>
+                <input class="auth-control auth-control--icone auth-control--toggle" id="nova_senha"
+                  type="password" autocomplete="new-password" aria-describedby="forca-nova-senha erro-nova_senha">
+                <button class="auth-toggle-senha" type="button" data-alvo="nova_senha" aria-label="Mostrar senha">
+                  <i class="bi bi-eye" aria-hidden="true"></i>
+                </button>
+              </div>
+              <p class="auth-forca-senha" id="forca-nova-senha"></p>
+              <p class="auth-field-error" id="erro-nova_senha" role="alert" hidden></p>
+            </div>
+
+            <div class="auth-field">
+              <label class="auth-label" for="confirma_nova_senha">Confirmar nova senha</label>
+              <div class="auth-control-wrap">
+                <i class="bi bi-lock auth-control-icone" aria-hidden="true"></i>
+                <input class="auth-control auth-control--icone auth-control--toggle" id="confirma_nova_senha"
+                  type="password" autocomplete="new-password" aria-describedby="erro-confirma_nova_senha">
+                <button class="auth-toggle-senha" type="button" data-alvo="confirma_nova_senha" aria-label="Mostrar senha">
+                  <i class="bi bi-eye" aria-hidden="true"></i>
+                </button>
+              </div>
+              <p class="auth-field-error" id="erro-confirma_nova_senha" role="alert" hidden></p>
+            </div>
+
+            <p class="auth-message" id="msg-senha" role="status" aria-live="polite"></p>
+
+            <button class="botao-principal auth-submit" type="submit">Alterar senha</button>
+          </form>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <economizai-footer></economizai-footer>
+</body>
+
+</html>
