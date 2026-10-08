@@ -141,6 +141,83 @@ economizai-footer {
     gap: 24px;
 }
 
+/* Mobile primeiro: tudo empilhado */
+.mercados-bloco {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.mercados-logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.icon-mercados {
+    flex: 0 0 64px;          /* nunca encolhe */
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    background: white;
+    border-radius: 16px;
+    padding: 8px;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.10);
+    transition: transform 0.2s ease;
+}
+
+.icon-mercados:hover {
+    transform: translateY(-3px);
+}
+
+/* Telas grandes: texto ao lado dos logos */
+@media (min-width: 1024px) {
+    .mercados-bloco {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .mercados-texto {
+        width: 40%;
+        flex-shrink: 0;
+    }
+
+    .mercados-logos {
+        flex: 1;
+        min-width: 0;
+        justify-content: space-between;
+    }
+}
+
+@media (min-width: 1280px) {
+    .icon-mercados {
+        flex-basis: 72px;
+        width: 72px;
+        height: 72px;
+        padding: 10px;
+    }
+}
+
+.flutuando {
+    animation: flutuar 4s ease-in-out infinite;
+}
+
+@keyframes flutuar {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-16px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .flutuando {
+        animation: none;
+    }
+}
+
 .logo-link {
     display: inline-flex;
     align-items: center;
@@ -729,6 +806,8 @@ html[data-theme="dark"] .auth-blob {
     line-height: 1.6;
     max-width: 34rem;
 }
+
+
 
 .auth-features {
     list-style: none;

@@ -618,6 +618,14 @@ class EconomizaiHeader extends HTMLElement {
             ${this.getNavLink("contato", "contato.html", "Contato")}
           </nav>
           <div class="acoes-header">
+            <div class="postar">
+              <a class="botao-postar" href="postar.html">
+                <i class="bi bi-plus-circle"></i>
+                <span>Postar</span>
+              </a>
+            </div> 
+
+
             <div class="acessibilidade">
               <button class="drop-box" type="button" aria-label="Acessibilidades" title="Acessibilidades">
                 <i class="bi bi-universal-access-circle"></i>
@@ -642,14 +650,6 @@ class EconomizaiHeader extends HTMLElement {
                 </button>
               </div>
             </div>
-
-            <!--<div class="postar">
-              <a class="botao-postar" href="postar.html">
-                <i class="bi bi-plus-circle"></i>
-                <span>Postar</span>
-              </a>
-            </div> --!>
-
             <div class="login" id="user-div">
               <a class="botao-principal" href="login.html">
                 <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
