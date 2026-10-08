@@ -306,6 +306,19 @@ class EconomizaiHeader extends HTMLElement {
           white-space: nowrap;
         }
 
+        .usuario-identificacao {
+          display: flex;
+          align-items: flex-end;
+          flex-direction: column;
+          line-height: 1.2;
+        }
+
+        .usuario-login {
+          color: var(--cor-texto-secundario, rgba(0, 0, 0, 0.70));
+          font-size: 0.6875rem;
+          white-space: nowrap;
+        }
+
         .login .botao-principal {
           width: auto;
           height: auto;
@@ -318,44 +331,40 @@ class EconomizaiHeader extends HTMLElement {
           color: var(--cor-nav-ativo-texto, #166534);
         }
 
-        .pesquisa  {
+        .pesquisa {
           display: flex;
           align-items: center;
-          gap: 24px;
-          padding: 8px 32px;
-          border: solid 1px;
-          box-sizing: border-box; 
+          gap: 8px;
+          padding: 8px 12px;
+          width: 100%;          /* ocupa a largura do pai */
+          min-width: 300px;     /* garante um mínimo para o texto caber */
+          border: solid 1px rgba(66, 65, 65, 0.4);
+          box-sizing: border-box;
           border-radius: 8px;
-          border-color: rgba(66, 65, 65, 0.4);
           transition: 0.2s ease;
         }
 
-        .pesquisa:hover  {
-          display: flex;
-          align-items: center;
-          gap: 24px;
-          padding: 8px 32px;
-          border: solid 1px;
-          box-sizing: border-box; 
-          border-radius: 8px;
+        .pesquisa:hover {
           border-color: rgba(148, 202, 126, 0.4);
-          transition: 0.2s ease;
         }
 
         .pesquisa input {
+          flex: 1;
+          min-width: 0;
+          padding: 0;           /* remove o padding padrão do navegador */
           border: none;
           outline: none;
           background: transparent;
+          text-overflow: ellipsis;
         }
 
         .pesquisa button {
+          flex-shrink: 0;
+          padding: 0;           /* remove o padding padrão do botão (~6px de cada lado) */
           background-color: transparent;
           border: none;
           outline: none;
-        }
-        
-        .pesquisa i {
-          color: var(--cor-texto, black);
+          cursor: pointer;
         }
 
         .botao-postar {
@@ -519,6 +528,7 @@ class EconomizaiHeader extends HTMLElement {
             order: 3;
             width: 100%;
           }
+
         }
 
         @media (max-width: 640px) {
@@ -633,12 +643,12 @@ class EconomizaiHeader extends HTMLElement {
               </div>
             </div>
 
-            <div class="postar">
+            <!--<div class="postar">
               <a class="botao-postar" href="postar.html">
                 <i class="bi bi-plus-circle"></i>
                 <span>Postar</span>
               </a>
-            </div>
+            </div> --!>
 
             <div class="login" id="user-div">
               <a class="botao-principal" href="login.html">
@@ -729,18 +739,9 @@ botaoAumentarFonte.addEventListener("click", aumentarFonte);
       return;
     }
 
-    let usuario = null;
+    const login = localStorage.getItem("usuarioLogado");
 
-    if (typeof window.verificarLogin === "function") {
-      usuario = window.verificarLogin({
-        redirecionarSeAusente: false,
-        targetElement: usuarioArea
-      });
-    } else {
-      usuario = localStorage.getItem("usuarioLogado");
-    }
-
-    if (!usuario) {
+    if (!login) {
       usuarioArea.innerHTML = `
         <a class="botao-principal" href="login.html">
           <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -755,12 +756,37 @@ botaoAumentarFonte.addEventListener("click", aumentarFonte);
       return;
     }
 
-    const usuarioSeguro = String(usuario)
+    let usuarios = [];
+    try {
+      const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios"));
+      usuarios = Array.isArray(usuariosSalvos) ? usuariosSalvos : [];
+    } catch {
+      usuarios = [];
+    }
+
+    const cadastro = usuarios.find(
+      (usuario) =>
+        typeof usuario.login === "string" &&
+        usuario.login.toLowerCase() === login.toLowerCase()
+    );
+    const primeiroNome = String(cadastro?.nome || "").trim().split(/\s+/)[0] || login;
+
+    const nomeSeguro = primeiroNome
       .replaceAll("&", "&amp;")
       .replaceAll("<", "&lt;")
       .replaceAll(">", "&gt;");
 
-    usuarioArea.innerHTML = `<span class="usuario-bemvindo">Bem-vindo, ${usuarioSeguro}!</span>`;
+    const loginSeguro = login
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
+
+    usuarioArea.innerHTML = `
+      <span class="usuario-identificacao">
+        <span class="usuario-bemvindo">Bem-vindo, ${nomeSeguro}!</span>
+        <span class="usuario-login">Login: ${loginSeguro}</span>
+      </span>
+    `;
   }
 }
 

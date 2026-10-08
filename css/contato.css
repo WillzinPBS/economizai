@@ -3,12 +3,21 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
-/* título */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/*TÍTULO / TOPO*/
+
 h1 {
     font-family: Arial, Helvetica, sans-serif;
     text-align: center;
     margin-top: 60px;
-    font-size: 3rem
+    font-size: clamp(2.625rem, 5vw, 4rem);
+    font-weight: 800;
+    line-height: 1.05;
 }
 
 .duvida {
@@ -16,28 +25,29 @@ h1 {
     color: var(--cor-texto-secundario);
     font-size: 1.25rem;
     max-width: 768px;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 18px auto 0;
+    line-height: 1.6;
 }
 
-/* layout */
+/*LAYOUT*/
+
 .container {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-    max-width: 1100px;
-    margin: auto auto;
-    padding: 40px;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+    gap: 28px;
+    width: min(1100px, calc(100% - 40px));
+    margin: 25px auto 0;
+    padding: 0;
+    align-items: start;
 }
 
-.contact-left {
-    flex: 1;
-    flex: 0 0 300px;
+.contact-left,
+.contact-right {
+    width: 100%;
+    min-width: 0;
 }
 
 .contact-right {
-    flex: 2;
     display: flex;
     justify-content: center;
 }
@@ -48,7 +58,8 @@ h1 {
     padding: 30px;
 }
 
-/* cards */
+/*CARDS*/
+
 .card {
     background-color: var(--cor-superficie-elevada);
     border-radius: 10px;
@@ -56,7 +67,8 @@ h1 {
     box-shadow: 0 4px 10px var(--cor-sombra);
 }
 
-/* links */
+/*LINKS*/
+
 a {
     color: var(--cor-texto-secundario);
     text-decoration: none;
@@ -72,31 +84,18 @@ a {
     padding-left: 0;
 }
 
-#list li {
-    position: relative;
-    padding-left: -20px;
-    margin-left: -10;
-    margin-bottom: 15px;
-}
-
-/* Ícones */
-#list {
-    list-style: none;
-    padding-left: 0;
-}
-
-#list li {
+#list .contact-title {
     position: relative;
     padding-left: 20px;
     margin-left: 0;
-    margin-bottom: 15px;
 }
 
-/* Ícones */
-#E-mail::before,
-#Telefone::before,
-#Endereco::before,
-#Horas::before {
+/*ÍCONES DOS CONTATOS*/
+
+#email::before,
+#telefone::before,
+#endereco::before,
+#horas::before {
     content: "";
     position: absolute;
     left: 0;
@@ -107,26 +106,26 @@ a {
     background-repeat: no-repeat;
 }
 
-#E-mail::before {
+#email::before {
     background-image: url(../img/mail.svg);
 }
 
-#Telefone::before {
+#telefone::before {
     background-image: url(../img/phone.svg);
 }
 
-#Endereco::before {
+#endereco::before {
     background-image: url(../img/map-pin.svg);
 }
 
-#Horas::before {
+#horas::before {
     background-image: url(../img/message-square.svg);
 }
 
-html[data-theme="dark"] #E-mail::before,
-html[data-theme="dark"] #Telefone::before,
-html[data-theme="dark"] #Endereco::before,
-html[data-theme="dark"] #Horas::before {
+html[data-theme="dark"] #email::before,
+html[data-theme="dark"] #telefone::before,
+html[data-theme="dark"] #endereco::before,
+html[data-theme="dark"] #horas::before {
     filter: invert(1) brightness(1.4);
     opacity: 0.86;
 }
@@ -135,39 +134,190 @@ html[data-theme="dark"] #Horas::before {
     color: var(--cor-link-hover);
 }
 
+/*FORMULÁRIO*/
 
-
-/* formulário */
 .form {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    width: 100%;
 }
 
 .row {
-    display: flex;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 17px;
+    width: 100%;
 }
 
 .row input {
-    flex: 1;
+    width: 100%;
 }
 
-/* inputs */
+.campo {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.campo label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+input:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--cor-link-hover);
+    box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.12);
+}
+
+input:invalid:not(:placeholder-shown),
+textarea:invalid:not(:placeholder-shown) {
+    border-color: #ef4444;
+}
+
+/*DETAILS / PERGUNTAS FREQUENTES*/
+
+.frequente {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    padding: 1rem;
+}
+
+.frequente details {
+    width: 100%;
+    max-width: 500px;
+}
+
+.pergunta {
+    font-weight: 600;
+}
+
+.pergunta:hover {
+    color: #16a34a;
+    cursor: pointer;
+}
+
+/*INPUTS*/
+
 input,
 textarea {
     width: 100%;
+    max-width: 100%;
     padding: 14px;
     border-radius: 8px;
     border: 1px solid var(--cor-campo-borda);
     background-color: var(--cor-campo);
     color: var(--cor-texto);
     font-size: 0.9375rem;
+    font-family: inherit;
 }
 
-/* textarea maior */
 textarea {
     height: 180px;
-    width: 40rem;
+    width: 100%;
     resize: none;
+}
+
+/*BOTÃO DE ENVIO*/
+
+.botao-principal:disabled {
+    opacity: 0.68;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.botao-principal:disabled .botao-cadeado {
+    color: white;
+    font-size: 0.95rem;
+    margin-right: 8px;
+    filter: none;
+    flex-shrink: 0;
+}
+
+.botao-principal:disabled .botao-texto {
+    filter: blur(1.5px);
+    opacity: 0.75;
+}
+
+.botao-principal:disabled:hover {
+    cursor: not-allowed;
+}
+
+.botao-principal.enviando {
+    cursor: wait;
+}
+
+/*TABLET*/
+
+@media (max-width: 860px) {
+    .container {
+        grid-template-columns: 1fr;
+        width: min(680px, calc(100% - 32px));
+        gap: 20px;
+    }
+
+    .contact-left,
+    .contact-right {
+        width: 100%;
+    }
+}
+
+/*CELULAR*/
+
+@media (max-width: 600px) {
+    h1 {
+        margin-top: 40px;
+        font-size: clamp(2.2rem, 10vw, 3rem);
+    }
+
+    .duvida {
+        padding: 0 18px;
+        font-size: 0.95rem;
+        line-height: 1.55;
+    }
+
+    .container {
+        width: calc(100% - 24px);
+        margin-top: 18px;
+        padding: 0;
+        gap: 16px;
+    }
+
+    .card,
+    .contact-right .card {
+        padding: 22px;
+        border-radius: 12px;
+    }
+
+    .row {
+        grid-template-columns: 1fr;
+        gap: 17px;
+    }
+
+    textarea {
+        min-height: 150px;
+    }
+}
+
+/*REDUZIR ANIMAÇÕES*/
+
+@media (prefers-reduced-motion: reduce) {
+    .botao-principal,
+    input,
+    textarea {
+        transition: none;
+    }
 }

@@ -1,4 +1,3 @@
-const todosProdutos = document.querySelectorAll('.produto-card');
 const divFiltros = document.getElementById("filtro");
 const botoes = divFiltros.querySelectorAll('button');
 
@@ -13,6 +12,8 @@ const textoContado = document.getElementById("produtos-contador");
 function selecionarCategoria(categoria, botao) {
     botao.classList.remove('btn-light', 'text-dark');
     botao.classList.add('btn-primary', 'bg-green-600');
+
+    const todosProdutos = document.querySelectorAll('.produto-card');
 
     todosProdutos.forEach(produto => {
         
@@ -45,6 +46,7 @@ botoes.forEach(botao => {
 
         localStorage.setItem('filtro', getBotaoId)
         selecionarCategoria(getCategoria,botaoSelecionado)
+        
     })
 });
 

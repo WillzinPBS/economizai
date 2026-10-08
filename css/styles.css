@@ -310,6 +310,12 @@ a.botao-principal {
     font-weight: 600;
 }
 
+.auth-required {
+    margin-left: 0.2rem;
+    color: var(--cor-erro);
+    font-weight: 800;
+}
+
 .auth-control {
     width: 100%;
     min-height: 2.75rem;
@@ -331,6 +337,32 @@ a.botao-principal {
 .auth-control:focus {
     border-color: var(--cor-botao-principal);
     box-shadow: 0 0 0 3px var(--cor-foco-sombra);
+}
+
+.auth-control--invalido,
+.auth-control--invalido:focus {
+    border-color: var(--cor-erro);
+    box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.16);
+}
+
+.auth-field-error {
+    margin: 0;
+    color: var(--cor-erro);
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.auth-field-hint {
+    margin: 0;
+    color: var(--cor-texto-secundario);
+    font-size: 0.75rem;
+    line-height: 1.35;
+}
+
+.auth-control[readonly] {
+    cursor: default;
+    opacity: 0.88;
 }
 
 .auth-submit {
@@ -375,9 +407,66 @@ a.botao-principal {
     text-decoration: underline;
 }
 
+/* Mobile primeiro: tudo empilhado */
+.mercados-bloco {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.mercados-logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.mercados-texto {
+    text-align: center;
+}
+
 .icon-mercados {
-    border-radius: 20px;
-    box-shadow: 0 8px 8px var(--cor-sombra);
+    flex: 0 0 64px;          /* nunca encolhe */
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    background: white;
+    border-radius: 16px;
+    padding: 8px;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.10);
+    transition: transform 0.2s ease;
+}
+
+.icon-mercados:hover {
+    transform: translateY(-3px);
+}
+
+@media (min-width: 1024px) {
+    .mercados-bloco {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .mercados-texto {
+        width: 40%;
+        flex-shrink: 0;
+        text-align: left;  
+    }
+
+    .mercados-logos {
+        flex: 1;
+        min-width: 0;
+        justify-content: space-between;
+    }
+}
+
+@media (min-width: 1280px) {
+    .icon-mercados {
+        flex-basis: 72px;
+        width: 72px;
+        height: 72px;
+        padding: 10px;
+    }
 }
 
 .flutuando {
@@ -606,3 +695,6 @@ html[data-theme="dark"] .text-muted {
     color: #15803d;
 }
 
+#aumentar,#diminuir {
+    color: var(--cor-texto);
+}
