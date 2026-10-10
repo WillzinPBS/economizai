@@ -4,6 +4,70 @@ const produtosMock = JSON.parse(
 const listaProdutos = document.getElementById("produtos");
 const contadorProdutos = document.getElementById("produtos-contador");
 
+const CURTIDAS_CHAVE = "curtidas";
+
+function obterUsuarioLogado() {
+  return localStorage.getItem("usuarioLogado");
+}
+
+// Formato salvo: { "usuario1": [1, 4], "usuario2": [2] }
+function carregarCurtidas() {
+  try {
+    const dados = JSON.parse(localStorage.getItem(CURTIDAS_CHAVE));
+    return dados && typeof dados === "object" && !Array.isArray(dados)
+      ? dados
+      : {};
+  } catch {
+    return {};
+  }
+}
+
+function produtoCurtido(id) {
+  const usuario = obterUsuarioLogado();
+  if (!usuario) return false;
+
+  return (carregarCurtidas()[usuario] || []).includes(id);
+}
+
+function alternarCurtida(id) {
+  const usuario = obterUsuarioLogado();
+  const curtidas = carregarCurtidas();
+  const lista = curtidas[usuario] || [];
+
+  curtidas[usuario] = lista.includes(id)
+    ? lista.filter((idAtual) => idAtual !== id)
+    : [...lista, id];
+
+  localStorage.setItem(CURTIDAS_CHAVE, JSON.stringify(curtidas));
+  return curtidas[usuario].includes(id);
+}
+
+function contarCurtidas(id) {
+  return Object.values(carregarCurtidas()).filter(
+    (lista) => Array.isArray(lista) && lista.includes(id)
+  ).length;
+}
+
+function atualizarBotaoCurtir(botao) {
+  const id = Number(botao.dataset.id);
+  const curtido = produtoCurtido(id);
+  const total = contarCurtidas(id);
+
+  botao.classList.toggle("curtido", curtido);
+  botao.setAttribute("aria-pressed", String(curtido));
+  botao.setAttribute(
+    "aria-label",
+    `Curtir ${botao.dataset.nome} (${total} ${
+      total === 1 ? "curtida" : "curtidas"
+    })`
+  );
+  botao.querySelector(".produto-curtir-contagem").textContent = total;
+}
+
+function atualizarTodosBotoesCurtir() {
+  document.querySelectorAll(".produto-curtir").forEach(atualizarBotaoCurtir);
+}
+
 function criarProdutoCard(produto) {
   const selos = {
     seloMenorPreco: `
@@ -39,42 +103,63 @@ function criarProdutoCard(produto) {
     <article class="produto-card" data-categoria="${produto.categoria}">
       <div class="imagem">
         <img src="${produto.imagem}" alt="${produto.nome}" loading="lazy">
-        ${selo}
       </div>
 
       <div class="descricao">
-        <p class="produto-categoria">${produto.categoria}</p>
-        <h2>${produto.nome}</h2>
+        <div class="produto-identidade">
+          <div class="produto-selo-area">${selo}</div>
+          <p class="produto-categoria">${produto.categoria}</p>
+          <h2>${produto.nome}</h2>
+        </div>
 
-        <div class="container-precificacao">
-          <div class="precificacao" id="blur">
-            <div class="precos">
-              <strong class="produto-preco">${produto.preco}</strong>
-              <p class="produto-tipo">${produto.tipo}</p>
+        <div class="produto-preco-info">
+          <div class="container-precificacao">
+            <div class="precificacao" id="blur">
+              <div class="precos">
+                <strong class="produto-preco">${produto.preco}</strong>
+                <p class="produto-tipo">${produto.tipo}</p>
+              </div>
+
+              <button class="produto-info-trigger" type="button" aria-expanded="false" aria-describedby="mercados-${produto.id}">
+                <i class="bi bi-building" aria-hidden="true"></i>
+                Comparar mercados
+              </button>
+
+              <div class="produto-tooltip" id="mercados-${produto.id}" role="tooltip">
+                <p class="outros-mercados-titulo">Outros mercados</p>
+                <div class="outros-mercados">
+                  ${outrosMercados}
+                </div>
+              </div>
             </div>
 
-            <p class="produto-mercado">
-              <i class="bi bi-building" aria-hidden="true"></i>
-              ${produto.mercado}
-            </p>
-          </div>
-
-          <div class="container-alert">
-            <i class="fa-solid fa-lock"></i>
-            <h3>Fa&ccedil;a login para ter acesso</h3>
+            <div class="container-alert">
+              <i class="fa-solid fa-lock"></i>
+              <h3>Fa&ccedil;a login para ter acesso</h3>
+              <a href="login.html" class="container-alert-link">Entrar</a>
+            </div>
           </div>
         </div>
 
-        <button class="botao-principal produto-adicionar" type="button" data-id="${produto.id}">
-          <span aria-hidden="true">+</span>
-          <span>Adicionar</span>
-        </button>
+        <div class="produto-acao">
+          <button
+            type="button"
+            class="produto-curtir"
+            data-id="${produto.id}"
+            data-nome="${produto.nome}"
+            aria-pressed="false"
+            aria-label="Curtir ${produto.nome}"
+            title="Curtir">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            </svg>
+            <span class="produto-curtir-contagem">0</span>
+          </button>
 
-        <hr>
-
-        <p class="outros-mercados-titulo">Outros mercados:</p>
-        <div class="outros-mercados">
-          ${outrosMercados}
+          <button class="botao-principal produto-adicionar" type="button" data-id="${produto.id}">
+            <span aria-hidden="true">+</span>
+            <span>Adicionar</span>
+          </button>
         </div>
       </div>
     </article>
@@ -84,6 +169,44 @@ function criarProdutoCard(produto) {
 contadorProdutos.textContent = `${produtosMock.length} produtos encontrados`;
 produtosMock.forEach((produto) => {
   listaProdutos.insertAdjacentHTML("beforeend", criarProdutoCard(produto));
+});
+
+atualizarTodosBotoesCurtir();
+
+window.addEventListener("storage", (event) => {
+  if (event.key === CURTIDAS_CHAVE) atualizarTodosBotoesCurtir();
+});
+
+document.addEventListener("click", (event) => {
+  const botao = event.target.closest(".produto-curtir");
+  if (!botao) return;
+
+  if (!obterUsuarioLogado()) {
+    window.location.href = "login.html";
+    return;
+  }
+
+  alternarCurtida(Number(botao.dataset.id));
+  atualizarBotaoCurtir(botao);
+});
+
+document.addEventListener("click", (event) => {
+  const trigger = event.target.closest(".produto-info-trigger");
+
+  document.querySelectorAll(".produto-tooltip.aberto").forEach((tooltip) => {
+    if (!trigger || tooltip !== trigger.nextElementSibling) {
+      tooltip.classList.remove("aberto");
+      const gatilhoAnterior = tooltip.previousElementSibling;
+      if (gatilhoAnterior)
+        gatilhoAnterior.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  if (!trigger) return;
+
+  const tooltip = trigger.nextElementSibling;
+  const aberto = tooltip.classList.toggle("aberto");
+  trigger.setAttribute("aria-expanded", String(aberto));
 });
 
 function carregarCarrinho() {
@@ -118,6 +241,10 @@ function converterPreco(preco) {
   );
 }
 
+function formatarMoeda(valor) {
+  return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
 function obterPrecosProduto(produto) {
   return [
     { nome: produto.mercado, preco: produto.preco },
@@ -150,10 +277,15 @@ document.addEventListener("click", (event) => {
     if (item) {
       item.quantidade += 1;
     } else {
-      const produto = produtosMock.find((produtoAtual) => produtoAtual.id === id);
+      const produto = produtosMock.find(
+        (produtoAtual) => produtoAtual.id === id
+      );
       if (produto) carrinho.push({ produto, quantidade: 1 });
+
     }
   }
+
+  
 
   if (aumentar && item) {
     item.quantidade += 1;
@@ -179,7 +311,6 @@ function renderizarCarrinho() {
   const listaCarrinho = document.getElementById("lista-carrinho");
   const contadorCarrinho = document.getElementById("contador-carrinho");
   const resumoCarrinho = document.getElementById("resumo-carrinho");
-  const totalCarrinho = document.getElementById("total-carrinho");
   const totalItens = carrinho.reduce(
     (total, item) => total + item.quantidade,
     0
@@ -190,12 +321,10 @@ function renderizarCarrinho() {
 
   if (carrinho.length === 0) {
     listaCarrinho.innerHTML = `
-      <div class="text-center py-5">
-        <i class="bi bi-cart fs-1 text-secondary"></i>
-        <h5 class="mt-3">Sua lista est&aacute; vazia</h5>
-        <p class="text-muted">
-          Adicione produtos para come&ccedil;ar a comparar pre&ccedil;os
-        </p>
+      <div class="carrinho-vazio">
+        <i class="bi bi-cart" aria-hidden="true"></i>
+        <h3>Sua lista est&aacute; vazia</h3>
+        <p>Adicione produtos para come&ccedil;ar a comparar pre&ccedil;os</p>
       </div>
     `;
 
@@ -204,64 +333,66 @@ function renderizarCarrinho() {
     return;
   }
 
-  const totalMenoresPrecos = carrinho.reduce((total, item) => {
-    return total + converterPreco(item.produto.preco) * item.quantidade;
-  }, 0);
-
-  totalCarrinho.textContent = totalMenoresPrecos.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
-
   resumoCarrinho.classList.remove("d-none");
   listaCarrinho.innerHTML = carrinho
-    .map(
-      (item) => `
-        <div class="bg-light p-3 rounded-4 d-flex flex-wrap align-items-center justify-content-between mb-3">
-          <div class="d-flex align-items-center">
-            <img
-              src="${item.produto.imagem}"
-              class="rounded-3 me-3 img-animada"
-              style="width:80px;height:80px;object-fit:cover;"
-              alt="${item.produto.nome}">
+    .map((item) => {
+      const subtotal = converterPreco(item.produto.preco) * item.quantidade;
 
-            <div>
-              <h6 class="mb-0 fw-bold">${item.produto.nome}</h6>
-              <small class="text-muted">
-                Menor pre&ccedil;o: ${item.produto.mercado} - ${item.produto.preco}
-              </small>
-            </div>
+      return `
+        <article class="carrinho-item">
+          <img
+            class="carrinho-item-imagem"
+            src="${item.produto.imagem}"
+            alt="${item.produto.nome}">
+
+          <div class="carrinho-item-info">
+            <h3>${item.produto.nome}</h3>
+            <p class="carrinho-item-categoria">${item.produto.categoria}</p>
+            <p class="carrinho-item-melhor">
+              Menor pre&ccedil;o: <strong>${
+                item.produto.mercado
+              }</strong> &middot; ${item.produto.preco}
+            </p>
           </div>
 
-          <div class="d-flex align-items-center">
-            <div class="d-flex align-items-center border rounded-3 bg-white me-3">
+          <div class="carrinho-item-controles">
+            <div class="carrinho-quantidade" role="group" aria-label="Quantidade de ${
+              item.produto.nome
+            }">
               <button
-                class="btn btn-sm border-0 px-3 diminuir-item"
+                type="button"
+                class="diminuir-item"
                 data-id="${item.produto.id}"
                 aria-label="Diminuir quantidade de ${item.produto.nome}">
-                -
+                &minus;
               </button>
 
-              <span class="px-2 fw-bold">${item.quantidade}</span>
+              <span>${item.quantidade}</span>
 
               <button
-                class="btn btn-sm border-0 px-3 aumentar-item"
+                type="button"
+                class="aumentar-item"
                 data-id="${item.produto.id}"
                 aria-label="Aumentar quantidade de ${item.produto.nome}">
                 +
               </button>
             </div>
 
+            <strong class="carrinho-item-subtotal">${formatarMoeda(
+              subtotal
+            )}</strong>
+
             <button
-              class="btn text-danger p-0 remover-item"
+              type="button"
+              class="remover-item"
               data-id="${item.produto.id}"
               aria-label="Remover ${item.produto.nome}">
-              <i class="bi bi-trash3 fs-5"></i>
+              <i class="bi bi-trash3" aria-hidden="true"></i>
             </button>
           </div>
-        </div>
-      `
-    )
+        </article>
+      `;
+    })
     .join("");
 
   configurarComparador(compararMercados());
@@ -309,42 +440,64 @@ function configurarComparador(mercadosOrdenados) {
   }
 
   const melhorMercado = mercadosOrdenados[0];
-  const economia =
-    mercadosOrdenados.length > 1
-      ? mercadosOrdenados[1].total - melhorMercado.total
-      : 0;
+  const outrosMercados = mercadosOrdenados.slice(1);
+  const economia = outrosMercados.length
+    ? outrosMercados[0].total - melhorMercado.total
+    : 0;
+
+  const blocoEconomia =
+    economia > 0
+      ? `
+      <p class="comparador-economia">
+        Voc&ecirc; economiza <strong>${formatarMoeda(economia)}</strong>
+        em rela&ccedil;&atilde;o ao ${outrosMercados[0].nome}
+      </p>
+    `
+      : "";
+
+  const blocoOutros = outrosMercados.length
+    ? `
+      <div class="comparador-outros">
+        <p class="comparador-outros-titulo">Outros mercados</p>
+        <ol class="comparador-lista" start="2">
+          ${outrosMercados
+            .map((mercado, indice) => {
+              const diferenca = mercado.total - melhorMercado.total;
+              const textoDiferenca =
+                diferenca > 0
+                  ? `+ ${formatarMoeda(diferenca)}`
+                  : "Mesmo pre&ccedil;o";
+
+              return `
+                <li class="comparador-linha">
+                  <span class="comparador-posicao">${indice + 2}&ordm;</span>
+                  <span class="comparador-nome">${mercado.nome}</span>
+                  <span class="comparador-diferenca">${textoDiferenca}</span>
+                  <strong class="comparador-total">${formatarMoeda(
+                    mercado.total
+                  )}</strong>
+                </li>
+              `;
+            })
+            .join("")}
+        </ol>
+      </div>
+    `
+    : "";
 
   resultadoComparacao.classList.remove("d-none");
   resultadoComparacao.innerHTML = `
-    <div class="card border-0 bg-success text-white p-4">
-      <h5 class="fw-bold mb-2">Melhor mercado para a lista</h5>
-      <h2 class="fw-bold mb-3">${melhorMercado.nome}</h2>
-
-      <div class="mb-3">
-        ${mercadosOrdenados
-          .map(
-            (mercado, indice) => `
-              <div class="d-flex justify-content-between mb-2">
-                <span>${indice + 1}. ${mercado.nome}</span>
-                <strong>
-                  ${mercado.total.toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </strong>
-              </div>
-            `
-          )
-          .join("")}
+    <div class="comparador">
+      <div class="comparador-destaque">
+        <span class="comparador-selo">
+          Melhor mercado
+        </span>
+        <h3>${melhorMercado.nome}</h3>
+        <p class="comparador-valor">${formatarMoeda(melhorMercado.total)}</p>
+        ${blocoEconomia}
       </div>
 
-      <div>
-        <strong>Economia sobre a segunda op&ccedil;&atilde;o:</strong>
-        ${economia.toLocaleString("pt-BR", {
-          style: "currency",
-          currency: "BRL",
-        })}
-      </div>
+      ${blocoOutros}
     </div>
   `;
 }

@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ECONOMIZAI | Produtos</title>
     <link rel="stylesheet" href="css/styles.css">
+<script src="dist/notiflix-notify-aio-X.X.X.min.js"></script>
     <link rel="stylesheet" href="css/produto.css">
     <script src="js/auth.js"></script>
     <script src="https://kit.fontawesome.com/4620774d96.js"></script>
@@ -76,28 +77,20 @@
             <div class="produtos" id="produtos"></div>
             <div class="invisiveis" id="invisiveis"></div>
 
-        <section class="container-cart">
-            <h1>Seu Carrinho</h1>
-            <div id="decoration"></div>
-        </section>
-        <p id="contador-carrinho">0 itens</p>
-
-        <div id="lista-carrinho"></div>
-
-        <div id="resumo-carrinho" class="mt-4 d-none">
-
-            <hr>
-
-            <div class="d-flex justify-content-between mb-2">
-                <span>Total pelos menores pre&ccedil;os</span>
-                <strong id="total-carrinho">
-                    R$ 0,00
-                </strong>
+        <section class="carrinho" aria-labelledby="carrinho-titulo">
+            <div class="carrinho-cabecalho">
+                <h2 id="carrinho-titulo">Seu Carrinho</h2>
+                <span id="contador-carrinho" class="carrinho-contador">0 itens</span>
             </div>
 
-            <section id="resultado-comparacao" class="mt-4 d-none" aria-live="polite"></section>
+            <div class="carrinho-corpo">
+                <div id="lista-carrinho" class="carrinho-lista"></div>
 
-        </div>
+                <aside id="resumo-carrinho" class="carrinho-resumo d-none" aria-label="Resumo e compara&ccedil;&atilde;o de mercados">
+                    <section id="resultado-comparacao" class="d-none" aria-live="polite"></section>
+                </aside>
+            </div>
+        </section>
 
 </section>
 
