@@ -15,7 +15,7 @@
     --cor-link: #047857;
     --cor-link-hover: #16a34a;
     --cor-sucesso: #15803d;
-    --cor-erro: #dc2626;
+    --cor-erro: #dc2626;    
     --cor-nav-ativo-bg: #dcfce7;
     --cor-nav-ativo-texto: #166534;
     --cor-realce-verde-suave: #f0fdf4;
@@ -997,4 +997,64 @@ html[data-theme="dark"] .auth-blob {
 
 @media (max-width: 720px) {
     .auth-intro { padding-top: 0; }
+}
+
+/* Mantem login e cadastro acessiveis quando a tela nao comporta duas colunas. */
+main.auth-page {
+    height: auto;
+    min-height: calc(100vh - 72px);
+    overflow: clip;
+    padding: clamp(1.5rem, 4vw, 3rem) 1rem;
+}
+
+.auth-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-items: start;
+    gap: clamp(1.5rem, 4vw, 2.5rem);
+    width: min(1280px, 100%);
+    height: auto;
+}
+
+.auth-intro,
+.auth-card {
+    min-width: 0;
+    max-height: none;
+    overflow: visible;
+}
+
+.auth-intro {
+    width: 100%;
+    padding-top: 0;
+}
+
+.auth-card {
+    justify-self: center;
+}
+
+@media (max-width: 1099px) {
+    .auth-shell {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
+        gap: 1.5rem;
+    }
+
+    .auth-intro,
+    .auth-card {
+        width: min(100%, 56rem);
+    }
+
+    .auth-intro {
+        max-width: 42rem;
+    }
+}
+
+@media (max-width: 720px) {
+    .auth-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .auth-card {
+        padding: clamp(1rem, 5vw, 1.5rem);
+    }
 }

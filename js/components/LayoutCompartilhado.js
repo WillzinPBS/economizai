@@ -4,6 +4,21 @@ const TAMANHO_FONTE_PADRAO = 100;
 const TAMANHO_FONTE_MINIMO = 90;
 const TAMANHO_FONTE_MAXIMO = 120;
 const TAMANHO_FONTE_PASSO = 10;
+let catalogoBuscaCompartilhado;
+
+function carregarCatalogoBusca() {
+  if (!catalogoBuscaCompartilhado) {
+    catalogoBuscaCompartilhado = fetch("api/index.php?acao=produtos", { credentials: "same-origin", cache: "no-store" })
+      .then((resposta) => resposta.json())
+      .then((dados) => dados.produtos || [])
+      .catch(() => []);
+  }
+  return catalogoBuscaCompartilhado;
+}
+
+function normalizarBuscaCompartilhada(valor) {
+  return valor.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR").trim();
+}
 
 function limitarTamanhoFonte(tamanho) {
   const numero = Number(tamanho);
@@ -110,10 +125,14 @@ class EconomizaiHeader extends HTMLElement {
 
   connectedCallback() {
     this.render();
+    this._sessaoAlterada = () => this.sincronizarUsuario();
+    window.addEventListener("sessao-alterada", this._sessaoAlterada);
+    window.sessaoPronta?.then(() => this.sincronizarUsuario());
   }
 
   disconnectedCallback() {
     this.encerrarMenuUsuario();
+    window.removeEventListener("sessao-alterada", this._sessaoAlterada);
   }
 
   isActive(page) {
@@ -143,6 +162,8 @@ class EconomizaiHeader extends HTMLElement {
         *::after {
           box-sizing: border-box;
         }
+
+        [hidden] { display: none !important; }
 
         header {
           display: flex;
@@ -311,6 +332,7 @@ class EconomizaiHeader extends HTMLElement {
         }
 
         .pesquisa {
+          position: relative;
           display: flex;
           align-items: center;
           gap: 8px;
@@ -344,6 +366,81 @@ class EconomizaiHeader extends HTMLElement {
           border: none;
           outline: none;
           cursor: pointer;
+        }
+
+        .pesquisa-sugestoes {
+          position: absolute;
+          top: calc(100% + 8px);
+          left: 0;
+          right: 0;
+          z-index: 1001;
+          display: none;
+          max-height: 320px;
+          overflow-y: auto;
+          padding: 6px;
+          border: 1px solid var(--cor-borda, #e5e7eb);
+          border-radius: 10px;
+          background: var(--cor-superficie-elevada, #fff);
+          box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
+        }
+
+        .pesquisa-sugestoes.aberto { display: block; }
+
+        .pesquisa-sugestao {
+          display: grid;
+          grid-template-columns: 48px minmax(0, 1fr) auto;
+          align-items: center;
+          gap: 10px;
+          padding: 9px 10px;
+          border-radius: 7px;
+          color: var(--cor-texto, #0f172a);
+          text-decoration: none;
+        }
+
+        .pesquisa-sugestao img {
+          width: 48px;
+          height: 48px;
+          object-fit: contain;
+          border-radius: 6px;
+          background: var(--cor-fundo, #f1f5f9);
+        }
+
+        .pesquisa-sugestao-info { min-width: 0; }
+
+        .pesquisa-sugestao-nome {
+          display: block;
+          overflow: hidden;
+          font-weight: 600;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .pesquisa-sugestao:hover,
+        .pesquisa-sugestao:focus-visible {
+          background: var(--cor-nav-ativo-bg, #dcfce7);
+          outline: none;
+        }
+
+        .pesquisa-sugestao small {
+          display: block;
+          margin-top: 2px;
+          color: var(--cor-texto-secundario, #4b5563);
+        }
+
+        .pesquisa-sugestao-selo {
+          padding: 4px 7px;
+          border-radius: 999px;
+          background: var(--cor-verde-suave, #dcfce7);
+          color: var(--cor-nav-ativo-texto, #166534);
+          font-size: 0.7rem;
+          font-weight: 700;
+          white-space: nowrap;
+        }
+
+        @media (max-width: 500px) {
+          .pesquisa-sugestao { grid-template-columns: 42px minmax(0, 1fr); gap: 8px; }
+          .pesquisa-sugestoes img { width: 42px; height: 42px; }
+          .pesquisa-sugestao-selo { grid-column: 2; justify-self: start; }
         }
 
         .botao-postar {
@@ -665,7 +762,7 @@ class EconomizaiHeader extends HTMLElement {
         /* No celular, só o avatar (+ seta) para o header não estourar */
         @media (max-width: 640px) {
           .usuario-nome-curto {
-            display: none;
+            max-width: 80px;
           }
 
           .usuario-gatilho {
@@ -705,8 +802,14 @@ class EconomizaiHeader extends HTMLElement {
 
         @media (max-width: 640px) {
           .menu img {
-            width: 132px;
+            width: 110px;
           }
+
+          .postar { display: none; }
+          .menu { justify-content: space-between; gap: 12px; }
+          nav { gap: 2px; }
+          nav a { padding: 6px; }
+          .pesquisa { min-width: 0; }
 
           .menu-acessibilidade {
             position: fixed;
@@ -781,9 +884,10 @@ class EconomizaiHeader extends HTMLElement {
             ${this.getNavLink("home", "index.html", "Início")}
             ${this.getNavLink("produtos", "produto.html", "Produtos")}
             <div class="container">
-              <form class="pesquisa">
-              <input type="text" placeholder="Busque promoções e mercados">
-              <button type="submit"><i class="bi bi-search"></i></button>
+              <form class="pesquisa" action="produto.html" method="get" autocomplete="off">
+              <input type="search" name="busca" autocomplete="off" aria-label="Buscar produtos e mercados" placeholder="Busque promoções e mercados">
+              <button type="submit" aria-label="Buscar"><i class="bi bi-search"></i></button>
+              <div class="pesquisa-sugestoes" role="listbox" aria-label="Produtos encontrados"></div>
               </form>
             </div>
 
@@ -791,7 +895,7 @@ class EconomizaiHeader extends HTMLElement {
             ${this.getNavLink("contato", "contato.html", "Contato")}
           </nav>
           <div class="acoes-header">
-            <div class="postar">
+            <div class="postar" data-login-required hidden>
               <a class="botao-postar" href="postar.html">
                 <i class="bi bi-plus-circle"></i>
                 <span>Postar</span>
@@ -859,6 +963,11 @@ class EconomizaiHeader extends HTMLElement {
                     <span>Configurações</span>
                   </a>
 
+                  <a class="usuario-item" href="modelo-bd.html">Modelo do banco de dados</a>
+                  <a class="usuario-item" data-master href="usuarios.html" hidden>Consultar usuários</a>
+                  <a class="usuario-item" data-master href="logs.html" hidden>Logs de autenticação</a>
+                  <a class="usuario-item" data-master href="promocoes.html" hidden>Gerenciar produtos</a>
+
                   <button class="usuario-item usuario-item--sair" id="botao-sair" type="button">
                     <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
                     <span>Sair</span>
@@ -872,6 +981,64 @@ class EconomizaiHeader extends HTMLElement {
     `;
 
     const botaoTema = this.shadowRoot.querySelector(".botao-tema");
+    const campoBusca = this.shadowRoot.querySelector('.pesquisa input[name="busca"]');
+    const caixaSugestoes = this.shadowRoot.querySelector(".pesquisa-sugestoes");
+    let buscaAtual = 0;
+
+    campoBusca.addEventListener("input", async () => {
+      const termo = normalizarBuscaCompartilhada(campoBusca.value);
+      const requisicao = ++buscaAtual;
+      caixaSugestoes.replaceChildren();
+      caixaSugestoes.classList.remove("aberto");
+      if (termo.length < 2) return;
+
+      const produtos = await carregarCatalogoBusca();
+      if (requisicao !== buscaAtual) return;
+      const encontrados = produtos.filter((produto) =>
+        normalizarBuscaCompartilhada(`${produto.nome} ${produto.categoria} ${produto.mercado} ${(produto.outrosMercados || []).map((mercado) => mercado.nome).join(" ")}`).includes(termo)
+      ).slice(0, 6);
+
+      encontrados.forEach((produto) => {
+        const sugestao = document.createElement("a");
+        sugestao.className = "pesquisa-sugestao";
+        sugestao.setAttribute("role", "option");
+        sugestao.href = `produto.html?busca=${encodeURIComponent(produto.nome)}`;
+        const imagem = document.createElement("img");
+        imagem.src = produto.imagem;
+        imagem.alt = "";
+        imagem.loading = "lazy";
+        imagem.onerror = () => imagem.remove();
+        const informacoes = document.createElement("span");
+        informacoes.className = "pesquisa-sugestao-info";
+        const nome = document.createElement("span");
+        nome.className = "pesquisa-sugestao-nome";
+        nome.textContent = produto.nome;
+        const detalhe = document.createElement("small");
+        detalhe.textContent = `${produto.categoria} · ${produto.mercado} · ${produto.preco}`;
+        informacoes.append(nome, detalhe);
+        sugestao.append(imagem, informacoes);
+        if (produto.menorPreco) {
+          const selo = document.createElement("span");
+          selo.className = "pesquisa-sugestao-selo";
+          selo.textContent = "Menor preço";
+          sugestao.append(selo);
+        }
+        caixaSugestoes.append(sugestao);
+      });
+
+      if (encontrados.length) caixaSugestoes.classList.add("aberto");
+    });
+
+    campoBusca.addEventListener("focus", () => {
+      if (caixaSugestoes.childElementCount) caixaSugestoes.classList.add("aberto");
+    });
+    const formularioBusca = this.shadowRoot.querySelector(".pesquisa");
+    document.addEventListener("click", (evento) => {
+      if (!evento.composedPath().includes(formularioBusca)) {
+        caixaSugestoes.classList.remove("aberto");
+      }
+    });
+
     const botaoDiminuirFonte = this.shadowRoot.querySelector(".botao-diminuir-fonte");
     const botaoAumentarFonte = this.shadowRoot.querySelector(".botao-aumentar-fonte");
 
@@ -951,30 +1118,17 @@ class EconomizaiHeader extends HTMLElement {
       return;
     }
 
-    const login = localStorage.getItem("usuarioLogado");
+    const cadastro = window.usuarioAtual;
+    const login = cadastro?.login;
 
     // Visitante: só o botão "Entrar"
     if (!login) {
       botaoEntrar.hidden = false;
       menu.hidden = true;
+      raiz.querySelectorAll("[data-login-required]").forEach((item) => { item.hidden = true; });
       this.fecharMenuUsuario();
       return;
     }
-
-    // Logado: busca o nome completo no cadastro
-    let usuarios = [];
-    try {
-      const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios"));
-      usuarios = Array.isArray(usuariosSalvos) ? usuariosSalvos : [];
-    } catch {
-      usuarios = [];
-    }
-
-    const cadastro = usuarios.find(
-      (usuario) =>
-        typeof usuario.login === "string" &&
-        usuario.login.toLowerCase() === login.toLowerCase()
-    );
 
     const nomeCompleto = String(cadastro?.nome || login).trim();
     const primeiroNome = nomeCompleto.split(/\s+/)[0];
@@ -997,7 +1151,10 @@ class EconomizaiHeader extends HTMLElement {
       elemento.textContent = inicial;
     }
   });
-    raiz.getElementById("usuario-nome-curto").textContent = primeiroNome;
+    raiz.getElementById("usuario-nome-curto").textContent = `@${login}`;
+    raiz.querySelectorAll("[data-master]").forEach((item) => {
+      item.hidden = cadastro.perfil !== "master";
+    });
 
     const nomeCompletoEl = raiz.getElementById("usuario-nome-completo");
     nomeCompletoEl.textContent = nomeCompleto;
@@ -1010,6 +1167,7 @@ class EconomizaiHeader extends HTMLElement {
 
     botaoEntrar.hidden = true;
     menu.hidden = false;
+    raiz.querySelectorAll("[data-login-required]").forEach((item) => { item.hidden = false; });
   }
 
   // Liga os eventos do menu do usuário. Roda uma vez por render().
@@ -1069,16 +1227,13 @@ class EconomizaiHeader extends HTMLElement {
     raiz.getElementById("usuario-gatilho").setAttribute("aria-expanded", "false");
   }
 
-  sair() {
-    // logout() vem do auth.js: remove "usuarioLogado" e redireciona para login.html
-    if (typeof logout === "function") {
-      logout();
-      return;
+  async sair() {
+    try {
+      await encerrarSessao();
+    } catch (erro) {
+      sessionStorage.setItem("erro-sistema", erro.message);
+      location.href = "erro.html";
     }
-
-    // Plano B caso o auth.js não esteja carregado nesta página
-    localStorage.removeItem("usuarioLogado");
-    window.location.href = "login.html";
   }
 
   encerrarMenuUsuario() {

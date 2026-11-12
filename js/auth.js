@@ -1,466 +1,226 @@
-function obterUsuarios() {
-  try {
-    const usuarios = JSON.parse(localStorage.getItem("usuarios"));
-    return Array.isArray(usuarios) ? usuarios : [];
-  } catch {
-    return [];
-  }
-}
-
 const LEMBRAR_USUARIO_CHAVE = "economizai_lembrar_usuario";
 const LEMBRAR_USUARIO_ATIVO_CHAVE = "economizai_lembrar_usuario_ativo";
 
-function salvarUsuarios(usuarios) {
-  localStorage.setItem("usuarios", JSON.stringify(usuarios));
-}
-
-function mostrarMensagem(texto, sucesso) {
+function mostrarMensagem(texto, sucesso = false) {
   const mensagem = document.getElementById("mensagem-auth");
   if (!mensagem) return;
-
-  mensagem.innerText = texto;
-  mensagem.className = sucesso
-    ? "auth-message auth-message--sucesso"
-    : "auth-message auth-message--erro";
+  mensagem.textContent = texto;
+  mensagem.className = "auth-message " + (sucesso ? "auth-message--sucesso" : "auth-message--erro");
 }
 
-function valor(id) {
-  const campo = document.getElementById(id);
-  return campo ? campo.value.trim() : "";
-}
+function valor(id) { return document.getElementById(id)?.value.trim() || ""; }
+function validarNome(nome) { return /^[A-Za-zÀ-ÖØ-öø-ÿ ]{15,80}$/.test(nome); }
+function validarLogin(loginDigitado) { return /^[A-Za-z]{6}$/.test(loginDigitado); }
+function validarSenha(senha) { return /^[A-Za-z]{8}$/.test(senha); }
+function validarTelefoneCelular(telefone) { return /^\(\+55\)\d{2}-\d{8,9}$/.test(telefone); }
+function validarTelefoneFixo(telefone) { return /^\(\+55\)\d{2}-\d{8}$/.test(telefone); }
+function validarCep(cep) { return /^\d{5}-?\d{3}$/.test(cep); }
+function obterPrimeiroNome(nome) { return String(nome || "").trim().split(/\s+/)[0] || ""; }
 
-function validarNome(nome) {
-  return /^[A-Za-zÀ-ÿ\s]{15,60}$/.test(nome);
-}
-
-function validarTelefoneCelular(telefone) {
-  return /^\d{2} \d{5}-\d{4}$/.test(telefone);
-}
-
-function validarTelefoneFixo(telefone) {
-  return /^\(\+55\) \d{2} \d{4}-\d{4}$/.test(telefone);
-}
-
-function validarLogin(login) {
-  return /^[A-Za-z0-9]{4,30}$/.test(login);
-}
-
-function validarSenha(senha) {
-  return senha.length >= 8;
-}
-
-function validarCep(cep) {
-  return /^\d{5}-?\d{3}$/.test(cep);
-}
-
-function obterPrimeiroNome(nome) {
-  return String(nome || "").trim().split(/\s+/)[0] || "";
+function validarCPF(cpf) {
+  const numeros = cpf.replace(/\D/g, "");
+  if (!/^\d{11}$/.test(numeros) || /^(\d)\1{10}$/.test(numeros)) return false;
+  for (let tamanho = 9; tamanho <= 10; tamanho++) {
+    let soma = 0;
+    for (let i = 0; i < tamanho; i++) soma += Number(numeros[i]) * (tamanho + 1 - i);
+    const resto = (soma * 10) % 11;
+    if ((resto === 10 ? 0 : resto) !== Number(numeros[tamanho])) return false;
+  }
+  return true;
 }
 
 function atualizarForcaSenhaCadastro() {
-  const senhaCampo = document.getElementById("senha");
+  const campo = document.getElementById("senha");
   const indicador = document.getElementById("forca-senha-cadastro");
-
-  if (!senhaCampo || !indicador) return;
-
-  if (!senhaCampo.value) {
-    indicador.className = "auth-forca-senha";
-    indicador.innerText = "";
-    return;
-  }
-
-  const senhaValida = validarSenha(senhaCampo.value);
-  indicador.className = senhaValida
-    ? "auth-forca-senha auth-forca-senha--forte"
-    : "auth-forca-senha auth-forca-senha--fraca";
-  indicador.innerText = senhaValida
-    ? "Senha valida: minimo de 8 caracteres."
-    : "A senha deve ter no minimo 8 caracteres.";
+  if (!campo || !indicador) return;
+  const valida = validarSenha(campo.value);
+  indicador.className = "auth-forca-senha" + (campo.value ? (valida ? " auth-forca-senha--forte" : " auth-forca-senha--fraca") : "");
+  indicador.textContent = campo.value ? (valida ? "Senha válida." : "Use exatamente 8 letras, sem números ou símbolos.") : "";
 }
 
 function montarEnderecoCompleto() {
-  const enderecoCampo = document.getElementById("endereco");
-  if (!enderecoCampo) return;
-
-  const logradouro = valor("logradouro");
-  const numero = valor("numero");
-  const complemento = valor("complemento");
-  const bairro = valor("bairro");
-  const cidade = valor("cidade");
-  const estado = valor("estado").toUpperCase();
-  const cep = valor("cep");
-
-  const partes = [
-    [logradouro, numero].filter(Boolean).join(", "),
-    complemento,
-    bairro,
-    [cidade, estado].filter(Boolean).join(" - "),
-    cep ? `CEP ${cep}` : "",
-  ].filter(Boolean);
-
-  enderecoCampo.value = partes.join(", ");
-
-  if (enderecoCampo.value && typeof limparErroCampo === "function") {
-    limparErroCampo(enderecoCampo);
-  }
+  const campo = document.getElementById("endereco");
+  if (!campo) return;
+  campo.value = [
+    [valor("logradouro"), valor("numero")].filter(Boolean).join(", "),
+    valor("complemento"), valor("bairro"),
+    [valor("cidade"), valor("estado")].filter(Boolean).join(" - "),
+    valor("cep") ? "CEP " + valor("cep") : "",
+  ].filter(Boolean).join(", ");
 }
 
 function atualizarStatusCep(texto, erro = false) {
   const status = document.getElementById("cep-status");
   if (!status) return;
-
   status.textContent = texto;
   status.style.color = erro ? "var(--cor-erro)" : "";
 }
 
 async function buscarEnderecoPorCep() {
-  const cepCampo = document.getElementById("cep");
-  if (!cepCampo) return;
-
-  const cep = cepCampo.value.replace(/\D/g, "");
-
-  if (cep.length !== 8) {
-    definirErroCampo("cep", "Informe um CEP com 8 digitos.");
-    atualizarStatusCep("CEP invalido.", true);
-    return;
-  }
-
-  atualizarStatusCep("Buscando endereco...");
-
+  const cep = valor("cep").replace(/\D/g, "");
+  if (cep.length !== 8) { atualizarStatusCep("Informe um CEP com 8 dígitos.", true); return; }
+  atualizarStatusCep("Buscando endereço...");
   try {
     const resposta = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
-    if (!resposta.ok) throw new Error("Falha ao consultar CEP.");
-
+    if (!resposta.ok) throw new Error();
     const endereco = await resposta.json();
-    if (endereco.erro) throw new Error("CEP nao encontrado.");
-
-    document.getElementById("logradouro").value = endereco.logradouro || "";
-    document.getElementById("bairro").value = endereco.bairro || "";
+    if (endereco.erro) throw new Error();
+    ["logradouro", "bairro"].forEach((id) => { document.getElementById(id).value = endereco[id] || ""; });
     document.getElementById("cidade").value = endereco.localidade || "";
     document.getElementById("estado").value = endereco.uf || "";
-
-    ["cep", "logradouro", "bairro", "cidade", "estado"].forEach((id) => {
-      limparErroCampo(id);
-    });
-
     montarEnderecoCompleto();
-    atualizarStatusCep("Endereco encontrado. Informe o numero e, se houver, o complemento.");
-    document.getElementById("numero").focus();
-  } catch (erro) {
-    definirErroCampo("cep", erro.message || "Nao foi possivel consultar o CEP.");
-    atualizarStatusCep("Nao foi possivel consultar o CEP. Preencha o endereco manualmente.", true);
+    atualizarStatusCep("Endereço encontrado. Confira e informe o número.");
+  } catch {
+    atualizarStatusCep("Não foi possível consultar o CEP. Preencha o endereço manualmente.", true);
   }
 }
 
-function cadastrar() {
+async function cadastrar() {
   const formulario = document.getElementById("cadastroForm");
   limparErrosFormulario(formulario);
-
   montarEnderecoCompleto();
-
-  if (!validarCamposObrigatorios(formulario)) {
-    mostrarMensagem("Preencha os campos obrigatorios destacados.", false);
-    return;
-  }
-
-  const nome = valor("nome");
-  const dataNascimento = valor("data_nascimento");
-  const sexo = valor("sexo");
-  const nomeMaterno = valor("nome_materno");
-  const cpf = valor("cpf");
-  const telefoneCelular = valor("telefone_celular");
-  const telefoneFixo = valor("telefone_fixo");
-  const cep = valor("cep");
-  const logradouro = valor("logradouro");
-  const numero = valor("numero");
-  const complemento = valor("complemento");
-  const bairro = valor("bairro");
-  const cidade = valor("cidade");
-  const estado = valor("estado").toUpperCase();
-  const endereco = valor("endereco");
-  const login = valor("login");
-  const senha = valor("senha");
-  const confirmaSenha = valor("confirma_senha");
-
-  if (!validarNome(nome)) {
-    definirErroCampo("nome", "Use entre 15 e 60 caracteres alfabeticos.");
-    mostrarMensagem("Revise o nome informado.", false);
-    return;
-  }
-
-  if (!validarCep(cep)) {
-    definirErroCampo("cep", "Informe um CEP com 8 digitos.");
-    mostrarMensagem("Revise o CEP informado.", false);
-    return;
-  }
-
-  const telefoneCelularValido = validarTelefoneCelular(telefoneCelular);
-  const telefoneFixoValido = validarTelefoneFixo(telefoneFixo);
-
-  if (!telefoneCelularValido || !telefoneFixoValido) {
-    if (!telefoneCelularValido) {
-      definirErroCampo("telefone_celular", "Use o formato 21 98480-7030.");
-    }
-
-    if (!telefoneFixoValido) {
-      definirErroCampo("telefone_fixo", "Use o formato (+55) 21 3333-4444.");
-    }
-
-    mostrarMensagem("Revise os telefones informados.", false);
-    return;
-  }
-
-  if (!validarLogin(login)) {
-    definirErroCampo("login", "Use entre 4 e 30 letras ou numeros.");
-    mostrarMensagem("Revise o login informado.", false);
-    return;
-  }
-
-  if (!validarSenha(senha)) {
-    definirErroCampo("senha", "A senha deve ter no minimo 8 caracteres.");
-    mostrarMensagem("Revise a senha informada.", false);
-    return;
-  }
-
-  if (senha !== confirmaSenha) {
-    definirErroCampo("confirma_senha", "A confirmacao deve ser igual a senha.");
-    mostrarMensagem("Senha e confirmacao devem ser iguais.", false);
-    return;
-  }
-
-  const usuarios = obterUsuarios();
-  const loginNormalizado = login.toLowerCase();
-  const existe = usuarios.some(
-    (usuario) =>
-      typeof usuario.login === "string" &&
-      usuario.login.toLowerCase() === loginNormalizado
-  );
-
-  if (existe) {
-    definirErroCampo("login", "Este login ja esta cadastrado.");
-    mostrarMensagem("Login ja cadastrado.", false);
-    return;
-  }
-
-  usuarios.push({
-    nome,
-    dataNascimento,
-    sexo,
-    nomeMaterno,
-    cpf,
-    telefoneCelular,
-    telefoneFixo,
-    cep,
-    logradouro,
-    numero,
-    complemento,
-    bairro,
-    cidade,
-    estado,
-    endereco,
-    login: loginNormalizado,
-    senha,
+  if (!validarCamposObrigatorios(formulario)) { mostrarMensagem("Preencha os campos obrigatórios destacados."); return; }
+  const dados = {
+    nome: valor("nome"), dataNascimento: valor("data_nascimento"), sexo: valor("sexo"),
+    nomeMaterno: valor("nome_materno"), cpf: valor("cpf"), email: valor("email"),
+    telefoneCelular: valor("telefone_celular"), telefoneFixo: valor("telefone_fixo"),
+    cep: valor("cep"), logradouro: valor("logradouro"), numero: valor("numero"),
+    complemento: valor("complemento"), bairro: valor("bairro"), cidade: valor("cidade"),
+    estado: valor("estado"), endereco: valor("endereco"), login: valor("login"),
+    senha: document.getElementById("senha").value, confirmaSenha: document.getElementById("confirma_senha").value,
+  };
+  const verificacoes = [
+    ["nome", validarNome(dados.nome), "Use entre 15 e 80 letras e espaços."],
+    ["nome_materno", /^[A-Za-zÀ-ÖØ-öø-ÿ ]{2,80}$/.test(dados.nomeMaterno), "Use entre 2 e 80 letras e espaços."],
+    ["cpf", validarCPF(dados.cpf), "Informe um CPF válido."],
+    ["email", /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(dados.email), "Informe um e-mail válido."],
+    ["telefone_celular", validarTelefoneCelular(dados.telefoneCelular), "Use (+55)21-999999999."],
+    ["telefone_fixo", validarTelefoneFixo(dados.telefoneFixo), "Use (+55)21-33334444."],
+    ["cep", validarCep(dados.cep), "Informe um CEP com 8 dígitos."],
+    ["login", validarLogin(dados.login), "Use exatamente 6 letras."],
+    ["senha", validarSenha(dados.senha), "Use exatamente 8 letras, sem números ou símbolos."],
+    ["confirma_senha", dados.senha === dados.confirmaSenha, "A confirmação deve ser igual à senha."],
+  ];
+  let valido = true;
+  verificacoes.forEach(([id, ok, mensagem]) => {
+    if (!ok) { definirErroCampo(id, mensagem); valido = false; }
   });
-
-  salvarUsuarios(usuarios);
-  mostrarMensagem(
-    "Cadastro realizado com sucesso. Redirecionando para login...",
-    true
-  );
-
-  setTimeout(() => {
+  if (!valido) { mostrarMensagem("Revise os campos destacados."); return; }
+  const botao = formulario.querySelector('[type="submit"]');
+  botao.disabled = true;
+  try {
+    await requisitar("cadastro", dados);
+    formulario.reset();
+    sessionStorage.setItem("aviso-login", "Cadastro realizado. Entre com seu login e senha.");
     window.location.href = "login.html";
-  }, 800);
+  } catch (erro) { mostrarMensagem(erro.message); }
+  finally { botao.disabled = false; }
 }
 
-function login() {
+async function login() {
   const formulario = document.getElementById("loginForm");
   limparErrosFormulario(formulario);
-
-  if (!validarCamposObrigatorios(formulario)) {
-    mostrarMensagem("Preencha os campos obrigatorios destacados.", false);
-    return;
-  }
-
+  if (!validarCamposObrigatorios(formulario)) { mostrarMensagem("Preencha login e senha."); return; }
   const loginDigitado = valor("login");
-  const senha = valor("senha");
-  const lembrarUsuario = document.getElementById("lembrar_usuario");
-
-  if (!validarLogin(loginDigitado)) {
-    definirErroCampo("login", "Use entre 4 e 30 letras ou numeros.");
-    mostrarMensagem("Revise o login informado.", false);
-    return;
+  const senha = document.getElementById("senha").value;
+  if (!validarLogin(loginDigitado) || !validarSenha(senha)) {
+    mostrarMensagem("O login deve ter 6 letras e a senha, 8 letras."); return;
   }
-
-  if (!validarSenha(senha)) {
-    definirErroCampo("senha", "A senha deve ter no minimo 8 caracteres.");
-    mostrarMensagem("Revise a senha informada.", false);
-    return;
+  const botao = formulario.querySelector('[type="submit"]');
+  botao.disabled = true;
+  try {
+    await window.sessaoPronta;
+    await requisitar("login", { login: loginDigitado, senha });
+    if (document.getElementById("lembrar_usuario").checked) {
+      localStorage.setItem(LEMBRAR_USUARIO_CHAVE, loginDigitado);
+      localStorage.setItem(LEMBRAR_USUARIO_ATIVO_CHAVE, "true");
+    } else {
+      localStorage.removeItem(LEMBRAR_USUARIO_CHAVE);
+      localStorage.removeItem(LEMBRAR_USUARIO_ATIVO_CHAVE);
+    }
+    window.location.href = "2fa.html";
+  } catch (erro) {
+    if (erro.status >= 500) {
+      sessionStorage.setItem("erro-sistema", erro.message);
+      window.location.href = "erro.html";
+    } else mostrarMensagem(erro.message);
   }
-
-  const usuarios = obterUsuarios();
-  const loginNormalizado = loginDigitado.toLowerCase();
-  const usuario = usuarios.find(
-    (item) =>
-      typeof item.login === "string" &&
-      item.login.toLowerCase() === loginNormalizado
-  );
-
-  if (!usuario || usuario.senha !== senha) {
-    definirErroCampo("login", "Confira o login informado.");
-    definirErroCampo("senha", "Confira a senha informada.");
-    mostrarMensagem("Login ou senha invalidos.", false);
-    return;
-  }
-
-  const lembrarAtivo = Boolean(lembrarUsuario && lembrarUsuario.checked);
-
-  if (lembrarAtivo) {
-    localStorage.setItem(LEMBRAR_USUARIO_CHAVE, loginDigitado);
-    localStorage.setItem(LEMBRAR_USUARIO_ATIVO_CHAVE, "true");
-  } else {
-    localStorage.removeItem(LEMBRAR_USUARIO_CHAVE);
-    localStorage.removeItem(LEMBRAR_USUARIO_ATIVO_CHAVE);
-  }
-
-  localStorage.setItem("usuarioLogado", loginNormalizado);
-  window.location.href = "index.html";
+  finally { botao.disabled = false; }
 }
 
 function preencherLoginLembrado() {
-  const loginCampo = document.getElementById("login");
-  const lembrarUsuario = document.getElementById("lembrar_usuario");
-
-  if (!loginCampo || !lembrarUsuario) return;
-
-  const lembrarAtivo =
-    localStorage.getItem(LEMBRAR_USUARIO_ATIVO_CHAVE) === "true";
-  const loginSalvo = localStorage.getItem(LEMBRAR_USUARIO_CHAVE) || "";
-
-  lembrarUsuario.checked = lembrarAtivo && Boolean(loginSalvo);
-
-  if (lembrarUsuario.checked) {
-    loginCampo.value = loginSalvo;
-  }
+  const campo = document.getElementById("login");
+  const lembrar = document.getElementById("lembrar_usuario");
+  if (!campo || !lembrar) return;
+  lembrar.checked = localStorage.getItem(LEMBRAR_USUARIO_ATIVO_CHAVE) === "true";
+  if (lembrar.checked) campo.value = localStorage.getItem(LEMBRAR_USUARIO_CHAVE) || "";
 }
 
-function verificarLogin(opcoes = {}) {
-  const { redirecionarSeAusente = true, targetElement = null } = opcoes;
-  const loginSalvo = localStorage.getItem("usuarioLogado");
-
-  if (!loginSalvo) {
-    if (targetElement) targetElement.innerHTML = "";
-    if (redirecionarSeAusente) window.location.href = "index.html";
+async function verificarLogin(opcoes = {}) {
+  const usuario = await window.sessaoPronta;
+  if (!usuario) {
+    if (opcoes.redirecionarSeAusente !== false) window.location.href = "login.html";
     return null;
   }
+  if (opcoes.targetElement) opcoes.targetElement.textContent = `Bem-vindo, ${usuario.login}!`;
+  return usuario.login;
+}
 
-  const usuario = obterUsuarios().find(
-    (item) =>
-      typeof item.login === "string" &&
-      item.login.toLowerCase() === loginSalvo.toLowerCase()
-  );
-  const primeiroNome = obterPrimeiroNome(usuario?.nome) || loginSalvo;
-
-  if (targetElement) {
-    targetElement.innerText = `Bem-vindo, ${primeiroNome}!`;
-  }
-
-  return primeiroNome;
+async function logout() {
+  try {
+    await requisitar("logout", {});
+    atualizarSessao(null);
+    window.location.href = "login.html";
+  } catch (erro) { mostrarMensagem(erro.message); }
 }
 
 function aplicarMascaraTelefone(input, tipo) {
   input.addEventListener("input", () => {
-    // Para o telefone fixo, o campo e reformatado com o literal "(+55) " na
-    // frente. Sem remove-lo antes de extrair os digitos, o "55" desse
-    // prefixo e relido como se fosse digitado, corrompendo o DDD a cada tecla.
-    const valorSemPrefixo =
-      tipo === "fixo" ? input.value.replace(/^\(\+55\)\s*/, "") : input.value;
-
-    let numeros = valorSemPrefixo.replace(/\D/g, "");
-    const quantidadeMaxima = tipo === "celular" ? 11 : 10;
-    const tamanhoPrimeiroBloco = tipo === "celular" ? 5 : 4;
-
-    numeros = numeros.slice(0, quantidadeMaxima);
-
-    const ddd = numeros.slice(0, 2);
-    const telefone = numeros.slice(2);
-    const primeiroBloco = telefone.slice(0, tamanhoPrimeiroBloco);
-    const segundoBloco = telefone.slice(tamanhoPrimeiroBloco);
-
-    const telefoneFormatado = `${ddd}${primeiroBloco ? ` ${primeiroBloco}` : ""}${segundoBloco ? `-${segundoBloco}` : ""}`;
-
-    input.value = numeros
-      ? tipo === "celular"
-        ? telefoneFormatado
-        : `(+55) ${telefoneFormatado}`
-      : "";
+    const numeros = input.value.replace(/^\(\+55\)\s*/, "").replace(/\D/g, "").slice(0, tipo === "fixo" ? 10 : 11);
+    input.value = numeros ? `(+55)${numeros.slice(0, 2)}${numeros.length > 2 ? "-" + numeros.slice(2) : ""}` : "";
   });
 }
 
-function aplicarMascaraCPF(input) {
-  input.addEventListener("input", () => {
-    let texto = input.value.replace(/\D/g, "").slice(0, 11);
-    texto = texto.replace(/(\d{3})(\d)/, "$1.$2");
-    texto = texto.replace(/(\d{3})(\d)/, "$1.$2");
-    texto = texto.replace(/(\d{3})(\d{1,2})$/, "$1-$2");
-    input.value = texto;
+document.addEventListener("DOMContentLoaded", async () => {
+  const cadastro = document.getElementById("cadastroForm");
+  ["telefone_celular", "telefone_fixo"].forEach((id) => {
+    const campo = document.getElementById(id);
+    if (campo) aplicarMascaraTelefone(campo, id === "telefone_fixo" ? "fixo" : "celular");
   });
-}
-
-function aplicarMascaraCep(input) {
-  input.addEventListener("input", () => {
-    const numeros = input.value.replace(/\D/g, "").slice(0, 8);
-    input.value = numeros.replace(/(\d{5})(\d)/, "$1-$2");
-  });
-}
-
-function logout() {
-  localStorage.removeItem("usuarioLogado");
-  window.location.href = "login.html";
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  const formularioCadastro = document.getElementById("cadastroForm");
-  const celular = document.getElementById("telefone_celular");
-  const fixo = document.getElementById("telefone_fixo");
   const cpf = document.getElementById("cpf");
+  if (cpf) cpf.addEventListener("input", () => {
+    cpf.value = cpf.value.replace(/\D/g, "").slice(0, 11).replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d)/, "$1.$2").replace(/(\d{3})(\d{1,2})$/, "$1-$2");
+  });
   const cep = document.getElementById("cep");
-  const senhaCadastro = document.getElementById("senha");
-
-  if (celular) aplicarMascaraTelefone(celular, "celular");
-  if (fixo) aplicarMascaraTelefone(fixo, "fixo");
-  if (cpf) aplicarMascaraCPF(cpf);
-
   if (cep) {
-    aplicarMascaraCep(cep);
+    cep.addEventListener("input", () => { cep.value = cep.value.replace(/\D/g, "").slice(0, 8).replace(/(\d{5})(\d)/, "$1-$2"); });
     cep.addEventListener("blur", buscarEnderecoPorCep);
   }
-
-  ["logradouro", "numero", "complemento", "bairro", "cidade", "estado", "cep"]
-    .map((id) => document.getElementById(id))
-    .filter(Boolean)
-    .forEach((campo) => campo.addEventListener("input", montarEnderecoCompleto));
-
-  if (senhaCadastro) {
-    senhaCadastro.addEventListener("input", atualizarForcaSenhaCadastro);
-    atualizarForcaSenhaCadastro();
+  ["logradouro", "numero", "complemento", "bairro", "cidade", "estado", "cep"].forEach((id) => {
+    document.getElementById(id)?.addEventListener("input", montarEnderecoCompleto);
+  });
+  document.getElementById("senha")?.addEventListener("input", atualizarForcaSenhaCadastro);
+  if (cadastro) cadastro.addEventListener("submit", (evento) => { evento.preventDefault(); cadastrar(); });
+  const aviso = sessionStorage.getItem("aviso-login");
+  if (document.getElementById("loginForm") && aviso) {
+    mostrarMensagem(aviso, aviso.startsWith("Cadastro"));
+    sessionStorage.removeItem("aviso-login");
   }
-
-  if (formularioCadastro) {
-    formularioCadastro.addEventListener("submit", (event) => {
-      event.preventDefault();
-      cadastrar();
+  document.querySelectorAll("#cadastroForm, #loginForm").forEach((formulario) => {
+    formulario.addEventListener("reset", () => {
+      limparErrosFormulario(formulario); mostrarMensagem("");
+      formulario.querySelectorAll(".auth-toggle-senha").forEach((botao) => {
+        document.getElementById(botao.dataset.alvo).type = "password";
+        botao.setAttribute("aria-label", "Mostrar senha");
+        botao.querySelector("i").className = "fa-solid fa-eye";
+      });
+      setTimeout(atualizarForcaSenhaCadastro, 0);
+      atualizarStatusCep("Preencha o CEP para consultar o endereço.");
     });
-  }
-
-  const usuario = localStorage.getItem("usuarioLogado");
+  });
+  const usuario = await window.sessaoPronta;
   if (usuario) {
-    document.querySelectorAll("#blur").forEach((elemento) => {
-      elemento.removeAttribute("id");
-    });
-
-    document.querySelectorAll(".container-alert").forEach((alerta) => {
-      alerta.remove();
-    });
+    document.querySelectorAll("#blur").forEach((elemento) => elemento.removeAttribute("id"));
+    document.querySelectorAll(".container-alert").forEach((elemento) => elemento.remove());
   }
 });

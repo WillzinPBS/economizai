@@ -1,0 +1,145 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1800 2110" role="img" aria-labelledby="titulo resumo-diagrama">
+<title id="titulo">Economizai — modelo do banco de dados MySQL</title>
+<desc id="resumo-diagrama">Sete tabelas: usuarios, logs_autenticacao, produtos, ofertas, promocoes, curtidas e migracoes. Usuários podem curtir produtos publicados uma vez por produto. As curtidas são removidas ao excluir o usuário ou o produto. Produtos possuem ofertas por mercado e promoções registram as solicitações de publicação e revisão.</desc>
+<defs><style>
+.titulo{font:700 34px 'Segoe UI',Arial,sans-serif;fill:#0f172a}
+.subtitulo{font:21px 'Segoe UI',Arial,sans-serif;fill:#475569}
+.tabela{fill:#fff;stroke:#cbd5e1;stroke-width:2}
+.cabecalho{fill:#166534}
+.entidade{font:700 25px 'Segoe UI',Arial,sans-serif;fill:#fff}
+.campo{font:19px Consolas,monospace;fill:#0f172a}
+.tipo{font:18px Consolas,monospace;fill:#475569}
+.chave{fill:#166534;font-weight:700}
+.nota{font:20px 'Segoe UI',Arial,sans-serif;fill:#334155}
+.relacao{fill:none;stroke:#15803d;stroke-width:3}
+.cardinalidade{font:700 17px 'Segoe UI',Arial,sans-serif;fill:#166534}
+</style><marker id="seta" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10" fill="none" stroke="#15803d" stroke-width="1.5"/></marker></defs>
+<rect width="1800" height="2110" rx="16" fill="#f8fafc"/>
+<text class="titulo" x="40" y="58">Modelo do banco de dados</text>
+<text class="subtitulo" x="40" y="94">Economizai · MySQL · Catálogo, preços, curtidas, aprovação e autenticação</text>
+<g aria-label="Tabela usuarios"><rect class="tabela" x="40" y="130" width="620" height="728" rx="12"/>
+<path class="cabecalho" d="M52 130H648Q660 130 660 142V190H40V142Q40 130 52 130Z"/>
+<text class="entidade" x="64" y="169">usuarios</text>
+<text class="campo chave" x="64" y="220">id</text><text class="tipo" x="307" y="220">INT UNSIGNED · PK</text>
+<text class="campo" x="64" y="248">nome</text><text class="tipo" x="307" y="248">VARCHAR(80)</text>
+<text class="campo" x="64" y="276">data_nascimento</text><text class="tipo" x="307" y="276">DATE</text>
+<text class="campo" x="64" y="304">sexo</text><text class="tipo" x="307" y="304">VARCHAR(20)</text>
+<text class="campo" x="64" y="332">nome_materno</text><text class="tipo" x="307" y="332">VARCHAR(80)</text>
+<text class="campo" x="64" y="360">cpf</text><text class="tipo" x="307" y="360">CHAR(11) · UNIQUE</text>
+<text class="campo" x="64" y="388">email</text><text class="tipo" x="307" y="388">VARCHAR(160) · UNIQUE</text>
+<text class="campo" x="64" y="416">telefone_celular</text><text class="tipo" x="307" y="416">VARCHAR(20)</text>
+<text class="campo" x="64" y="444">telefone_fixo</text><text class="tipo" x="307" y="444">VARCHAR(20)</text>
+<text class="campo" x="64" y="472">cep</text><text class="tipo" x="307" y="472">CHAR(8)</text>
+<text class="campo" x="64" y="500">logradouro</text><text class="tipo" x="307" y="500">VARCHAR(160)</text>
+<text class="campo" x="64" y="528">numero</text><text class="tipo" x="307" y="528">VARCHAR(20)</text>
+<text class="campo" x="64" y="556">complemento</text><text class="tipo" x="307" y="556">VARCHAR(100)</text>
+<text class="campo" x="64" y="584">bairro</text><text class="tipo" x="307" y="584">VARCHAR(100)</text>
+<text class="campo" x="64" y="612">cidade</text><text class="tipo" x="307" y="612">VARCHAR(100)</text>
+<text class="campo" x="64" y="640">estado</text><text class="tipo" x="307" y="640">CHAR(2)</text>
+<text class="campo" x="64" y="668">endereco</text><text class="tipo" x="307" y="668">VARCHAR(600)</text>
+<text class="campo" x="64" y="696">login</text><text class="tipo" x="307" y="696">CHAR(6) · UNIQUE</text>
+<text class="campo" x="64" y="724">senha</text><text class="tipo" x="307" y="724">VARCHAR(255) · hash</text>
+<text class="campo" x="64" y="752">perfil</text><text class="tipo" x="307" y="752">ENUM(master, comum)</text>
+<text class="campo" x="64" y="780">foto</text><text class="tipo" x="307" y="780">MEDIUMTEXT · NULL</text>
+<text class="campo" x="64" y="808">versao_sessao</text><text class="tipo" x="307" y="808">INT UNSIGNED</text>
+<text class="campo" x="64" y="836">criado_em</text><text class="tipo" x="307" y="836">TIMESTAMP</text>
+</g>
+<g aria-label="Tabela logs_autenticacao"><rect class="tabela" x="790" y="130" width="960" height="280" rx="12"/>
+<path class="cabecalho" d="M802 130H1738Q1750 130 1750 142V190H790V142Q790 130 802 130Z"/>
+<text class="entidade" x="814" y="169">logs_autenticacao</text>
+<text class="campo chave" x="814" y="220">id</text><text class="tipo" x="1203" y="220">INT UNSIGNED · PK</text>
+<text class="campo chave" x="814" y="248">usuario_id</text><text class="tipo" x="1203" y="248">INT UNSIGNED · FK · NULL</text>
+<text class="campo" x="814" y="276">nome</text><text class="tipo" x="1203" y="276">VARCHAR(80)</text>
+<text class="campo" x="814" y="304">cpf</text><text class="tipo" x="1203" y="304">CHAR(11)</text>
+<text class="campo" x="814" y="332">perfil</text><text class="tipo" x="1203" y="332">ENUM(master, comum)</text>
+<text class="campo" x="814" y="360">fator</text><text class="tipo" x="1203" y="360">VARCHAR(100)</text>
+<text class="campo" x="814" y="388">data_hora</text><text class="tipo" x="1203" y="388">DATETIME · INDEX</text>
+</g>
+<g aria-label="Tabela promocoes"><rect class="tabela" x="790" y="470" width="960" height="504" rx="12"/>
+<path class="cabecalho" d="M802 470H1738Q1750 470 1750 482V530H790V482Q790 470 802 470Z"/>
+<text class="entidade" x="814" y="509">promocoes</text>
+<text class="campo chave" x="814" y="560">id</text><text class="tipo" x="1203" y="560">INT UNSIGNED · PK</text>
+<text class="campo chave" x="814" y="588">usuario_id</text><text class="tipo" x="1203" y="588">INT UNSIGNED · FK</text>
+<text class="campo chave" x="814" y="616">produto_id</text><text class="tipo" x="1203" y="616">INT UNSIGNED · FK · NULL</text>
+<text class="campo" x="814" y="644">nome</text><text class="tipo" x="1203" y="644">VARCHAR(120)</text>
+<text class="campo" x="814" y="672">categoria</text><text class="tipo" x="1203" y="672">VARCHAR(60)</text>
+<text class="campo" x="814" y="700">tipo</text><text class="tipo" x="1203" y="700">VARCHAR(30)</text>
+<text class="campo" x="814" y="728">mercado</text><text class="tipo" x="1203" y="728">VARCHAR(100)</text>
+<text class="campo" x="814" y="756">imagem</text><text class="tipo" x="1203" y="756">MEDIUMTEXT</text>
+<text class="campo" x="814" y="784">preco</text><text class="tipo" x="1203" y="784">DECIMAL(10, 2)</text>
+<text class="campo" x="814" y="812">link</text><text class="tipo" x="1203" y="812">VARCHAR(2048)</text>
+<text class="campo" x="814" y="840">cupom</text><text class="tipo" x="1203" y="840">VARCHAR(60)</text>
+<text class="campo" x="814" y="868">status</text><text class="tipo" x="1203" y="868">ENUM(pendente, aprovada, rejeitada)</text>
+<text class="campo" x="814" y="896">criado_em</text><text class="tipo" x="1203" y="896">TIMESTAMP</text>
+<text class="campo" x="814" y="924">revisado_em</text><text class="tipo" x="1203" y="924">DATETIME · NULL</text>
+<text class="campo chave" x="814" y="952">revisado_por</text><text class="tipo" x="1203" y="952">INT UNSIGNED · FK · NULL</text>
+</g>
+<g aria-label="Tabela produtos"><rect class="tabela" x="40" y="1090" width="700" height="336" rx="12"/>
+<path class="cabecalho" d="M52 1090H728Q740 1090 740 1102V1150H40V1102Q40 1090 52 1090Z"/>
+<text class="entidade" x="64" y="1129">produtos</text>
+<text class="campo chave" x="64" y="1180">id</text><text class="tipo" x="341" y="1180">INT UNSIGNED · PK</text>
+<text class="campo" x="64" y="1208">nome</text><text class="tipo" x="341" y="1208">VARCHAR(120)</text>
+<text class="campo" x="64" y="1236">chave_nome</text><text class="tipo" x="341" y="1236">VARCHAR(120)</text>
+<text class="campo" x="64" y="1264">categoria</text><text class="tipo" x="341" y="1264">VARCHAR(60)</text>
+<text class="campo" x="64" y="1292">tipo</text><text class="tipo" x="341" y="1292">VARCHAR(30)</text>
+<text class="campo" x="64" y="1320">imagem</text><text class="tipo" x="341" y="1320">MEDIUMTEXT</text>
+<text class="campo" x="64" y="1348">selo</text><text class="tipo" x="341" y="1348">VARCHAR(30)</text>
+<text class="campo" x="64" y="1376">criado_em</text><text class="tipo" x="341" y="1376">TIMESTAMP</text>
+<text class="campo" x="64" y="1404">atualizado_em</text><text class="tipo" x="341" y="1404">TIMESTAMP · atualização automática</text>
+</g>
+<g aria-label="Tabela ofertas"><rect class="tabela" x="900" y="1090" width="850" height="308" rx="12"/>
+<path class="cabecalho" d="M912 1090H1738Q1750 1090 1750 1102V1150H900V1102Q900 1090 912 1090Z"/>
+<text class="entidade" x="924" y="1129">ofertas</text>
+<text class="campo chave" x="924" y="1180">id</text><text class="tipo" x="1266" y="1180">INT UNSIGNED · PK</text>
+<text class="campo chave" x="924" y="1208">produto_id</text><text class="tipo" x="1266" y="1208">INT UNSIGNED · FK</text>
+<text class="campo" x="924" y="1236">mercado</text><text class="tipo" x="1266" y="1236">VARCHAR(100)</text>
+<text class="campo" x="924" y="1264">chave_mercado</text><text class="tipo" x="1266" y="1264">VARCHAR(100)</text>
+<text class="campo" x="924" y="1292">preco</text><text class="tipo" x="1266" y="1292">DECIMAL(10, 2)</text>
+<text class="campo" x="924" y="1320">link</text><text class="tipo" x="1266" y="1320">VARCHAR(2048)</text>
+<text class="campo" x="924" y="1348">cupom</text><text class="tipo" x="1266" y="1348">VARCHAR(60)</text>
+<text class="campo" x="924" y="1376">atualizado_em</text><text class="tipo" x="1266" y="1376">TIMESTAMP · atualização automática</text>
+</g>
+<g aria-label="Tabela curtidas"><rect class="tabela" x="40" y="1520" width="700" height="168" rx="12"/>
+<path class="cabecalho" d="M52 1520H728Q740 1520 740 1532V1580H40V1532Q40 1520 52 1520Z"/>
+<text class="entidade" x="64" y="1559">curtidas</text>
+<text class="campo chave" x="64" y="1610">usuario_id</text><text class="tipo" x="341" y="1610">INT UNSIGNED · PK · FK</text>
+<text class="campo chave" x="64" y="1638">produto_id</text><text class="tipo" x="341" y="1638">INT UNSIGNED · PK · FK · INDEX</text>
+<text class="campo" x="64" y="1666">criado_em</text><text class="tipo" x="341" y="1666">TIMESTAMP</text>
+</g>
+<g aria-label="Tabela migracoes"><rect class="tabela" x="900" y="1520" width="850" height="140" rx="12"/>
+<path class="cabecalho" d="M912 1520H1738Q1750 1520 1750 1532V1580H900V1532Q900 1520 912 1520Z"/>
+<text class="entidade" x="924" y="1559">migracoes</text>
+<text class="campo chave" x="924" y="1610">nome</text><text class="tipo" x="1266" y="1610">VARCHAR(80) · PK</text>
+<text class="campo" x="924" y="1638">aplicada_em</text><text class="tipo" x="1266" y="1638">TIMESTAMP</text>
+</g>
+<g class="relacao" marker-end="url(#seta)">
+<path d="M660 220H715V248H790"/>
+<path d="M660 220H690V588H790"/>
+<path d="M660 220H680V952H790"/>
+<path d="M740 1180H760V616H790"/>
+<path d="M740 1180H820V1208H900"/>
+<path d="M40 220H20V1610H40"/>
+<path d="M740 1180H790V1638H740"/>
+</g>
+<g class="cardinalidade">
+<text x="729" y="236">0..N</text><text x="705" y="574">autor 1:N</text>
+<text x="698" y="939">revisor 1:N</text><text x="705" y="1065">1:N</text>
+<text x="830" y="1194">1:N</text><text x="45" y="1496">usuário 1:N</text>
+<text x="798" y="1625">1:N</text>
+</g>
+<text class="nota" x="40" y="1466">UNIQUE produtos: (chave_nome, categoria).</text>
+<text class="nota" x="900" y="1440">UNIQUE ofertas: (produto_id, chave_mercado).</text>
+<text class="nota" x="40" y="1730">PK curtidas: (usuario_id, produto_id).</text>
+<text class="nota" x="40" y="1763">Uma curtida por usuário em cada produto.</text>
+<text class="nota" x="40" y="1796">Índice por produto_id para consultar a contagem.</text>
+<rect x="900" y="1710" width="850" height="116" rx="12" fill="#dcfce7"/>
+<text class="nota" x="924" y="1745" font-weight="700">Catálogo publicado e curtidas</text>
+<text class="nota" x="924" y="1778">Produtos, ofertas e curtidas são lidos do MySQL.</text>
+<text class="nota" x="924" y="1811">Somente usuários autenticados podem curtir.</text>
+<text class="nota" x="40" y="1880">PK: chave primária · FK: chave estrangeira · UNIQUE: valor único · NULL: campo opcional.</text>
+<text class="nota" x="40" y="1916">Excluir produto apaga ofertas e curtidas (CASCADE); o histórico da promoção mantém produto_id nulo.</text>
+<text class="nota" x="40" y="1952">Excluir usuário apaga suas solicitações e curtidas; logs e referências ao revisor usam SET NULL.</text>
+<text class="nota" x="40" y="1988">curtidas relaciona usuários e produtos (N:N); a chave composta impede duplicidade.</text>
+<text class="nota" x="40" y="2024">migracoes preserva o registro das importações já aplicadas.</text>
+<text class="subtitulo" x="40" y="2072">Estrutura correspondente a banco/economizai.sql. Produtos existentes são preservados nas atualizações.</text>
+</svg>

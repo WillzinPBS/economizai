@@ -43,7 +43,7 @@ const campos = formulario
 
 
 function usuarioEstaLogado() {
-    return localStorage.getItem("usuarioLogado") !== null;
+    return Boolean(window.usuarioAtual);
 }
 
 
@@ -253,3 +253,5 @@ formulario?.addEventListener("submit", event => {
 atualizarEstadoFormulario();
 
 atualizarEstadoLogin();
+
+window.addEventListener("sessao-alterada", atualizarEstadoLogin);

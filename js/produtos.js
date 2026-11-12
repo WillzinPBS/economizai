@@ -1,67 +1,55 @@
-const produtosMock = JSON.parse(
-  document.getElementById("produtos-json").textContent
-);
+let produtosCatalogo = [];
 const listaProdutos = document.getElementById("produtos");
 const contadorProdutos = document.getElementById("produtos-contador");
 
-const CURTIDAS_CHAVE = "curtidas";
+
+
+function escaparHtmlProduto(valor) {
+  return String(valor).replace(/[&<>"']/g, (caractere) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  })[caractere]);
+}
 
 function obterUsuarioLogado() {
-  return localStorage.getItem("usuarioLogado");
+  return window.usuarioAtual?.login;
 }
 
-// Formato salvo: { "usuario1": [1, 4], "usuario2": [2] }
-function carregarCurtidas() {
+function atualizarProtecaoPrecos() {
+  const usuarioLogado = Boolean(obterUsuarioLogado());
+  document.querySelectorAll(".precificacao-protegida").forEach((precos) => {
+    precos.classList.toggle("sem-blur", usuarioLogado);
+    const alerta = precos.parentElement.querySelector(".container-alert");
+    if (alerta) alerta.hidden = usuarioLogado;
+  });
+}
+
+let curtidasProdutos = new Map();
+const curtidasPendentes = new Set();
+let versaoConsultaCurtidas = 0;
+
+async function carregarCurtidasServidor() {
+  if (curtidasPendentes.size) return;
+  const versao = ++versaoConsultaCurtidas;
   try {
-    const dados = JSON.parse(localStorage.getItem(CURTIDAS_CHAVE));
-    return dados && typeof dados === "object" && !Array.isArray(dados)
-      ? dados
-      : {};
+    const { curtidas } = await requisitar("curtidas");
+    if (versao !== versaoConsultaCurtidas) return;
+    curtidasProdutos = new Map(curtidas.map((item) => [item.produtoId, item]));
+    atualizarTodosBotoesCurtir();
   } catch {
-    return {};
+    // Mantém a última contagem recebida; o próximo carregamento sincroniza.
   }
-}
-
-function produtoCurtido(id) {
-  const usuario = obterUsuarioLogado();
-  if (!usuario) return false;
-
-  return (carregarCurtidas()[usuario] || []).includes(id);
-}
-
-function alternarCurtida(id) {
-  const usuario = obterUsuarioLogado();
-  const curtidas = carregarCurtidas();
-  const lista = curtidas[usuario] || [];
-
-  curtidas[usuario] = lista.includes(id)
-    ? lista.filter((idAtual) => idAtual !== id)
-    : [...lista, id];
-
-  localStorage.setItem(CURTIDAS_CHAVE, JSON.stringify(curtidas));
-  return curtidas[usuario].includes(id);
-}
-
-function contarCurtidas(id) {
-  return Object.values(carregarCurtidas()).filter(
-    (lista) => Array.isArray(lista) && lista.includes(id)
-  ).length;
 }
 
 function atualizarBotaoCurtir(botao) {
   const id = Number(botao.dataset.id);
-  const curtido = produtoCurtido(id);
-  const total = contarCurtidas(id);
-
+  const estado = curtidasProdutos.get(id) || { total: 0, curtido: false };
+  const curtido = Boolean(obterUsuarioLogado()) && estado.curtido;
   botao.classList.toggle("curtido", curtido);
   botao.setAttribute("aria-pressed", String(curtido));
-  botao.setAttribute(
-    "aria-label",
-    `Curtir ${botao.dataset.nome} (${total} ${
-      total === 1 ? "curtida" : "curtidas"
-    })`
-  );
-  botao.querySelector(".produto-curtir-contagem").textContent = total;
+  botao.disabled = curtidasPendentes.has(id);
+  botao.setAttribute("aria-label", `${curtido ? "Descurtir" : "Curtir"} ${botao.dataset.nome} (${estado.total} ${estado.total === 1 ? "curtida" : "curtidas"})`);
+  botao.title = curtido ? "Descurtir" : "Curtir";
+  botao.querySelector(".produto-curtir-contagem").textContent = estado.total;
 }
 
 function atualizarTodosBotoesCurtir() {
@@ -114,7 +102,7 @@ function criarProdutoCard(produto) {
 
         <div class="produto-preco-info">
           <div class="container-precificacao">
-            <div class="precificacao" id="blur">
+            <div class="precificacao precificacao-protegida">
               <div class="precos">
                 <strong class="produto-preco">${produto.preco}</strong>
                 <p class="produto-tipo">${produto.tipo}</p>
@@ -166,28 +154,118 @@ function criarProdutoCard(produto) {
   `;
 }
 
-contadorProdutos.textContent = `${produtosMock.length} produtos encontrados`;
-produtosMock.forEach((produto) => {
-  listaProdutos.insertAdjacentHTML("beforeend", criarProdutoCard(produto));
-});
+const campoBuscaProdutos = document.getElementById("busca-produtos");
+let categoriaSelecionada = "Todas";
+let atualizarFiltroProdutos = () => {};
+if (campoBuscaProdutos) {
+  const normalizarBusca = (valor) =>
+    valor.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR").trim();
+  const parametrosBusca = new URLSearchParams(window.location.search);
+  campoBuscaProdutos.value = parametrosBusca.get("busca") || "";
+
+  const filtrarProdutos = () => {
+    const termo = normalizarBusca(campoBuscaProdutos.value);
+    const cards = [...listaProdutos.querySelectorAll(".produto-card")];
+    let encontrados = 0;
+
+    cards.forEach((card) => {
+      const corresponde = normalizarBusca(card.textContent).includes(termo) &&
+        (categoriaSelecionada === "Todas" || normalizarBusca(card.dataset.categoria) === normalizarBusca(categoriaSelecionada));
+      card.hidden = !corresponde;
+      if (corresponde) encontrados += 1;
+    });
+
+    contadorProdutos.textContent = `${encontrados} produtos encontrados`;
+  };
+  atualizarFiltroProdutos = filtrarProdutos;
+
+  campoBuscaProdutos.addEventListener("input", filtrarProdutos);
+  document.querySelectorAll("#filtro button").forEach((botao) => {
+    botao.addEventListener("click", () => {
+      categoriaSelecionada = botao.textContent.trim();
+      document.querySelectorAll("#filtro button").forEach((item) => {
+        const ativo = item === botao;
+        item.classList.toggle("btn-primary", ativo);
+        item.classList.toggle("bg-green-600", ativo);
+        item.classList.toggle("btn-light", !ativo);
+        item.classList.toggle("text-dark", !ativo);
+      });
+      filtrarProdutos();
+    });
+  });
+  filtrarProdutos();
+}
+
+function normalizarChaveProduto(valor) {
+  return String(valor).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR").trim();
+}
+
+function precoNumerico(valor) {
+  return Number(String(valor).replace(/[^\d,.-]/g, "").replace(/\.(?=\d{3}(?:\D|$))/g, "").replace(",", "."));
+}
+
+function escaparOferta(produto) {
+  return {
+    ...produto,
+    nome: escaparHtmlProduto(produto.nome), categoria: escaparHtmlProduto(produto.categoria),
+    mercado: escaparHtmlProduto(produto.mercado), tipo: escaparHtmlProduto(produto.tipo),
+    imagem: escaparHtmlProduto(produto.imagem),
+    outrosMercados: produto.outrosMercados.map((mercado) => ({...mercado, nome: escaparHtmlProduto(mercado.nome)})),
+  };
+}
+
+async function carregarProdutosCatalogo() {
+  contadorProdutos.textContent = "Carregando produtos...";
+  try {
+    const resposta = await requisitar("produtos");
+    curtidasProdutos = new Map(resposta.produtos.map((produto) => [produto.id, {
+      produtoId: produto.id, total: produto.totalCurtidas || 0, curtido: Boolean(produto.curtido),
+    }]));
+    produtosCatalogo = resposta.produtos.map(escaparOferta);
+    listaProdutos.replaceChildren();
+    produtosCatalogo.forEach((produto) => listaProdutos.insertAdjacentHTML("beforeend", criarProdutoCard(produto)));
+    carrinho = carregarCarrinho();
+    atualizarFiltroProdutos();
+    atualizarTodosBotoesCurtir();
+    atualizarProtecaoPrecos();
+    renderizarCarrinho();
+  } catch (erro) {
+    contadorProdutos.textContent = erro.message;
+  }
+}
 
 atualizarTodosBotoesCurtir();
+window.sessaoPronta?.then(atualizarProtecaoPrecos);
+window.addEventListener("sessao-alterada", atualizarProtecaoPrecos);
+window.addEventListener("sessao-alterada", carregarCurtidasServidor);
 
-window.addEventListener("storage", (event) => {
-  if (event.key === CURTIDAS_CHAVE) atualizarTodosBotoesCurtir();
-});
+window.addEventListener("focus", carregarCurtidasServidor);
 
-document.addEventListener("click", (event) => {
+document.addEventListener("click", async (event) => {
   const botao = event.target.closest(".produto-curtir");
   if (!botao) return;
-
   if (!obterUsuarioLogado()) {
     window.location.href = "login.html";
     return;
   }
-
-  alternarCurtida(Number(botao.dataset.id));
+  const id = Number(botao.dataset.id);
+  if (curtidasPendentes.has(id)) return;
+  const mensagem = document.getElementById("mensagem-curtidas");
+  if (mensagem) mensagem.textContent = "";
+  const estado = curtidasProdutos.get(id) || { total: 0, curtido: false };
+  curtidasPendentes.add(id);
+  versaoConsultaCurtidas += 1;
   atualizarBotaoCurtir(botao);
+  try {
+    const resposta = await requisitar("curtir-produto", { id, curtido: !estado.curtido });
+    curtidasProdutos.set(id, resposta);
+  } catch (erro) {
+    if (erro.status === 401) { location.href = "login.html"; return; }
+    if (mensagem) mensagem.textContent = erro.message;
+  } finally {
+    curtidasPendentes.delete(id);
+    atualizarTodosBotoesCurtir();
+  }
 });
 
 document.addEventListener("click", (event) => {
@@ -213,32 +291,21 @@ function carregarCarrinho() {
   try {
     const itensSalvos = JSON.parse(localStorage.getItem("carrinho"));
     if (!Array.isArray(itensSalvos)) return [];
-
-    return itensSalvos
-      .map((item) => {
-        const produtoAtual = produtosMock.find(
-          (produto) => produto.id === item?.produto?.id
-        );
-
-        if (!produtoAtual) return null;
-
-        return {
-          produto: produtoAtual,
-          quantidade: Math.max(1, Number(item.quantidade) || 1),
-        };
-      })
-      .filter(Boolean);
-  } catch {
-    return [];
-  }
+    return itensSalvos.map((item) => {
+      const id = Number(item.produtoId ?? item.produto?.id);
+      const produto = item.produto
+        ? produtosCatalogo.find((produto) => produto.nome === item.produto.nome && produto.categoria === item.produto.categoria)
+        : produtosCatalogo.find((produto) => produto.id === id);
+      const quantidade = Math.floor(Number(item.quantidade));
+      return { produto, quantidade: Number.isSafeInteger(quantidade) && quantidade > 0 ? quantidade : 1 };
+    }).filter((item) => item.produto);
+  } catch { return []; }
 }
 
-let carrinho = carregarCarrinho();
+let carrinho = [];
 
 function converterPreco(preco) {
-  return Number(
-    String(preco).replace("R$", "").replace(".", "").replace(",", ".").trim()
-  );
+  return precoNumerico(preco);
 }
 
 function formatarMoeda(valor) {
@@ -265,7 +332,7 @@ document.addEventListener("click", (event) => {
 
   if (!acao) return;
 
-  if (adicionar && !localStorage.getItem("usuarioLogado")) {
+  if (adicionar && !obterUsuarioLogado()) {
     window.location.href = "login.html";
     return;
   }
@@ -277,7 +344,7 @@ document.addEventListener("click", (event) => {
     if (item) {
       item.quantidade += 1;
     } else {
-      const produto = produtosMock.find(
+      const produto = produtosCatalogo.find(
         (produtoAtual) => produtoAtual.id === id
       );
       if (produto) carrinho.push({ produto, quantidade: 1 });
@@ -306,7 +373,7 @@ document.addEventListener("click", (event) => {
 });
 
 function renderizarCarrinho() {
-  localStorage.setItem("carrinho", JSON.stringify(carrinho));
+  localStorage.setItem("carrinho", JSON.stringify(carrinho.map((item) => ({ produtoId: item.produto.id, quantidade: item.quantidade }))));
 
   const listaCarrinho = document.getElementById("lista-carrinho");
   const contadorCarrinho = document.getElementById("contador-carrinho");
@@ -399,107 +466,66 @@ function renderizarCarrinho() {
 }
 
 function compararMercados() {
-  if (!carrinho.length) return null;
-
-  const nomesMercados = [
-    ...new Set(
-      carrinho.flatMap((item) =>
-        obterPrecosProduto(item.produto).map((mercado) => mercado.nome)
-      )
-    ),
-  ];
-
-  const mercados = nomesMercados
-    .map((nome) => {
-      let total = 0;
-
-      for (const item of carrinho) {
-        const oferta = obterPrecosProduto(item.produto).find(
-          (mercado) => mercado.nome === nome
-        );
-
-        if (!oferta) return null;
-        total += converterPreco(oferta.preco) * item.quantidade;
-      }
-
-      return { nome, total };
-    })
-    .filter(Boolean)
-    .sort((a, b) => a.total - b.total);
-
-  return mercados.length ? mercados : null;
+  return compararPrecosCarrinho(carrinho);
 }
 
-function configurarComparador(mercadosOrdenados) {
+function configurarComparador(comparacao) {
   const resultadoComparacao = document.getElementById("resultado-comparacao");
-
-  if (!mercadosOrdenados?.length) {
+  if (!comparacao?.mercados.length) {
     resultadoComparacao.classList.add("d-none");
     resultadoComparacao.innerHTML = "";
     return;
   }
 
-  const melhorMercado = mercadosOrdenados[0];
-  const outrosMercados = mercadosOrdenados.slice(1);
-  const economia = outrosMercados.length
-    ? outrosMercados[0].total - melhorMercado.total
-    : 0;
+  const { mercados, completos, melhorMercado, alternativaComparavel, totalItens } = comparacao;
+  const listaCompleta = melhorMercado.itensDisponiveis === totalItens;
+  const outrosMercados = mercados;
+  const alternativaCompleta = completos.find((mercado) => mercado !== melhorMercado);
+  const alternativa = alternativaCompleta || alternativaComparavel;
+  const economia = alternativa ? alternativa.acrescimoCentavos : 0;
+  const avisoCobertura = !listaCompleta
+    ? "Nenhum mercado possui a lista completa. Este &eacute; o subtotal do mercado com maior cobertura." : "";
+  const mensagemEconomia = economia > 0
+    ? `Voc&ecirc; economiza <strong>${formatarMoeda(economia / 100)}</strong> ${alternativaCompleta ? "na compra completa" : `nos ${alternativa.itensComparaveis} ${alternativa.itensComparaveis === 1 ? "item com pre&ccedil;os compar&aacute;veis" : "itens com pre&ccedil;os compar&aacute;veis"}`} em rela&ccedil;&atilde;o ao ${alternativa.nome}.`
+    : mercados.some((mercado) => mercado.itensComparaveis > 0)
+      ? "A economia considera apenas os itens com pre&ccedil;os em mais de um mercado."
+      : "Os itens da lista n&atilde;o possuem outros pre&ccedil;os dispon&iacute;veis para compara&ccedil;&atilde;o.";
+  const explicacao = [mensagemEconomia,avisoCobertura].filter(Boolean).join("<br><br>");
 
-  const blocoEconomia =
-    economia > 0
-      ? `
-      <p class="comparador-economia">
-        Voc&ecirc; economiza <strong>${formatarMoeda(economia)}</strong>
-        em rela&ccedil;&atilde;o ao ${outrosMercados[0].nome}
-      </p>
-    `
-      : "";
-
-  const blocoOutros = outrosMercados.length
-    ? `
-      <div class="comparador-outros">
-        <p class="comparador-outros-titulo">Outros mercados</p>
-        <ol class="comparador-lista" start="2">
-          ${outrosMercados
-            .map((mercado, indice) => {
-              const diferenca = mercado.total - melhorMercado.total;
-              const textoDiferenca =
-                diferenca > 0
-                  ? `+ ${formatarMoeda(diferenca)}`
-                  : "Mesmo pre&ccedil;o";
-
-              return `
-                <li class="comparador-linha">
-                  <span class="comparador-posicao">${indice + 2}&ordm;</span>
-                  <span class="comparador-nome">${mercado.nome}</span>
-                  <span class="comparador-diferenca">${textoDiferenca}</span>
-                  <strong class="comparador-total">${formatarMoeda(
-                    mercado.total
-                  )}</strong>
-                </li>
-              `;
-            })
-            .join("")}
-        </ol>
-      </div>
-    `
-    : "";
+  const blocoOutros = outrosMercados.length ? `
+    <div class="comparador-outros">
+      <p class="comparador-outros-titulo">Pre&ccedil;os por mercado</p>
+      <p class="comparador-referencia">${listaCompleta ? `Do menor para o maior pre&ccedil;o. Diferen&ccedil;a para ${melhorMercado.nome} nos mesmos itens e quantidades.` : "Subtotais do menor para o maior. Nos itens sem oferta no destaque, a diferen&ccedil;a usa o menor pre&ccedil;o cadastrado."}</p>
+      <ul class="comparador-lista">
+        ${outrosMercados.map((mercado, indice) => {
+          const acrescimo = mercado.acrescimoCentavos;
+          const destaque = mercado === melhorMercado;
+          const textoDiferenca = destaque ? (listaCompleta ? "Mais vantajoso" : "Maior cobertura") :
+            acrescimo > 0 ? `+ ${formatarMoeda(acrescimo / 100)}` :
+            acrescimo < 0 ? `- ${formatarMoeda(Math.abs(acrescimo) / 100)}` : "Mesmo pre&ccedil;o";
+          return `
+            <li class="comparador-linha">
+              <span class="comparador-posicao" aria-hidden="true">${indice + 1}&ordm;</span>
+              <span class="comparador-nome">${mercado.nome}<small class="comparador-cobertura">${mercado.itensDisponiveis} de ${totalItens} itens${mercado.itensDisponiveis < totalItens ? " &middot; subtotal parcial" : ""}</small></span>
+              <span class="comparador-diferenca ${acrescimo <= 0 ? "comparador-diferenca--menor" : ""}">${textoDiferenca}</span>
+              <strong class="comparador-total">${formatarMoeda(mercado.totalCentavos / 100)}</strong>
+            </li>`;
+        }).join("")}
+      </ul>
+    </div>` : "";
 
   resultadoComparacao.classList.remove("d-none");
   resultadoComparacao.innerHTML = `
     <div class="comparador">
       <div class="comparador-destaque">
-        <span class="comparador-selo">
-          Melhor mercado
-        </span>
+        <span class="comparador-selo">${listaCompleta ? "Melhor mercado no total" : "Melhor cobertura dispon&iacute;vel"}</span>
         <h3>${melhorMercado.nome}</h3>
-        <p class="comparador-valor">${formatarMoeda(melhorMercado.total)}</p>
-        ${blocoEconomia}
+        <p class="comparador-valor">${formatarMoeda(melhorMercado.totalCentavos / 100)}</p>
+        <p>${melhorMercado.itensDisponiveis} de ${totalItens} itens dispon&iacute;veis</p>
+        ${explicacao ? `<p class="comparador-economia">${explicacao}</p>` : ""}
       </div>
-
       ${blocoOutros}
-    </div>
-  `;
+    </div>`;
 }
 
-renderizarCarrinho();
+carregarProdutosCatalogo();

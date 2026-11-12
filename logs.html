@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECONOMIZAI | Logs de autenticação</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <script src="js/api.js" defer></script>
+  <script src="js/components/LayoutCompartilhado.js" defer></script>
+  <script src="js/admin.js" defer></script>
+</head>
+<body data-tela="logs">
+  <economizai-header active-page="logs"></economizai-header>
+  <main class="admin-pagina">
+    <section class="admin-card" id="conteudo-admin" hidden>
+      <div class="admin-cabecalho">
+        <h1>Logs de autenticação</h1>
+        <p>Entradas dos usuários comuns, da mais recente para a mais antiga.</p>
+      </div>
+      <form class="admin-acoes" id="form-busca">
+        <label for="busca">Nome ou CPF
+          <input id="busca" type="search" maxlength="80" placeholder="Digite o nome ou CPF">
+        </label>
+        <button class="admin-botao admin-botao--principal" type="submit">Pesquisar</button>
+        <button class="admin-botao" type="reset">Mostrar todos</button>
+      </form>
+      <p class="admin-mensagem" id="mensagem-admin" role="status" aria-live="polite"></p>
+      <div class="admin-tabela-wrap" role="region" aria-label="Tabela de logs; role para os lados para ver todas as colunas" tabindex="0">
+        <table class="admin-tabela">
+          <caption class="sr-only">Entradas autenticadas com segundo fator</caption>
+          <thead><tr><th>Dia e hora</th><th>Nome</th><th>CPF</th><th>Segundo fator</th></tr></thead>
+          <tbody id="tabela-admin"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <economizai-footer></economizai-footer>
+</body>
+</html>

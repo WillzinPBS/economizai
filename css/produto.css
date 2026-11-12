@@ -226,11 +226,17 @@ html[data-theme="dark"] .produtos-filtros .text-dark {
   fill: #ef4444;
 }
 
-#blur {
+.precificacao-protegida {
   position: relative;
   filter: blur(6px);
   user-select: none;
   pointer-events: none;
+}
+
+.precificacao-protegida.sem-blur {
+  filter: none;
+  user-select: auto;
+  pointer-events: auto;
 }
 
 .container-precificacao {
@@ -251,6 +257,10 @@ html[data-theme="dark"] .produtos-filtros .text-dark {
   padding: 8px;
   background-color: rgba(0, 0, 0, 0.03);
   border-radius: 12px;
+}
+
+.container-alert[hidden] {
+  display: none !important;
 }
 
 .container-alert-link {
@@ -708,7 +718,24 @@ html[data-theme="dark"] .produtos-filtros .text-dark {
 }
 
 .comparador-nome {
+  min-width: 0;
+  overflow-wrap: anywhere;
   font-weight: 600;
+}
+
+.comparador-cobertura {
+  display: block;
+  margin-top: 3px;
+  color: var(--cor-texto-secundario);
+  font-size: 0.6875rem;
+  font-weight: 400;
+}
+
+.comparador-referencia {
+  margin: 6px 0 10px;
+  color: var(--cor-texto-secundario);
+  font-size: 0.75rem;
+  line-height: 1.4;
 }
 
 .comparador-diferenca {
@@ -724,6 +751,11 @@ html[data-theme="dark"] .produtos-filtros .text-dark {
 .comparador-total {
   font-weight: 700;
   white-space: nowrap;
+}
+
+.comparador-diferenca--menor {
+  background-color: var(--cor-verde-suave);
+  color: var(--cor-link);
 }
 
 @media (max-width: 900px) {
@@ -756,14 +788,14 @@ html[data-theme="dark"] .produtos-filtros .text-dark {
   }
 
   .comparador-diferenca {
-    grid-column: 2;
+    grid-column: 2 / -1;
     grid-row: 2;
     justify-self: start;
   }
 
   .comparador-total {
     grid-column: 3;
-    grid-row: 1 / span 2;
+    grid-row: 1;
   }
 }
 
@@ -813,8 +845,9 @@ html[data-theme="dark"] .produtos-filtros .text-dark {
   border-radius: 10px;
   background-color: var(--cor-superficie-elevada);
   box-shadow: 0 6px 18px var(--cor-sombra);
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(120px, 38%) minmax(0, 1fr);
+  align-items: stretch;
 }
 
 .produto-card-v .produto-adicionar-v {
@@ -842,7 +875,8 @@ html[data-theme="dark"] .produtos-filtros .text-dark {
 .imagem-v {
   position: relative;
   width: 100%;
-  height: 192px;
+  height: 100%;
+  min-height: 280px;
   overflow: hidden;
   background-color: var(--cor-fundo);
 }
@@ -850,8 +884,9 @@ html[data-theme="dark"] .produtos-filtros .text-dark {
 .precificacao-v {
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px 12px;
   margin-bottom: 12px;
 }
 
@@ -876,7 +911,7 @@ html[data-theme="dark"] .produtos-filtros .text-dark {
   font-size: 0.75rem;
   font-weight: 500;
   line-height: 1.3;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .outros-mercados-titulo-v {
@@ -905,4 +940,7 @@ html[data-theme="dark"] .produtos-filtros .text-dark {
 .outro-mercado-v strong {
   font-weight: 700;
   white-space: nowrap;
+}
+.produto-card[hidden] {
+  display: none !important;
 }

@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 
   <!-- A ordem importa: o configuracoes.js usa funções do auth.js (ajuste o caminho se precisar) -->
+  <style>#secao-senha[hidden] { display: none; }</style>
+  <script src="js/api.js" defer></script>
   <script src="js/components/LayoutCompartilhado.js" defer></script>
   <script src="js/auth.js" defer></script>
   <script src="js/configuracoes.js" defer></script>
@@ -99,9 +101,9 @@
               <div class="auth-control-wrap">
                 <i class="bi bi-person auth-control-icone" aria-hidden="true"></i>
                 <input class="auth-control auth-control--icone" id="nome_config" type="text"
-                  autocomplete="name" maxlength="60" aria-describedby="dica-nome erro-nome_config">
+                  autocomplete="name" minlength="15" maxlength="80" aria-describedby="dica-nome erro-nome_config">
               </div>
-              <p class="auth-field-hint" id="dica-nome">Entre 15 e 60 letras, sem números.</p>
+              <p class="auth-field-hint" id="dica-nome">Entre 15 e 80 letras, sem números.</p>
               <p class="auth-field-error" id="erro-nome_config" role="alert" hidden></p>
             </div>
 
@@ -112,7 +114,7 @@
         </section>
 
         <!-- Senha -->
-        <section class="config-secao" aria-labelledby="titulo-senha">
+        <section class="config-secao" id="secao-senha" aria-labelledby="titulo-senha" hidden>
           <div class="auth-secao">
             <span class="auth-secao-numero" aria-hidden="true"><i class="bi bi-lock"></i></span>
             <h2 class="auth-secao-titulo" id="titulo-senha">Senha</h2>
@@ -124,7 +126,7 @@
               <div class="auth-control-wrap">
                 <i class="bi bi-lock auth-control-icone" aria-hidden="true"></i>
                 <input class="auth-control auth-control--icone auth-control--toggle" id="senha_atual"
-                  type="password" autocomplete="current-password" aria-describedby="erro-senha_atual">
+                  type="password" minlength="8" maxlength="8" pattern="[A-Za-z]{8}" required autocomplete="current-password" aria-describedby="erro-senha_atual">
                 <button class="auth-toggle-senha" type="button" data-alvo="senha_atual" aria-label="Mostrar senha">
                   <i class="bi bi-eye" aria-hidden="true"></i>
                 </button>
@@ -137,12 +139,12 @@
               <div class="auth-control-wrap">
                 <i class="bi bi-lock auth-control-icone" aria-hidden="true"></i>
                 <input class="auth-control auth-control--icone auth-control--toggle" id="nova_senha"
-                  type="password" autocomplete="new-password" aria-describedby="forca-nova-senha erro-nova_senha">
+                  type="password" minlength="8" maxlength="8" pattern="[A-Za-z]{8}" required autocomplete="new-password" aria-describedby="forca-nova-senha erro-nova_senha">
                 <button class="auth-toggle-senha" type="button" data-alvo="nova_senha" aria-label="Mostrar senha">
                   <i class="bi bi-eye" aria-hidden="true"></i>
                 </button>
               </div>
-              <p class="auth-forca-senha" id="forca-nova-senha"></p>
+              <p class="auth-forca-senha" id="forca-nova-senha" aria-live="polite">Use exatamente 8 letras, sem números ou símbolos.</p>
               <p class="auth-field-error" id="erro-nova_senha" role="alert" hidden></p>
             </div>
 
@@ -151,7 +153,7 @@
               <div class="auth-control-wrap">
                 <i class="bi bi-lock auth-control-icone" aria-hidden="true"></i>
                 <input class="auth-control auth-control--icone auth-control--toggle" id="confirma_nova_senha"
-                  type="password" autocomplete="new-password" aria-describedby="erro-confirma_nova_senha">
+                  type="password" minlength="8" maxlength="8" pattern="[A-Za-z]{8}" required autocomplete="new-password" aria-describedby="erro-confirma_nova_senha">
                 <button class="auth-toggle-senha" type="button" data-alvo="confirma_nova_senha" aria-label="Mostrar senha">
                   <i class="bi bi-eye" aria-hidden="true"></i>
                 </button>
