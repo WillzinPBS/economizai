@@ -1,8 +1,60 @@
-const produtosMock = JSON.parse(
-  document.getElementById("produtos-json").textContent
-);
+let produtosCatalogo = [];
 const listaProdutos = document.getElementById("produtos");
 const contadorProdutos = document.getElementById("produtos-contador");
+
+
+
+function escaparHtmlProduto(valor) {
+  return String(valor).replace(/[&<>"']/g, (caractere) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  })[caractere]);
+}
+
+function obterUsuarioLogado() {
+  return window.usuarioAtual?.login;
+}
+
+function atualizarProtecaoPrecos() {
+  const usuarioLogado = Boolean(obterUsuarioLogado());
+  document.querySelectorAll(".precificacao-protegida").forEach((precos) => {
+    precos.classList.toggle("sem-blur", usuarioLogado);
+    const alerta = precos.parentElement.querySelector(".container-alert");
+    if (alerta) alerta.hidden = usuarioLogado;
+  });
+}
+
+let curtidasProdutos = new Map();
+const curtidasPendentes = new Set();
+let versaoConsultaCurtidas = 0;
+
+async function carregarCurtidasServidor() {
+  if (curtidasPendentes.size) return;
+  const versao = ++versaoConsultaCurtidas;
+  try {
+    const { curtidas } = await requisitar("curtidas");
+    if (versao !== versaoConsultaCurtidas) return;
+    curtidasProdutos = new Map(curtidas.map((item) => [item.produtoId, item]));
+    atualizarTodosBotoesCurtir();
+  } catch {
+    // Mantém a última contagem recebida; o próximo carregamento sincroniza.
+  }
+}
+
+function atualizarBotaoCurtir(botao) {
+  const id = Number(botao.dataset.id);
+  const estado = curtidasProdutos.get(id) || { total: 0, curtido: false };
+  const curtido = Boolean(obterUsuarioLogado()) && estado.curtido;
+  botao.classList.toggle("curtido", curtido);
+  botao.setAttribute("aria-pressed", String(curtido));
+  botao.disabled = curtidasPendentes.has(id);
+  botao.setAttribute("aria-label", `${curtido ? "Descurtir" : "Curtir"} ${botao.dataset.nome} (${estado.total} ${estado.total === 1 ? "curtida" : "curtidas"})`);
+  botao.title = curtido ? "Descurtir" : "Curtir";
+  botao.querySelector(".produto-curtir-contagem").textContent = estado.total;
+}
+
+function atualizarTodosBotoesCurtir() {
+  document.querySelectorAll(".produto-curtir").forEach(atualizarBotaoCurtir);
+}
 
 function criarProdutoCard(produto) {
   const selos = {
@@ -39,83 +91,225 @@ function criarProdutoCard(produto) {
     <article class="produto-card" data-categoria="${produto.categoria}">
       <div class="imagem">
         <img src="${produto.imagem}" alt="${produto.nome}" loading="lazy">
-        ${selo}
       </div>
 
       <div class="descricao">
-        <p class="produto-categoria">${produto.categoria}</p>
-        <h2>${produto.nome}</h2>
+        <div class="produto-identidade">
+          <div class="produto-selo-area">${selo}</div>
+          <p class="produto-categoria">${produto.categoria}</p>
+          <h2>${produto.nome}</h2>
+        </div>
 
-        <div class="container-precificacao">
-          <div class="precificacao" id="blur">
-            <div class="precos">
-              <strong class="produto-preco">${produto.preco}</strong>
-              <p class="produto-tipo">${produto.tipo}</p>
+        <div class="produto-preco-info">
+          <div class="container-precificacao">
+            <div class="precificacao precificacao-protegida">
+              <div class="precos">
+                <strong class="produto-preco">${produto.preco}</strong>
+                <p class="produto-tipo">${produto.tipo}</p>
+              </div>
+
+              <button class="produto-info-trigger" type="button" aria-expanded="false" aria-describedby="mercados-${produto.id}">
+                <i class="bi bi-building" aria-hidden="true"></i>
+                Comparar mercados
+              </button>
+
+              <div class="produto-tooltip" id="mercados-${produto.id}" role="tooltip">
+                <p class="outros-mercados-titulo">Outros mercados</p>
+                <div class="outros-mercados">
+                  ${outrosMercados}
+                </div>
+              </div>
             </div>
 
-            <p class="produto-mercado">
-              <i class="bi bi-building" aria-hidden="true"></i>
-              ${produto.mercado}
-            </p>
-          </div>
-
-          <div class="container-alert">
-            <i class="fa-solid fa-lock"></i>
-            <h3>Fa&ccedil;a login para ter acesso</h3>
+            <div class="container-alert">
+              <i class="fa-solid fa-lock"></i>
+              <h3>Fa&ccedil;a login para ter acesso</h3>
+              <a href="login.html" class="container-alert-link">Entrar</a>
+            </div>
           </div>
         </div>
 
-        <button class="botao-principal produto-adicionar" type="button" data-id="${produto.id}">
-          <span aria-hidden="true">+</span>
-          <span>Adicionar</span>
-        </button>
+        <div class="produto-acao">
+          <button
+            type="button"
+            class="produto-curtir"
+            data-id="${produto.id}"
+            data-nome="${produto.nome}"
+            aria-pressed="false"
+            aria-label="Curtir ${produto.nome}"
+            title="Curtir">
+            <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/>
+            </svg>
+            <span class="produto-curtir-contagem">0</span>
+          </button>
 
-        <hr>
-
-        <p class="outros-mercados-titulo">Outros mercados:</p>
-        <div class="outros-mercados">
-          ${outrosMercados}
+          <button class="botao-principal produto-adicionar" type="button" data-id="${produto.id}">
+            <span aria-hidden="true">+</span>
+            <span>Adicionar</span>
+          </button>
         </div>
       </div>
     </article>
   `;
 }
 
-contadorProdutos.textContent = `${produtosMock.length} produtos encontrados`;
-produtosMock.forEach((produto) => {
-  listaProdutos.insertAdjacentHTML("beforeend", criarProdutoCard(produto));
+const campoBuscaProdutos = document.getElementById("busca-produtos");
+let categoriaSelecionada = "Todas";
+let atualizarFiltroProdutos = () => {};
+if (campoBuscaProdutos) {
+  const normalizarBusca = (valor) =>
+    valor.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR").trim();
+  const parametrosBusca = new URLSearchParams(window.location.search);
+  campoBuscaProdutos.value = parametrosBusca.get("busca") || "";
+
+  const filtrarProdutos = () => {
+    const termo = normalizarBusca(campoBuscaProdutos.value);
+    const cards = [...listaProdutos.querySelectorAll(".produto-card")];
+    let encontrados = 0;
+
+    cards.forEach((card) => {
+      const corresponde = normalizarBusca(card.textContent).includes(termo) &&
+        (categoriaSelecionada === "Todas" || normalizarBusca(card.dataset.categoria) === normalizarBusca(categoriaSelecionada));
+      card.hidden = !corresponde;
+      if (corresponde) encontrados += 1;
+    });
+
+    contadorProdutos.textContent = `${encontrados} produtos encontrados`;
+  };
+  atualizarFiltroProdutos = filtrarProdutos;
+
+  campoBuscaProdutos.addEventListener("input", filtrarProdutos);
+  document.querySelectorAll("#filtro button").forEach((botao) => {
+    botao.addEventListener("click", () => {
+      categoriaSelecionada = botao.textContent.trim();
+      document.querySelectorAll("#filtro button").forEach((item) => {
+        const ativo = item === botao;
+        item.classList.toggle("btn-primary", ativo);
+        item.classList.toggle("bg-green-600", ativo);
+        item.classList.toggle("btn-light", !ativo);
+        item.classList.toggle("text-dark", !ativo);
+      });
+      filtrarProdutos();
+    });
+  });
+  filtrarProdutos();
+}
+
+function normalizarChaveProduto(valor) {
+  return String(valor).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR").trim();
+}
+
+function precoNumerico(valor) {
+  return Number(String(valor).replace(/[^\d,.-]/g, "").replace(/\.(?=\d{3}(?:\D|$))/g, "").replace(",", "."));
+}
+
+function escaparOferta(produto) {
+  return {
+    ...produto,
+    nome: escaparHtmlProduto(produto.nome), categoria: escaparHtmlProduto(produto.categoria),
+    mercado: escaparHtmlProduto(produto.mercado), tipo: escaparHtmlProduto(produto.tipo),
+    imagem: escaparHtmlProduto(produto.imagem),
+    outrosMercados: produto.outrosMercados.map((mercado) => ({...mercado, nome: escaparHtmlProduto(mercado.nome)})),
+  };
+}
+
+async function carregarProdutosCatalogo() {
+  contadorProdutos.textContent = "Carregando produtos...";
+  try {
+    const resposta = await requisitar("produtos");
+    curtidasProdutos = new Map(resposta.produtos.map((produto) => [produto.id, {
+      produtoId: produto.id, total: produto.totalCurtidas || 0, curtido: Boolean(produto.curtido),
+    }]));
+    produtosCatalogo = resposta.produtos.map(escaparOferta);
+    listaProdutos.replaceChildren();
+    produtosCatalogo.forEach((produto) => listaProdutos.insertAdjacentHTML("beforeend", criarProdutoCard(produto)));
+    carrinho = carregarCarrinho();
+    atualizarFiltroProdutos();
+    atualizarTodosBotoesCurtir();
+    atualizarProtecaoPrecos();
+    renderizarCarrinho();
+  } catch (erro) {
+    contadorProdutos.textContent = erro.message;
+  }
+}
+
+atualizarTodosBotoesCurtir();
+window.sessaoPronta?.then(atualizarProtecaoPrecos);
+window.addEventListener("sessao-alterada", atualizarProtecaoPrecos);
+window.addEventListener("sessao-alterada", carregarCurtidasServidor);
+
+window.addEventListener("focus", carregarCurtidasServidor);
+
+document.addEventListener("click", async (event) => {
+  const botao = event.target.closest(".produto-curtir");
+  if (!botao) return;
+  if (!obterUsuarioLogado()) {
+    window.location.href = "login.html";
+    return;
+  }
+  const id = Number(botao.dataset.id);
+  if (curtidasPendentes.has(id)) return;
+  const mensagem = document.getElementById("mensagem-curtidas");
+  if (mensagem) mensagem.textContent = "";
+  const estado = curtidasProdutos.get(id) || { total: 0, curtido: false };
+  curtidasPendentes.add(id);
+  versaoConsultaCurtidas += 1;
+  atualizarBotaoCurtir(botao);
+  try {
+    const resposta = await requisitar("curtir-produto", { id, curtido: !estado.curtido });
+    curtidasProdutos.set(id, resposta);
+  } catch (erro) {
+    if (erro.status === 401) { location.href = "login.html"; return; }
+    if (mensagem) mensagem.textContent = erro.message;
+  } finally {
+    curtidasPendentes.delete(id);
+    atualizarTodosBotoesCurtir();
+  }
+});
+
+document.addEventListener("click", (event) => {
+  const trigger = event.target.closest(".produto-info-trigger");
+
+  document.querySelectorAll(".produto-tooltip.aberto").forEach((tooltip) => {
+    if (!trigger || tooltip !== trigger.nextElementSibling) {
+      tooltip.classList.remove("aberto");
+      const gatilhoAnterior = tooltip.previousElementSibling;
+      if (gatilhoAnterior)
+        gatilhoAnterior.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  if (!trigger) return;
+
+  const tooltip = trigger.nextElementSibling;
+  const aberto = tooltip.classList.toggle("aberto");
+  trigger.setAttribute("aria-expanded", String(aberto));
 });
 
 function carregarCarrinho() {
   try {
     const itensSalvos = JSON.parse(localStorage.getItem("carrinho"));
     if (!Array.isArray(itensSalvos)) return [];
-
-    return itensSalvos
-      .map((item) => {
-        const produtoAtual = produtosMock.find(
-          (produto) => produto.id === item?.produto?.id
-        );
-
-        if (!produtoAtual) return null;
-
-        return {
-          produto: produtoAtual,
-          quantidade: Math.max(1, Number(item.quantidade) || 1),
-        };
-      })
-      .filter(Boolean);
-  } catch {
-    return [];
-  }
+    return itensSalvos.map((item) => {
+      const id = Number(item.produtoId ?? item.produto?.id);
+      const produto = item.produto
+        ? produtosCatalogo.find((produto) => produto.nome === item.produto.nome && produto.categoria === item.produto.categoria)
+        : produtosCatalogo.find((produto) => produto.id === id);
+      const quantidade = Math.floor(Number(item.quantidade));
+      return { produto, quantidade: Number.isSafeInteger(quantidade) && quantidade > 0 ? quantidade : 1 };
+    }).filter((item) => item.produto);
+  } catch { return []; }
 }
 
-let carrinho = carregarCarrinho();
+let carrinho = [];
 
 function converterPreco(preco) {
-  return Number(
-    String(preco).replace("R$", "").replace(".", "").replace(",", ".").trim()
-  );
+  return precoNumerico(preco);
+}
+
+function formatarMoeda(valor) {
+  return valor.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
 function obterPrecosProduto(produto) {
@@ -138,7 +332,7 @@ document.addEventListener("click", (event) => {
 
   if (!acao) return;
 
-  if (adicionar && !localStorage.getItem("usuarioLogado")) {
+  if (adicionar && !obterUsuarioLogado()) {
     window.location.href = "login.html";
     return;
   }
@@ -150,10 +344,15 @@ document.addEventListener("click", (event) => {
     if (item) {
       item.quantidade += 1;
     } else {
-      const produto = produtosMock.find((produtoAtual) => produtoAtual.id === id);
+      const produto = produtosCatalogo.find(
+        (produtoAtual) => produtoAtual.id === id
+      );
       if (produto) carrinho.push({ produto, quantidade: 1 });
+
     }
   }
+
+  
 
   if (aumentar && item) {
     item.quantidade += 1;
@@ -174,12 +373,11 @@ document.addEventListener("click", (event) => {
 });
 
 function renderizarCarrinho() {
-  localStorage.setItem("carrinho", JSON.stringify(carrinho));
+  localStorage.setItem("carrinho", JSON.stringify(carrinho.map((item) => ({ produtoId: item.produto.id, quantidade: item.quantidade }))));
 
   const listaCarrinho = document.getElementById("lista-carrinho");
   const contadorCarrinho = document.getElementById("contador-carrinho");
   const resumoCarrinho = document.getElementById("resumo-carrinho");
-  const totalCarrinho = document.getElementById("total-carrinho");
   const totalItens = carrinho.reduce(
     (total, item) => total + item.quantidade,
     0
@@ -190,12 +388,10 @@ function renderizarCarrinho() {
 
   if (carrinho.length === 0) {
     listaCarrinho.innerHTML = `
-      <div class="text-center py-5">
-        <i class="bi bi-cart fs-1 text-secondary"></i>
-        <h5 class="mt-3">Sua lista est&aacute; vazia</h5>
-        <p class="text-muted">
-          Adicione produtos para come&ccedil;ar a comparar pre&ccedil;os
-        </p>
+      <div class="carrinho-vazio">
+        <i class="bi bi-cart" aria-hidden="true"></i>
+        <h3>Sua lista est&aacute; vazia</h3>
+        <p>Adicione produtos para come&ccedil;ar a comparar pre&ccedil;os</p>
       </div>
     `;
 
@@ -204,149 +400,132 @@ function renderizarCarrinho() {
     return;
   }
 
-  const totalMenoresPrecos = carrinho.reduce((total, item) => {
-    return total + converterPreco(item.produto.preco) * item.quantidade;
-  }, 0);
-
-  totalCarrinho.textContent = totalMenoresPrecos.toLocaleString("pt-BR", {
-    style: "currency",
-    currency: "BRL",
-  });
-
   resumoCarrinho.classList.remove("d-none");
   listaCarrinho.innerHTML = carrinho
-    .map(
-      (item) => `
-        <div class="bg-light p-3 rounded-4 d-flex flex-wrap align-items-center justify-content-between mb-3">
-          <div class="d-flex align-items-center">
-            <img
-              src="${item.produto.imagem}"
-              class="rounded-3 me-3 img-animada"
-              style="width:80px;height:80px;object-fit:cover;"
-              alt="${item.produto.nome}">
+    .map((item) => {
+      const subtotal = converterPreco(item.produto.preco) * item.quantidade;
 
-            <div>
-              <h6 class="mb-0 fw-bold">${item.produto.nome}</h6>
-              <small class="text-muted">
-                Menor pre&ccedil;o: ${item.produto.mercado} - ${item.produto.preco}
-              </small>
-            </div>
+      return `
+        <article class="carrinho-item">
+          <img
+            class="carrinho-item-imagem"
+            src="${item.produto.imagem}"
+            alt="${item.produto.nome}">
+
+          <div class="carrinho-item-info">
+            <h3>${item.produto.nome}</h3>
+            <p class="carrinho-item-categoria">${item.produto.categoria}</p>
+            <p class="carrinho-item-melhor">
+              Menor pre&ccedil;o: <strong>${
+                item.produto.mercado
+              }</strong> &middot; ${item.produto.preco}
+            </p>
           </div>
 
-          <div class="d-flex align-items-center">
-            <div class="d-flex align-items-center border rounded-3 bg-white me-3">
+          <div class="carrinho-item-controles">
+            <div class="carrinho-quantidade" role="group" aria-label="Quantidade de ${
+              item.produto.nome
+            }">
               <button
-                class="btn btn-sm border-0 px-3 diminuir-item"
+                type="button"
+                class="diminuir-item"
                 data-id="${item.produto.id}"
                 aria-label="Diminuir quantidade de ${item.produto.nome}">
-                -
+                &minus;
               </button>
 
-              <span class="px-2 fw-bold">${item.quantidade}</span>
+              <span>${item.quantidade}</span>
 
               <button
-                class="btn btn-sm border-0 px-3 aumentar-item"
+                type="button"
+                class="aumentar-item"
                 data-id="${item.produto.id}"
                 aria-label="Aumentar quantidade de ${item.produto.nome}">
                 +
               </button>
             </div>
 
+            <strong class="carrinho-item-subtotal">${formatarMoeda(
+              subtotal
+            )}</strong>
+
             <button
-              class="btn text-danger p-0 remover-item"
+              type="button"
+              class="remover-item"
               data-id="${item.produto.id}"
               aria-label="Remover ${item.produto.nome}">
-              <i class="bi bi-trash3 fs-5"></i>
+              <i class="bi bi-trash3" aria-hidden="true"></i>
             </button>
           </div>
-        </div>
-      `
-    )
+        </article>
+      `;
+    })
     .join("");
 
   configurarComparador(compararMercados());
 }
 
 function compararMercados() {
-  if (!carrinho.length) return null;
-
-  const nomesMercados = [
-    ...new Set(
-      carrinho.flatMap((item) =>
-        obterPrecosProduto(item.produto).map((mercado) => mercado.nome)
-      )
-    ),
-  ];
-
-  const mercados = nomesMercados
-    .map((nome) => {
-      let total = 0;
-
-      for (const item of carrinho) {
-        const oferta = obterPrecosProduto(item.produto).find(
-          (mercado) => mercado.nome === nome
-        );
-
-        if (!oferta) return null;
-        total += converterPreco(oferta.preco) * item.quantidade;
-      }
-
-      return { nome, total };
-    })
-    .filter(Boolean)
-    .sort((a, b) => a.total - b.total);
-
-  return mercados.length ? mercados : null;
+  return compararPrecosCarrinho(carrinho);
 }
 
-function configurarComparador(mercadosOrdenados) {
+function configurarComparador(comparacao) {
   const resultadoComparacao = document.getElementById("resultado-comparacao");
-
-  if (!mercadosOrdenados?.length) {
+  if (!comparacao?.mercados.length) {
     resultadoComparacao.classList.add("d-none");
     resultadoComparacao.innerHTML = "";
     return;
   }
 
-  const melhorMercado = mercadosOrdenados[0];
-  const economia =
-    mercadosOrdenados.length > 1
-      ? mercadosOrdenados[1].total - melhorMercado.total
-      : 0;
+  const { mercados, completos, melhorMercado, alternativaComparavel, totalItens } = comparacao;
+  const listaCompleta = melhorMercado.itensDisponiveis === totalItens;
+  const outrosMercados = mercados;
+  const alternativaCompleta = completos.find((mercado) => mercado !== melhorMercado);
+  const alternativa = alternativaCompleta || alternativaComparavel;
+  const economia = alternativa ? alternativa.acrescimoCentavos : 0;
+  const avisoCobertura = !listaCompleta
+    ? "Nenhum mercado possui a lista completa. Este &eacute; o subtotal do mercado com maior cobertura." : "";
+  const mensagemEconomia = economia > 0
+    ? `Voc&ecirc; economiza <strong>${formatarMoeda(economia / 100)}</strong> ${alternativaCompleta ? "na compra completa" : `nos ${alternativa.itensComparaveis} ${alternativa.itensComparaveis === 1 ? "item com pre&ccedil;os compar&aacute;veis" : "itens com pre&ccedil;os compar&aacute;veis"}`} em rela&ccedil;&atilde;o ao ${alternativa.nome}.`
+    : mercados.some((mercado) => mercado.itensComparaveis > 0)
+      ? "A economia considera apenas os itens com pre&ccedil;os em mais de um mercado."
+      : "Os itens da lista n&atilde;o possuem outros pre&ccedil;os dispon&iacute;veis para compara&ccedil;&atilde;o.";
+  const explicacao = [mensagemEconomia,avisoCobertura].filter(Boolean).join("<br><br>");
+
+  const blocoOutros = outrosMercados.length ? `
+    <div class="comparador-outros">
+      <p class="comparador-outros-titulo">Pre&ccedil;os por mercado</p>
+      <p class="comparador-referencia">${listaCompleta ? `Do menor para o maior pre&ccedil;o. Diferen&ccedil;a para ${melhorMercado.nome} nos mesmos itens e quantidades.` : "Subtotais do menor para o maior. Nos itens sem oferta no destaque, a diferen&ccedil;a usa o menor pre&ccedil;o cadastrado."}</p>
+      <ul class="comparador-lista">
+        ${outrosMercados.map((mercado, indice) => {
+          const acrescimo = mercado.acrescimoCentavos;
+          const destaque = mercado === melhorMercado;
+          const textoDiferenca = destaque ? (listaCompleta ? "Mais vantajoso" : "Maior cobertura") :
+            acrescimo > 0 ? `+ ${formatarMoeda(acrescimo / 100)}` :
+            acrescimo < 0 ? `- ${formatarMoeda(Math.abs(acrescimo) / 100)}` : "Mesmo pre&ccedil;o";
+          return `
+            <li class="comparador-linha">
+              <span class="comparador-posicao" aria-hidden="true">${indice + 1}&ordm;</span>
+              <span class="comparador-nome">${mercado.nome}<small class="comparador-cobertura">${mercado.itensDisponiveis} de ${totalItens} itens${mercado.itensDisponiveis < totalItens ? " &middot; subtotal parcial" : ""}</small></span>
+              <span class="comparador-diferenca ${acrescimo <= 0 ? "comparador-diferenca--menor" : ""}">${textoDiferenca}</span>
+              <strong class="comparador-total">${formatarMoeda(mercado.totalCentavos / 100)}</strong>
+            </li>`;
+        }).join("")}
+      </ul>
+    </div>` : "";
 
   resultadoComparacao.classList.remove("d-none");
   resultadoComparacao.innerHTML = `
-    <div class="card border-0 bg-success text-white p-4">
-      <h5 class="fw-bold mb-2">Melhor mercado para a lista</h5>
-      <h2 class="fw-bold mb-3">${melhorMercado.nome}</h2>
-
-      <div class="mb-3">
-        ${mercadosOrdenados
-          .map(
-            (mercado, indice) => `
-              <div class="d-flex justify-content-between mb-2">
-                <span>${indice + 1}. ${mercado.nome}</span>
-                <strong>
-                  ${mercado.total.toLocaleString("pt-BR", {
-                    style: "currency",
-                    currency: "BRL",
-                  })}
-                </strong>
-              </div>
-            `
-          )
-          .join("")}
+    <div class="comparador">
+      <div class="comparador-destaque">
+        <span class="comparador-selo">${listaCompleta ? "Melhor mercado no total" : "Melhor cobertura dispon&iacute;vel"}</span>
+        <h3>${melhorMercado.nome}</h3>
+        <p class="comparador-valor">${formatarMoeda(melhorMercado.totalCentavos / 100)}</p>
+        <p>${melhorMercado.itensDisponiveis} de ${totalItens} itens dispon&iacute;veis</p>
+        ${explicacao ? `<p class="comparador-economia">${explicacao}</p>` : ""}
       </div>
-
-      <div>
-        <strong>Economia sobre a segunda op&ccedil;&atilde;o:</strong>
-        ${economia.toLocaleString("pt-BR", {
-          style: "currency",
-          currency: "BRL",
-        })}
-      </div>
-    </div>
-  `;
+      ${blocoOutros}
+    </div>`;
 }
 
-renderizarCarrinho();
+carregarProdutosCatalogo();

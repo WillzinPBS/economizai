@@ -7,8 +7,10 @@
   <link rel="stylesheet" href="css/styles.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://kit.fontawesome.com/4620774d96.js"></script>
+  <script src="js/api.js" defer></script>
   <script src="js/components/LayoutCompartilhado.js" defer></script>
   <script src="js/validation.js" defer></script>
   <script src="js/auth.js" defer></script>
@@ -160,6 +162,14 @@
             </div>
 
             <div class="auth-field">
+              <label class="auth-label" for="email">E-mail <span class="auth-required" aria-hidden="true">*</span></label>
+              <div class="auth-control-wrap">
+                <i class="auth-control-icone fa-solid fa-envelope" aria-hidden="true"></i>
+                <input id="email" type="email" class="auth-control auth-control--icone" autocomplete="email" placeholder="voce@exemplo.com" maxlength="160" required>
+              </div>
+            </div>
+
+            <div class="auth-field">
               <label class="auth-label" for="cpf">
                 CPF <span class="auth-required" aria-hidden="true">*</span>
               </label>
@@ -185,7 +195,7 @@
                 <i class="auth-control-icone fa-solid fa-mobile-screen-button" aria-hidden="true"></i>
                 <input
                   type="text"
-                  placeholder="(21) 98430-7030"
+                  placeholder="(+55)21-984307030"
                   class="auth-control auth-control--icone"
                   id="telefone_celular"
                   required
@@ -202,7 +212,7 @@
                 <i class="auth-control-icone fa-solid fa-phone" aria-hidden="true"></i>
                 <input
                   type="text"
-                  placeholder="(+55) 21 3333-4444"
+                  placeholder="(+55)21-33334444"
                   class="auth-control auth-control--icone"
                   id="telefone_fixo"
                   required
@@ -219,12 +229,12 @@
                 <i class="auth-control-icone fa-solid fa-user" aria-hidden="true"></i>
                 <input
                   type="text"
-                  placeholder="Entre 4 e 30 letras ou numeros"
+                  placeholder="Exatamente 6 letras"
                   class="auth-control auth-control--icone"
                   id="login"
                   autocomplete="username"
-                  minlength="4"
-                  maxlength="30"
+                  minlength="6"
+                  maxlength="6" pattern="[A-Za-z]{6}"
                   required
                 >
               </div>
@@ -427,20 +437,16 @@
                 <i class="auth-control-icone fa-solid fa-lock" aria-hidden="true"></i>
                 <input
                   type="password"
-                  placeholder="Minimo de 8 caracteres"
+                  placeholder="Digite sua senha"
                   class="auth-control auth-control--icone"
                   id="senha"
                   autocomplete="new-password"
-                  minlength="8"
                   required
                   style="padding-right: 2.4rem;"
                 >
-                <button type="button" class="auth-toggle-senha" data-alvo="senha" aria-label="Mostrar senha">
-                  <i class="fa-solid fa-eye" aria-hidden="true"></i>
-                </button>
+                <button type="button" class="auth-toggle-senha" data-alvo="senha" aria-label="Mostrar senha"></button>
               </div>
 
-              <p id="forca-senha-cadastro" class="auth-forca-senha" aria-live="polite"></p>
             </div>
 
             <div class="auth-field">
@@ -456,23 +462,21 @@
                   class="auth-control auth-control--icone"
                   id="confirma_senha"
                   autocomplete="new-password"
-                  minlength="8"
                   required
                   style="padding-right: 2.4rem;"
                 >
-                <button type="button" class="auth-toggle-senha" data-alvo="confirma_senha" aria-label="Mostrar senha">
-                  <i class="fa-solid fa-eye" aria-hidden="true"></i>
-                </button>
+                <button type="button" class="auth-toggle-senha" data-alvo="confirma_senha" aria-label="Mostrar senha"></button>
               </div>
             </div>
           </div>
 
-          <p id="mensagem-auth" class="auth-message"></p>
+          <p id="mensagem-auth" class="auth-message" role="status" aria-live="polite"></p>
 
           <button class="botao-principal auth-submit" type="submit">
             <i class="fa-solid fa-user-plus" aria-hidden="true"></i>
             Criar conta
           </button>
+          <button class="auth-link" type="reset">Limpar campos</button>
         </form>
 
         <p class="auth-switch">
@@ -487,19 +491,5 @@
 
   <economizai-footer></economizai-footer>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      document.querySelectorAll(".auth-toggle-senha").forEach(function(botao) {
-        botao.addEventListener("click", function() {
-          const alvo = document.getElementById(botao.dataset.alvo);
-          if (!alvo) return;
-          const visivel = alvo.type === "text";
-          alvo.type = visivel ? "password" : "text";
-          botao.querySelector("i").className = visivel ? "fa-solid fa-eye" : "fa-solid fa-eye-slash";
-          botao.setAttribute("aria-label", visivel ? "Mostrar senha" : "Ocultar senha");
-        });
-      });
-    });
-  </script>
 </body>
 </html>

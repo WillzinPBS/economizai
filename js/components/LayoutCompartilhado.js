@@ -4,6 +4,21 @@ const TAMANHO_FONTE_PADRAO = 100;
 const TAMANHO_FONTE_MINIMO = 90;
 const TAMANHO_FONTE_MAXIMO = 120;
 const TAMANHO_FONTE_PASSO = 10;
+let catalogoBuscaCompartilhado;
+
+function carregarCatalogoBusca() {
+  if (!catalogoBuscaCompartilhado) {
+    catalogoBuscaCompartilhado = fetch("api/index.php?acao=produtos", { credentials: "same-origin", cache: "no-store" })
+      .then((resposta) => resposta.json())
+      .then((dados) => dados.produtos || [])
+      .catch(() => []);
+  }
+  return catalogoBuscaCompartilhado;
+}
+
+function normalizarBuscaCompartilhada(valor) {
+  return valor.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLocaleLowerCase("pt-BR").trim();
+}
 
 function limitarTamanhoFonte(tamanho) {
   const numero = Number(tamanho);
@@ -110,6 +125,14 @@ class EconomizaiHeader extends HTMLElement {
 
   connectedCallback() {
     this.render();
+    this._sessaoAlterada = () => this.sincronizarUsuario();
+    window.addEventListener("sessao-alterada", this._sessaoAlterada);
+    window.sessaoPronta?.then(() => this.sincronizarUsuario());
+  }
+
+  disconnectedCallback() {
+    this.encerrarMenuUsuario();
+    window.removeEventListener("sessao-alterada", this._sessaoAlterada);
   }
 
   isActive(page) {
@@ -139,6 +162,8 @@ class EconomizaiHeader extends HTMLElement {
         *::after {
           box-sizing: border-box;
         }
+
+        [hidden] { display: none !important; }
 
         header {
           display: flex;
@@ -232,6 +257,26 @@ class EconomizaiHeader extends HTMLElement {
           transition: 0.2s ease;
         }
 
+        .drop-box {
+          width: 38px;
+          height: 38px;
+          border: 1px solid var(--cor-borda, #e5e7eb);
+          border-radius: 999px;
+          background-color: transparent;
+          color: var(--cor-texto-secundario, rgba(0, 0, 0, 0.70));
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: 0.2s ease;
+        }
+
+        .drop-box:hover,
+        .drop-box:hover:not(:disabled) {
+          background-color: var(--cor-realce-verde-suave, rgba(0, 0, 0, 0.03));
+          color: var(--cor-texto, rgba(0, 0, 0, 0.80));
+        }
+
         .botao-tema:hover,
         .botao-fonte:hover:not(:disabled) {
           background-color: var(--cor-realce-verde-suave, rgba(0, 0, 0, 0.03));
@@ -274,26 +319,6 @@ class EconomizaiHeader extends HTMLElement {
           gap: 8px;
         }
 
-        .usuario-bemvindo {
-          color: var(--cor-texto-secundario, rgba(0, 0, 0, 0.70));
-          font-size: 0.875rem;
-          font-weight: 600;
-          white-space: nowrap;
-        }
-
-        .usuario-identificacao {
-          display: flex;
-          align-items: flex-end;
-          flex-direction: column;
-          line-height: 1.2;
-        }
-
-        .usuario-login {
-          color: var(--cor-texto-secundario, rgba(0, 0, 0, 0.70));
-          font-size: 0.6875rem;
-          white-space: nowrap;
-        }
-
         .login .botao-principal {
           width: auto;
           height: auto;
@@ -306,6 +331,214 @@ class EconomizaiHeader extends HTMLElement {
           color: var(--cor-nav-ativo-texto, #166534);
         }
 
+        .pesquisa {
+          position: relative;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          padding: 8px 12px;
+          width: 100%;          /* ocupa a largura do pai */
+          min-width: 300px;     /* garante um mínimo para o texto caber */
+          border: solid 1px rgba(66, 65, 65, 0.4);
+          box-sizing: border-box;
+          border-radius: 8px;
+          transition: 0.2s ease;
+        }
+
+        .pesquisa:hover {
+          border-color: rgba(148, 202, 126, 0.4);
+        }
+
+        .pesquisa input {
+          flex: 1;
+          min-width: 0;
+          padding: 0;           /* remove o padding padrão do navegador */
+          border: none;
+          outline: none;
+          background: transparent;
+          text-overflow: ellipsis;
+        }
+
+        .pesquisa button {
+          flex-shrink: 0;
+          padding: 0;           /* remove o padding padrão do botão (~6px de cada lado) */
+          background-color: transparent;
+          border: none;
+          outline: none;
+          cursor: pointer;
+        }
+
+        .pesquisa-sugestoes {
+          position: absolute;
+          top: calc(100% + 8px);
+          left: 0;
+          right: 0;
+          z-index: 1001;
+          display: none;
+          max-height: 320px;
+          overflow-y: auto;
+          padding: 6px;
+          border: 1px solid var(--cor-borda, #e5e7eb);
+          border-radius: 10px;
+          background: var(--cor-superficie-elevada, #fff);
+          box-shadow: 0 12px 28px rgba(15, 23, 42, 0.16);
+        }
+
+        .pesquisa-sugestoes.aberto { display: block; }
+
+        .pesquisa-sugestao {
+          display: grid;
+          grid-template-columns: 48px minmax(0, 1fr) auto;
+          align-items: center;
+          gap: 10px;
+          padding: 9px 10px;
+          border-radius: 7px;
+          color: var(--cor-texto, #0f172a);
+          text-decoration: none;
+        }
+
+        .pesquisa-sugestao img {
+          width: 48px;
+          height: 48px;
+          object-fit: contain;
+          border-radius: 6px;
+          background: var(--cor-fundo, #f1f5f9);
+        }
+
+        .pesquisa-sugestao-info { min-width: 0; }
+
+        .pesquisa-sugestao-nome {
+          display: block;
+          overflow: hidden;
+          font-weight: 600;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .pesquisa-sugestao:hover,
+        .pesquisa-sugestao:focus-visible {
+          background: var(--cor-nav-ativo-bg, #dcfce7);
+          outline: none;
+        }
+
+        .pesquisa-sugestao small {
+          display: block;
+          margin-top: 2px;
+          color: var(--cor-texto-secundario, #4b5563);
+        }
+
+        .pesquisa-sugestao-selo {
+          padding: 4px 7px;
+          border-radius: 999px;
+          background: var(--cor-verde-suave, #dcfce7);
+          color: var(--cor-nav-ativo-texto, #166534);
+          font-size: 0.7rem;
+          font-weight: 700;
+          white-space: nowrap;
+        }
+
+        @media (max-width: 500px) {
+          .pesquisa-sugestao { grid-template-columns: 42px minmax(0, 1fr); gap: 8px; }
+          .pesquisa-sugestoes img { width: 42px; height: 42px; }
+          .pesquisa-sugestao-selo { grid-column: 2; justify-self: start; }
+        }
+
+        .botao-postar {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          width: 100%;
+          height: 100%;
+          padding: 8px 14px;
+          border: none;
+          border-radius: 12px;
+          color: var(--cor-texto, black);
+          font-size: 0.875rem;
+          font-weight: 600;
+          line-height: normal;
+          cursor: pointer;
+          text-decoration: none;
+          transition: 0.2s ease;
+          border: 1px solid var(--cor-borda, #e5e7eb);
+          border-radius: 12px;
+          z-index: 1000;
+        }
+
+        .botao-postar:hover {
+          color: var(--cor-botao-principal, #16a34a);
+        }
+
+        .botao-postar i {
+          color: #16a34a
+        }
+
+        .acessibilidade {
+          position: relative;
+        }
+
+        .menu-acessibilidade {
+          display: none;
+          position: absolute;
+          top: 48px;
+          right: 0;
+          width: 240px;
+          max-width: calc(100vw - 24px);
+          padding: 16px;
+          background: var(--cor-header-bg, #fff);
+          border: 1px solid var(--cor-borda, #e5e7eb);
+          border-radius: 12px;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+          z-index: 1000;
+        }
+
+        .acessibilidade.aberto .menu-acessibilidade {
+          display: block;
+        }
+
+        .menu-acessibilidade strong {
+          display: block;
+          margin-bottom: 14px;
+          color: var(--cor-texto, #111);
+        }
+
+        .menu-acessibilidade .controle-fonte {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+          margin-bottom: 12px;
+        }
+
+        .menu-acessibilidade .controle-fonte span {
+          flex: 1;
+          font-size: 0.85rem;
+          color: var(--cor-texto-secundario, #555);
+          text-align: center;
+        }
+
+        .menu-acessibilidade .botao-fonte {
+          flex-shrink: 0;
+          width: 36px;
+          height: 32px;
+          border-radius: 8px;
+        }
+
+        .opcao-acessibilidade {
+          width: 100%;
+          min-height: 40px;
+          padding: 10px;
+          border: 1px solid var(--cor-borda, #e5e7eb);
+          border-radius: 8px;
+          background: transparent;
+          color: var(--cor-texto, #111);
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
         .botao-principal {
           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
           display: inline-flex;
@@ -316,7 +549,7 @@ class EconomizaiHeader extends HTMLElement {
           height: 100%;
           padding: 8px 14px;
           border: none;
-          border-radius: 8px;
+          border-radius: 12px;
           background: var(--cor-botao-principal, #16a34a);
           color: #ffffff;
           font-size: 0.875rem;
@@ -348,9 +581,208 @@ class EconomizaiHeader extends HTMLElement {
           flex-shrink: 0;
         }
 
+        /* ===== Menu do usuário ===== */
+
+        /* Garante que o atributo hidden funcione mesmo com display definido em outras regras */
+        [hidden] {
+          display: none !important;
+        }
+
+        .usuario-menu {
+          position: relative;
+        }
+
+        .usuario-gatilho {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          height: 38px;
+          padding: 0 12px 0 4px;
+          border: 1px solid var(--cor-borda, #e5e7eb);
+          border-radius: 999px;
+          background-color: transparent;
+          color: var(--cor-texto, rgba(0, 0, 0, 0.80));
+          font: inherit;
+          font-weight: 600;
+          cursor: pointer;
+          transition: 0.2s ease;
+        }
+
+        .usuario-gatilho:hover,
+        .usuario-gatilho[aria-expanded="true"] {
+          background-color: var(--cor-realce-verde-suave, rgba(0, 0, 0, 0.03));
+        }
+
+        .usuario-gatilho:focus-visible,
+        .usuario-item:focus-visible {
+          outline: 2px solid var(--cor-botao-principal, #16a34a);
+          outline-offset: 2px;
+        }
+
+        .usuario-avatar {
+          display: inline-flex;
+          overflow: hidden;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+          width: 30px;
+          height: 30px;
+          border-radius: 50%;
+          background: var(--cor-botao-principal, #16a34a);
+          color: #ffffff;
+          font-size: 0.8125rem;
+          font-weight: 700;
+          line-height: 1;
+        }
+
+        .usuario-avatar img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+
+        .usuario-avatar--grande {
+          width: 44px;
+          height: 44px;
+          font-size: 1.125rem;
+        }
+
+        .usuario-nome-curto {
+          max-width: 110px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .usuario-seta {
+          font-size: 0.75rem;
+          transition: transform 0.2s ease;
+        }
+
+        .usuario-gatilho[aria-expanded="true"] .usuario-seta {
+          transform: rotate(180deg);
+        }
+
+        .usuario-painel {
+          position: absolute;
+          top: calc(100% + 10px);
+          right: 0;
+          z-index: 1000;
+          width: 260px;
+          max-width: calc(100vw - 24px);
+          padding: 8px;
+          background: var(--cor-header-bg, #ffffff);
+          border: 1px solid var(--cor-borda, #e5e7eb);
+          border-radius: 12px;
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+          animation: usuario-painel-entrada 0.15s ease;
+        }
+
+        @keyframes usuario-painel-entrada {
+          from {
+            opacity: 0;
+            transform: translateY(-6px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+          .usuario-painel {
+            animation: none;
+          }
+        }
+
+        .usuario-cabecalho {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin-bottom: 8px;
+          padding: 10px 8px 12px;
+          border-bottom: 1px solid var(--cor-borda, #e5e7eb);
+        }
+
+        .usuario-dados {
+          display: flex;
+          flex-direction: column;
+          min-width: 0;
+          line-height: 1.3;
+        }
+
+        .usuario-dados strong,
+        .usuario-dados span {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .usuario-dados strong {
+          color: var(--cor-texto, #111111);
+        }
+
+        .usuario-dados span {
+          color: var(--cor-texto-secundario, #555555);
+          font-size: 0.75rem;
+        }
+
+        .usuario-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          width: 100%;
+          padding: 10px;
+          border: none;
+          border-radius: 8px;
+          background: transparent;
+          color: var(--cor-texto, #111111);
+          font: inherit;
+          text-align: left;
+          text-decoration: none;
+          cursor: pointer;
+          transition: 0.2s ease;
+        }
+
+        .usuario-item i {
+          font-size: 1rem;
+        }
+
+        .usuario-item:hover {
+          background: var(--cor-realce-verde-suave, rgba(0, 0, 0, 0.03));
+        }
+
+        .usuario-item--sair:hover {
+          background: rgba(220, 38, 38, 0.08);
+          color: var(--cor-erro, #dc2626);
+        }
+
+
+        /* No celular, só o avatar (+ seta) para o header não estourar */
+        @media (max-width: 640px) {
+          .usuario-nome-curto {
+            max-width: 80px;
+          }
+
+          .usuario-gatilho {
+            padding-right: 10px;
+          }
+        }
+
+        /* ===== Fim do menu do usuário ===== */
+
+        .fechar-acessibilidade {
+          display: none;
+        }
+
         @media (max-width: 900px) {
           header {
             height: auto;
+          }
+
+          .menu-acessibilidade {
+            right: -10px;
           }
 
           .menu {
@@ -370,10 +802,79 @@ class EconomizaiHeader extends HTMLElement {
 
         @media (max-width: 640px) {
           .menu img {
-            width: 132px;
+            width: 110px;
+          }
+
+          .postar { display: none; }
+          .menu { justify-content: space-between; gap: 12px; }
+          nav { gap: 2px; }
+          nav a { padding: 6px; }
+          .pesquisa { min-width: 0; }
+
+          .menu-acessibilidade {
+            position: fixed;
+            top: 70px;
+            right: 12px;
+            left: 12px;
+            width: auto;
+            max-width: none;
+          }
+
+          .fechar-acessibilidade {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: var(--cor-texto, #111);
+            cursor: pointer;
+            font-size: 16px;
+          }
+
+          .fechar-acessibilidade:hover {
+            background: var(--cor-realce-verde-suave, rgba(0, 0, 0, 0.05));
+          }
+
+          .menu-acessibilidade {
+            padding-top: 50px;
+          }
+
+          .menu-acessibilidade .controle-fonte {
+            gap: 6px;
+          }
+
+          .menu-acessibilidade .controle-fonte span {
+            font-size: 0.8rem;
+          }
+
+          .menu-acessibilidade .botao-fonte {
+            width: 40px;
+            height: 36px;
+          }
+        }
+
+        @media (max-width: 380px) {
+          .menu-acessibilidade {
+            top: 65px;
+            right: 8px;
+            left: 8px;
+            padding: 12px;
+          }
+
+          .menu-acessibilidade .controle-fonte span {
+            font-size: 0.75rem;
           }
         }
       </style>
+      <head>
+          <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+      </head>
       <header>
         <div class="menu">
           <a class="logo-link" href="index.html" aria-label="Ir para a página inicial do Economizai">
@@ -382,32 +883,54 @@ class EconomizaiHeader extends HTMLElement {
           <nav aria-label="Navegação principal">
             ${this.getNavLink("home", "index.html", "Início")}
             ${this.getNavLink("produtos", "produto.html", "Produtos")}
-            ${this.getNavLink("como-funciona", "comofunciona.html", "Como funciona")}
+            <div class="container">
+              <form class="pesquisa" action="produto.html" method="get" autocomplete="off">
+              <input type="search" name="busca" autocomplete="off" aria-label="Buscar produtos e mercados" placeholder="Busque promoções e mercados">
+              <button type="submit" aria-label="Buscar"><i class="bi bi-search"></i></button>
+              <div class="pesquisa-sugestoes" role="listbox" aria-label="Produtos encontrados"></div>
+              </form>
+            </div>
+
+            <!-- ${this.getNavLink("como-funciona", "comofunciona.html", "Como funciona")} -->
             ${this.getNavLink("contato", "contato.html", "Contato")}
           </nav>
           <div class="acoes-header">
-            <div class="controle-fonte" aria-label="Tamanho da fonte">
-              <button class="botao-fonte botao-diminuir-fonte" type="button" aria-label="Diminuir fonte" title="Diminuir fonte">A-</button>
-              <button class="botao-fonte botao-aumentar-fonte" type="button" aria-label="Aumentar fonte" title="Aumentar fonte">A+</button>
+            <div class="postar" data-login-required hidden>
+              <a class="botao-postar" href="postar.html">
+                <i class="bi bi-plus-circle"></i>
+                <span>Postar</span>
+              </a>
             </div>
-            <button class="botao-tema" type="button" aria-label="Alternar tema" title="Alternar tema">
-              <svg class="icone-tema icone-lua" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/>
-              </svg>
-              <svg class="icone-tema icone-sol" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="4"/>
-                <path d="M12 2v2"/>
-                <path d="M12 20v2"/>
-                <path d="m4.93 4.93 1.41 1.41"/>
-                <path d="m17.66 17.66 1.41 1.41"/>
-                <path d="M2 12h2"/>
-                <path d="M20 12h2"/>
-                <path d="m6.34 17.66-1.41 1.41"/>
-                <path d="m19.07 4.93-1.41 1.41"/>
-              </svg>
-            </button>
+
+
+            <div class="acessibilidade">
+              <button class="drop-box" type="button" aria-label="Acessibilidades" title="Acessibilidades">
+                <i class="bi bi-universal-access-circle"></i>
+              </button>
+
+              <div class="menu-acessibilidade">
+                <strong>Acessibilidade</strong>
+
+                <button class="fechar-acessibilidade" type="button" aria-label="Fechar acessibilidade">
+                  <i class="bi bi-x-lg"></i>
+                </button>
+
+                <div class="controle-fonte">
+                  <button class="botao-fonte botao-diminuir-fonte" type="button">A−</button>
+                  <span>Tamanho da fonte</span>
+                  <button class="botao-fonte botao-aumentar-fonte" type="button">A+</button>
+                </div>
+
+                <button class="opcao-acessibilidade botao-tema" type="button">
+                  <i class="bi bi-moon"></i>
+                  <span>Modo escuro</span>
+                </button>
+              </div>
+            </div>
+
             <div class="login" id="user-div">
-              <a class="botao-principal" href="login.html">
+              <!-- Visitante -->
+              <a class="botao-principal" id="botao-entrar" href="login.html">
                 <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                   viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                   stroke-linecap="round" stroke-linejoin="round">
@@ -416,6 +939,41 @@ class EconomizaiHeader extends HTMLElement {
                 </svg>
                 <span>Entrar</span>
               </a>
+
+              <!-- Usuário logado (preenchido por sincronizarUsuario) -->
+              <div class="usuario-menu" id="usuario-menu" hidden>
+                <button class="usuario-gatilho" id="usuario-gatilho" type="button"
+                  aria-expanded="false" aria-controls="usuario-painel">
+                  <span class="usuario-avatar" id="usuario-avatar" aria-hidden="true"></span>
+                  <span class="usuario-nome-curto" id="usuario-nome-curto"></span>
+                  <i class="bi bi-chevron-down usuario-seta" aria-hidden="true"></i>
+                </button>
+
+                <div class="usuario-painel" id="usuario-painel" hidden>
+                  <div class="usuario-cabecalho">
+                    <span class="usuario-avatar usuario-avatar--grande" id="usuario-avatar-grande" aria-hidden="true"></span>
+                    <div class="usuario-dados">
+                      <strong id="usuario-nome-completo"></strong>
+                      <span id="usuario-login-texto"></span>
+                    </div>
+                  </div>
+
+                  <a class="usuario-item" href="configuracoes.html">
+                    <i class="bi bi-gear" aria-hidden="true"></i>
+                    <span>Configurações</span>
+                  </a>
+
+                  <a class="usuario-item" href="modelo-bd.html">Modelo do banco de dados</a>
+                  <a class="usuario-item" data-master href="usuarios.html" hidden>Consultar usuários</a>
+                  <a class="usuario-item" data-master href="logs.html" hidden>Logs de autenticação</a>
+                  <a class="usuario-item" data-master href="promocoes.html" hidden>Gerenciar produtos</a>
+
+                  <button class="usuario-item usuario-item--sair" id="botao-sair" type="button">
+                    <i class="bi bi-box-arrow-right" aria-hidden="true"></i>
+                    <span>Sair</span>
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -423,12 +981,90 @@ class EconomizaiHeader extends HTMLElement {
     `;
 
     const botaoTema = this.shadowRoot.querySelector(".botao-tema");
+    const campoBusca = this.shadowRoot.querySelector('.pesquisa input[name="busca"]');
+    const caixaSugestoes = this.shadowRoot.querySelector(".pesquisa-sugestoes");
+    let buscaAtual = 0;
+
+    campoBusca.addEventListener("input", async () => {
+      const termo = normalizarBuscaCompartilhada(campoBusca.value);
+      const requisicao = ++buscaAtual;
+      caixaSugestoes.replaceChildren();
+      caixaSugestoes.classList.remove("aberto");
+      if (termo.length < 2) return;
+
+      const produtos = await carregarCatalogoBusca();
+      if (requisicao !== buscaAtual) return;
+      const encontrados = produtos.filter((produto) =>
+        normalizarBuscaCompartilhada(`${produto.nome} ${produto.categoria} ${produto.mercado} ${(produto.outrosMercados || []).map((mercado) => mercado.nome).join(" ")}`).includes(termo)
+      ).slice(0, 6);
+
+      encontrados.forEach((produto) => {
+        const sugestao = document.createElement("a");
+        sugestao.className = "pesquisa-sugestao";
+        sugestao.setAttribute("role", "option");
+        sugestao.href = `produto.html?busca=${encodeURIComponent(produto.nome)}`;
+        const imagem = document.createElement("img");
+        imagem.src = produto.imagem;
+        imagem.alt = "";
+        imagem.loading = "lazy";
+        imagem.onerror = () => imagem.remove();
+        const informacoes = document.createElement("span");
+        informacoes.className = "pesquisa-sugestao-info";
+        const nome = document.createElement("span");
+        nome.className = "pesquisa-sugestao-nome";
+        nome.textContent = produto.nome;
+        const detalhe = document.createElement("small");
+        detalhe.textContent = `${produto.categoria} · ${produto.mercado} · ${produto.preco}`;
+        informacoes.append(nome, detalhe);
+        sugestao.append(imagem, informacoes);
+        if (produto.menorPreco) {
+          const selo = document.createElement("span");
+          selo.className = "pesquisa-sugestao-selo";
+          selo.textContent = "Menor preço";
+          sugestao.append(selo);
+        }
+        caixaSugestoes.append(sugestao);
+      });
+
+      if (encontrados.length) caixaSugestoes.classList.add("aberto");
+    });
+
+    campoBusca.addEventListener("focus", () => {
+      if (caixaSugestoes.childElementCount) caixaSugestoes.classList.add("aberto");
+    });
+    const formularioBusca = this.shadowRoot.querySelector(".pesquisa");
+    document.addEventListener("click", (evento) => {
+      if (!evento.composedPath().includes(formularioBusca)) {
+        caixaSugestoes.classList.remove("aberto");
+      }
+    });
+
     const botaoDiminuirFonte = this.shadowRoot.querySelector(".botao-diminuir-fonte");
     const botaoAumentarFonte = this.shadowRoot.querySelector(".botao-aumentar-fonte");
+
+    const botaoAcessibilidade = this.shadowRoot.querySelector(".drop-box");
+    const acessibilidade = this.shadowRoot.querySelector(".acessibilidade");
+
+    const botaoFecharAcessibilidade =
+      this.shadowRoot.querySelector(".fechar-acessibilidade");
+
+    botaoFecharAcessibilidade.addEventListener("click", () => {
+      acessibilidade.classList.remove("aberto");
+    });
+
+    botaoAcessibilidade.addEventListener("click", (event) => {
+      event.stopPropagation();
+      // O stopPropagation impede o "clicar fora" do menu de usuário de rodar,
+      // então fechamos ele aqui para os dois nunca ficarem abertos juntos.
+      this.fecharMenuUsuario();
+      acessibilidade.classList.toggle("aberto");
+    });
 
     botaoTema.addEventListener("click", alternarTema);
     botaoDiminuirFonte.addEventListener("click", diminuirFonte);
     botaoAumentarFonte.addEventListener("click", aumentarFonte);
+
+    this.ligarMenuUsuario();
 
     this.sincronizarTema(temaAtual);
     this.sincronizarFonte(tamanhoFonteAtual);
@@ -438,7 +1074,7 @@ class EconomizaiHeader extends HTMLElement {
   sincronizarTema(tema) {
     const temaNormalizado = tema === "dark" ? "dark" : "light";
     this.setAttribute("theme", temaNormalizado);
-    
+
     const logoEconomiza = this.shadowRoot.querySelector('#logoSrc');
     console.log(logoEconomiza)
 
@@ -471,60 +1107,138 @@ class EconomizaiHeader extends HTMLElement {
     botaoAumentarFonte.disabled = tamanhoNormalizado >= TAMANHO_FONTE_MAXIMO;
   }
 
+  // Decide o que mostrar: botão "Entrar" (visitante) ou menu do usuário (logado).
+  // Não recria o HTML — só alterna visibilidade e preenche os textos.
   sincronizarUsuario() {
-    const usuarioArea = this.shadowRoot?.querySelector("#user-div");
-    if (!usuarioArea) {
+    const raiz = this.shadowRoot;
+    const menu = raiz?.getElementById("usuario-menu");
+    const botaoEntrar = raiz?.getElementById("botao-entrar");
+
+    if (!menu || !botaoEntrar) {
       return;
     }
 
-    const login = localStorage.getItem("usuarioLogado");
+    const cadastro = window.usuarioAtual;
+    const login = cadastro?.login;
 
+    // Visitante: só o botão "Entrar"
     if (!login) {
-      usuarioArea.innerHTML = `
-        <a class="botao-principal" href="login.html">
-          <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
-          </svg>
-          <span>Entrar</span>
-        </a>
-      `;
+      botaoEntrar.hidden = false;
+      menu.hidden = true;
+      raiz.querySelectorAll("[data-login-required]").forEach((item) => { item.hidden = true; });
+      this.fecharMenuUsuario();
       return;
     }
 
-    let usuarios = [];
-    try {
-      const usuariosSalvos = JSON.parse(localStorage.getItem("usuarios"));
-      usuarios = Array.isArray(usuariosSalvos) ? usuariosSalvos : [];
-    } catch {
-      usuarios = [];
+    const nomeCompleto = String(cadastro?.nome || login).trim();
+    const primeiroNome = nomeCompleto.split(/\s+/)[0];
+    const inicial = primeiroNome.charAt(0).toUpperCase();
+
+    // textContent (e não innerHTML) para o nome nunca ser interpretado como HTML
+    const fotoValida =
+    typeof cadastro?.foto === "string" && cadastro.foto.startsWith("data:image/");
+
+  ["usuario-avatar", "usuario-avatar-grande"].forEach((id) => {
+    const elemento = raiz.getElementById(id);
+    elemento.textContent = "";
+
+    if (fotoValida) {
+      const img = document.createElement("img");
+      img.src = cadastro.foto;
+      img.alt = "";
+      elemento.appendChild(img);
+    } else {
+      elemento.textContent = inicial;
+    }
+  });
+    raiz.getElementById("usuario-nome-curto").textContent = `@${login}`;
+    raiz.querySelectorAll("[data-master]").forEach((item) => {
+      item.hidden = cadastro.perfil !== "master";
+    });
+
+    const nomeCompletoEl = raiz.getElementById("usuario-nome-completo");
+    nomeCompletoEl.textContent = nomeCompleto;
+    nomeCompletoEl.title = nomeCompleto;
+
+    raiz.getElementById("usuario-login-texto").textContent = `@${login}`;
+    raiz
+      .getElementById("usuario-gatilho")
+      .setAttribute("aria-label", `Menu do usuário ${primeiroNome}`);
+
+    botaoEntrar.hidden = true;
+    menu.hidden = false;
+    raiz.querySelectorAll("[data-login-required]").forEach((item) => { item.hidden = false; });
+  }
+
+  // Liga os eventos do menu do usuário. Roda uma vez por render().
+  ligarMenuUsuario() {
+    const raiz = this.shadowRoot;
+    const menu = raiz.getElementById("usuario-menu");
+    const gatilho = raiz.getElementById("usuario-gatilho");
+    const painel = raiz.getElementById("usuario-painel");
+    const botaoSair = raiz.getElementById("botao-sair");
+
+    if (!menu || !gatilho || !painel || !botaoSair) {
+      return;
     }
 
-    const cadastro = usuarios.find(
-      (usuario) =>
-        typeof usuario.login === "string" &&
-        usuario.login.toLowerCase() === login.toLowerCase()
-    );
-    const primeiroNome = String(cadastro?.nome || "").trim().split(/\s+/)[0] || login;
+    // Evita listeners duplicados no document se o componente for renderizado de novo
+    this.encerrarMenuUsuario();
 
-    const nomeSeguro = primeiroNome
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;");
+    gatilho.addEventListener("click", () => {
+      if (painel.hidden) this.abrirMenuUsuario();
+      else this.fecharMenuUsuario();
+    });
 
-    const loginSeguro = login
-      .replaceAll("&", "&amp;")
-      .replaceAll("<", "&lt;")
-      .replaceAll(">", "&gt;");
+    botaoSair.addEventListener("click", () => this.sair());
 
-    usuarioArea.innerHTML = `
-      <span class="usuario-identificacao">
-        <span class="usuario-bemvindo">Bem-vindo, ${nomeSeguro}!</span>
-        <span class="usuario-login">Login: ${loginSeguro}</span>
-      </span>
-    `;
+    // Fecha ao clicar fora (composedPath atravessa o shadow DOM)
+    this._cliqueForaUsuario = (evento) => {
+      if (!evento.composedPath().includes(menu)) this.fecharMenuUsuario();
+    };
+
+    // Fecha com Esc e devolve o foco ao botão
+    this._teclaUsuario = (evento) => {
+      if (evento.key === "Escape" && !painel.hidden) {
+        this.fecharMenuUsuario();
+        gatilho.focus();
+      }
+    };
+
+    document.addEventListener("click", this._cliqueForaUsuario);
+    document.addEventListener("keydown", this._teclaUsuario);
+  }
+
+  abrirMenuUsuario() {
+    const raiz = this.shadowRoot;
+    raiz.getElementById("usuario-painel").hidden = false;
+    raiz.getElementById("usuario-gatilho").setAttribute("aria-expanded", "true");
+
+    // Evita deixar o menu de acessibilidade aberto ao mesmo tempo
+    raiz.querySelector(".acessibilidade")?.classList.remove("aberto");
+  }
+
+  fecharMenuUsuario() {
+    const raiz = this.shadowRoot;
+    const painel = raiz?.getElementById("usuario-painel");
+    if (!painel || painel.hidden) return;
+
+    painel.hidden = true;
+    raiz.getElementById("usuario-gatilho").setAttribute("aria-expanded", "false");
+  }
+
+  async sair() {
+    try {
+      await encerrarSessao();
+    } catch (erro) {
+      sessionStorage.setItem("erro-sistema", erro.message);
+      location.href = "erro.html";
+    }
+  }
+
+  encerrarMenuUsuario() {
+    document.removeEventListener("click", this._cliqueForaUsuario);
+    document.removeEventListener("keydown", this._teclaUsuario);
   }
 }
 
@@ -601,5 +1315,3 @@ if (!customElements.get("economizai-header")) {
 if (!customElements.get("economizai-footer")) {
   customElements.define("economizai-footer", EconomizaiFooter);
 }
-
-

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECONOMIZAI | MODELO DO BANCO</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <script src="js/api.js" defer></script>
+  <script src="js/components/LayoutCompartilhado.js" defer></script>
+</head>
+
+<body>
+  <economizai-header active-page="modelo-bd"></economizai-header>
+
+  <main class="admin-pagina">
+    <p class="admin-mensagem" id="estado-modelo" role="status">Verificando sessão...</p>
+    <section class="admin-card" id="conteudo-modelo" aria-labelledby="titulo-modelo" hidden>
+      <div class="admin-cabecalho">
+        <h1 id="titulo-modelo">Modelo do banco de dados</h1>
+        <p>Usuários, autenticação, catálogo, ofertas por mercado, curtidas e solicitações de aprovação, com as chaves e os relacionamentos.</p>
+      </div>
+
+      <figure style="margin: 0;">
+        <img class="admin-modelo" src="docs/modelo-bd.svg" width="1800" height="2110"
+          alt="Diagrama das tabelas usuarios, logs_autenticacao, produtos, ofertas, promocoes, curtidas e migracoes. Curtidas relacionam usuários e produtos publicados, com uma curtida por usuário em cada produto."
+          aria-describedby="legenda-modelo">
+        <figcaption id="legenda-modelo" style="margin-top: 16px;">
+          PK: chave primária. FK: chave estrangeira. UNIQUE: valor único.
+          Produtos e ofertas são a fonte do catálogo. Curtidas ficam no banco e usam uma chave composta por usuário e produto. Excluir um produto remove suas ofertas e curtidas e mantém o histórico da promoção sem referência ao produto.
+        </figcaption>
+      </figure>
+
+      <div class="admin-acoes">
+        <a class="admin-botao" href="docs/modelo-bd.svg" target="_blank" rel="noopener">Abrir imagem ampliada</a>
+        <a class="admin-botao" href="produto.html">Ver produtos</a>
+      </div>
+    </section>
+  </main>
+
+  <economizai-footer></economizai-footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      const usuario = await window.sessaoPronta;
+      if (!usuario) {
+        window.location.replace("login.html");
+        return;
+      }
+      document.getElementById("estado-modelo").hidden = true;
+      document.getElementById("conteudo-modelo").hidden = false;
+    });
+  </script>
+</body>
+
+</html>

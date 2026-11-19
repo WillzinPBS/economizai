@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECONOMIZAI | Segundo fator</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <script src="js/api.js" defer></script>
+  <script src="js/components/LayoutCompartilhado.js" defer></script>
+  <script src="js/2fa.js" defer></script>
+</head>
+<body>
+  <economizai-header></economizai-header>
+  <main class="auth-page">
+    <section class="auth-card auth-card--login">
+      <img src="img/logoecom.png" alt="Logo do ECONOMIZAI" class="auth-logo">
+      <h1 class="auth-title">Confirme sua identidade</h1>
+      <p class="auth-subtitle">Responda à pergunta para concluir o acesso.</p>
+      <form class="auth-form" id="form-2fa">
+        <div class="auth-field">
+          <label class="auth-label" id="pergunta-2fa" for="resposta-2fa">Carregando pergunta...</label>
+          <input class="auth-control" id="resposta-2fa" type="text" autocomplete="off" required disabled>
+        </div>
+        <p id="tentativas-2fa" class="auth-field-hint" aria-live="polite"></p>
+        <p id="mensagem-2fa" class="auth-message" role="status" aria-live="polite"></p>
+        <button class="botao-principal auth-submit" id="confirmar-2fa" type="submit" disabled>Confirmar</button>
+        <a href="login.html" class="auth-link">Voltar para login</a>
+      </form>
+    </section>
+  </main>
+  <economizai-footer></economizai-footer>
+</body>
+</html>

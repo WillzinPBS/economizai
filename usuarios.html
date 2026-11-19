@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECONOMIZAI | Consulta de usuários</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <script src="js/api.js" defer></script>
+  <script src="js/components/LayoutCompartilhado.js" defer></script>
+  <script src="js/admin.js" defer></script>
+</head>
+<body data-tela="usuarios">
+  <economizai-header active-page="usuarios"></economizai-header>
+  <main class="admin-pagina">
+    <section class="admin-card" id="conteudo-admin" hidden>
+      <div class="admin-cabecalho">
+        <h1>Consulta de usuários</h1>
+        <p>Pesquise pelo nome e gerencie os usuários comuns cadastrados.</p>
+      </div>
+      <form class="admin-acoes" id="form-busca">
+        <label for="busca">Nome do usuário
+          <input id="busca" type="search" placeholder="Digite parte do nome">
+        </label>
+        <button class="admin-botao admin-botao--principal" type="submit">Pesquisar</button>
+        <button class="admin-botao" type="reset">Mostrar todos</button>
+        <a class="admin-botao" id="baixar-pdf" href="api/exportar-usuarios.php">Baixar lista em PDF</a>
+      </form>
+      <p class="admin-mensagem" id="mensagem-admin" role="status" aria-live="polite"></p>
+      <div class="admin-tabela-wrap" role="region" aria-label="Tabela de usuários; role para os lados para ver todas as colunas" tabindex="0">
+        <table class="admin-tabela">
+          <caption class="sr-only">Usuários comuns cadastrados</caption>
+          <thead><tr><th>Nome</th><th>Login</th><th>CPF</th><th>E-mail</th><th>Ações</th></tr></thead>
+          <tbody id="tabela-admin"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+  <dialog class="admin-dialog" id="confirmar-exclusao" aria-labelledby="titulo-exclusao">
+    <h2 id="titulo-exclusao">Excluir usuário?</h2>
+    <p id="nome-exclusao"></p>
+    <p>Esta ação remove o cadastro. Os registros de autenticação serão preservados.</p>
+    <form method="dialog" class="admin-acoes">
+      <button class="admin-botao" value="cancelar">Cancelar</button>
+      <button class="admin-botao admin-botao--perigo" value="excluir">Excluir usuário</button>
+    </form>
+  </dialog>
+  <economizai-footer></economizai-footer>
+</body>
+</html>

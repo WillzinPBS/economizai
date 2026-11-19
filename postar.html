@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECONOMIZAI | Postar promoção</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="css/postar.css">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <script src="js/api.js" defer></script>
+  <script src="js/components/LayoutCompartilhado.js" defer></script>
+  <script src="js/postar.js" defer></script>
+</head>
+<body>
+  <economizai-header></economizai-header>
+  <main class="w-full min-h-screen bg-slate-50 flex justify-center py-10 px-4">
+    <section class="w-full max-w-2xl">
+      <div class="mb-6">
+        <h1 class="text-2xl md:text-3xl font-bold text-slate-800">Postar promoção</h1>
+        <p class="text-sm text-slate-500 mt-1">Promoções de usuários passam por aprovação do administrador.</p>
+      </div>
+      <article class="bg-white p-6 md:p-8 rounded-2xl shadow-sm border border-slate-200">
+        <form id="form-postar" class="space-y-5">
+          <label class="block text-sm font-semibold">Nome do produto
+            <input class="inputPostar mt-2" name="nome" maxlength="120" required>
+          </label>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <label class="block text-sm font-semibold">Categoria
+              <select class="inputPostar mt-2" name="categoria" required>
+                <option value="">Selecione uma categoria</option>
+                <option>Bebidas</option><option>Alimentos Básicos</option><option>Laticínios</option>
+                <option>Limpeza</option><option>Massas</option><option>Mercearia</option>
+              </select>
+            </label>
+            <label class="block text-sm font-semibold">Tipo de venda
+              <select class="inputPostar mt-2" name="tipo" required>
+                <option value="">Selecione o tipo</option>
+                <option value="unidade">Por unidade</option><option value="quilo">Por quilo</option>
+                <option value="grama">Por grama</option><option value="litro">Por litro</option>
+                <option value="mililitro">Por mililitro</option><option value="pacote">Por pacote</option>
+                <option value="caixa">Por caixa</option><option value="dúzia">Por dúzia</option>
+              </select>
+            </label>
+            <label class="block text-sm font-semibold">Mercado
+              <input class="inputPostar mt-2" name="mercado" maxlength="100" required>
+            </label>
+          </div>
+          <label class="block text-sm font-semibold">Link da promoção
+            <input class="inputPostar mt-2" name="link" type="url" placeholder="https://..." required>
+          </label>
+          <label class="block text-sm font-semibold">Foto do produto (PNG, JPG ou WebP; até 1 MB)
+            <input class="inputPostar mt-2" name="imagem" type="file" accept="image/png,image/jpeg,image/webp" required>
+          </label>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <label class="block text-sm font-semibold">Preço (R$)
+              <input class="inputPostar mt-2" name="preco" type="number" min="0.01" step="0.01" required>
+            </label>
+            <label class="block text-sm font-semibold">Cupom (opcional)
+              <input class="inputPostar mt-2" name="cupom" maxlength="60">
+            </label>
+          </div>
+          <p id="mensagem-postar" role="status" aria-live="polite"></p>
+          <button class="botao-principal w-full" type="submit">Enviar promoção</button>
+        </form>
+      </article>
+    </section>
+  </main>
+  <economizai-footer></economizai-footer>
+</body>
+</html>

@@ -15,7 +15,7 @@
     --cor-link: #047857;
     --cor-link-hover: #16a34a;
     --cor-sucesso: #15803d;
-    --cor-erro: #dc2626;
+    --cor-erro: #dc2626;    
     --cor-nav-ativo-bg: #dcfce7;
     --cor-nav-ativo-texto: #166534;
     --cor-realce-verde-suave: #f0fdf4;
@@ -139,6 +139,83 @@ economizai-footer {
     width: min(1120px, calc(100% - 32px));
     height: 72px;
     gap: 24px;
+}
+
+/* Mobile primeiro: tudo empilhado */
+.mercados-bloco {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.mercados-logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+.icon-mercados {
+    flex: 0 0 64px;          /* nunca encolhe */
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    background: white;
+    border-radius: 16px;
+    padding: 8px;
+    box-shadow: 0 5px 12px rgba(0, 0, 0, 0.10);
+    transition: transform 0.2s ease;
+}
+
+.icon-mercados:hover {
+    transform: translateY(-3px);
+}
+
+/* Telas grandes: texto ao lado dos logos */
+@media (min-width: 1024px) {
+    .mercados-bloco {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .mercados-texto {
+        width: 40%;
+        flex-shrink: 0;
+    }
+
+    .mercados-logos {
+        flex: 1;
+        min-width: 0;
+        justify-content: space-between;
+    }
+}
+
+@media (min-width: 1280px) {
+    .icon-mercados {
+        flex-basis: 72px;
+        width: 72px;
+        height: 72px;
+        padding: 10px;
+    }
+}
+
+.flutuando {
+    animation: flutuar 4s ease-in-out infinite;
+}
+
+@keyframes flutuar {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-16px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .flutuando {
+        animation: none;
+    }
 }
 
 .logo-link {
@@ -599,26 +676,6 @@ html[data-theme="dark"] .text-muted {
     line-height: 1.5;
 }
 
-.auth-forca-senha {
-    min-height: 1rem;
-    margin: 0.25rem 0 0;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    line-height: 1.4;
-}
-
-.auth-forca-senha--fraca {
-    color: #dc2626;
-}
-
-.auth-forca-senha--media {
-    color: #d97706;
-}
-
-.auth-forca-senha--forte {
-    color: #15803d;
-}
-
 #aumentar,#diminuir {
     color: var(--cor-texto);
 }
@@ -729,6 +786,8 @@ html[data-theme="dark"] .auth-blob {
     line-height: 1.6;
     max-width: 34rem;
 }
+
+
 
 .auth-features {
     list-style: none;
@@ -848,14 +907,33 @@ html[data-theme="dark"] .auth-blob {
 
 .auth-toggle-senha {
     position: absolute;
-    right: 0.75rem;
+    right: 0.35rem;
+    width: 2rem;
+    height: 2rem;
     background: none;
     border: none;
     padding: 0;
     color: var(--cor-texto-secundario);
     cursor: pointer;
-    font-size: 0.9375rem;
-    display: inline-flex;
+    display: grid;
+    place-items: center;
+}
+
+.auth-toggle-senha::before {
+    content: "";
+    width: 1.125rem;
+    height: 1.125rem;
+    background-color: currentColor;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2'%3E%3Cpath d='M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+input[type="text"] + .auth-toggle-senha::after {
+    content: "";
+    position: absolute;
+    width: 1.25rem;
+    height: 2px;
+    background-color: currentColor;
+    transform: rotate(-45deg);
 }
 
 .auth-toggle-senha:hover {
@@ -918,4 +996,64 @@ html[data-theme="dark"] .auth-blob {
 
 @media (max-width: 720px) {
     .auth-intro { padding-top: 0; }
+}
+
+/* Mantem login e cadastro acessiveis quando a tela nao comporta duas colunas. */
+main.auth-page {
+    height: auto;
+    min-height: calc(100vh - 72px);
+    overflow: clip;
+    padding: clamp(1.5rem, 4vw, 3rem) 1rem;
+}
+
+.auth-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-items: start;
+    gap: clamp(1.5rem, 4vw, 2.5rem);
+    width: min(1280px, 100%);
+    height: auto;
+}
+
+.auth-intro,
+.auth-card {
+    min-width: 0;
+    max-height: none;
+    overflow: visible;
+}
+
+.auth-intro {
+    width: 100%;
+    padding-top: 0;
+}
+
+.auth-card {
+    justify-self: center;
+}
+
+@media (max-width: 1099px) {
+    .auth-shell {
+        grid-template-columns: minmax(0, 1fr);
+        justify-items: center;
+        gap: 1.5rem;
+    }
+
+    .auth-intro,
+    .auth-card {
+        width: min(100%, 56rem);
+    }
+
+    .auth-intro {
+        max-width: 42rem;
+    }
+}
+
+@media (max-width: 720px) {
+    .auth-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .auth-card {
+        padding: clamp(1rem, 5vw, 1.5rem);
+    }
 }

@@ -1,0 +1,167 @@
+/* Exemplares da página inicial: foto à esquerda e detalhes alinhados. */
+#produtos-destaque {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 20px;
+}
+
+#produtos-destaque .produto-card-v {
+  grid-template-columns: minmax(92px, 34%) minmax(0, 1fr);
+  height: 100%;
+  border: 1px solid var(--cor-borda);
+  border-radius: 14px;
+  text-align: left;
+}
+
+#produtos-destaque .imagem-v {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-width: 0;
+  min-height: 100%;
+  padding: 14px 8px;
+  background: var(--cor-fundo);
+}
+
+#produtos-destaque .imagem-v img {
+  display: block;
+  width: 100%;
+  height: 152px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+#produtos-destaque .produto-selo {
+  flex: 0 0 auto;
+  width: auto;
+  max-width: 100%;
+  min-height: 24px;
+  height: auto;
+  padding: 5px 7px;
+  gap: 4px;
+  font-size: .62rem;
+  line-height: 1.25;
+}
+
+#produtos-destaque .descricao-v {
+  min-width: 0;
+  gap: 0;
+  padding: 16px 14px;
+}
+
+#produtos-destaque .produto-identidade-v {
+  min-height: 64px;
+}
+
+#produtos-destaque .produto-categoria-v {
+  margin: 0 0 5px;
+  min-height: 17px;
+  font-size: .7rem;
+}
+
+#produtos-destaque h2 {
+  margin: 0;
+  color: var(--cor-texto);
+  font-size: .9rem;
+  font-weight: 650;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+#produtos-destaque .precificacao-v {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 7px;
+  min-height: 84px;
+  margin: 8px 0 12px;
+}
+
+#produtos-destaque .produto-preco {
+  display: block;
+  color: var(--cor-botao-principal);
+  font-size: clamp(1.25rem, 1.8vw, 1.65rem);
+  font-weight: 800;
+  line-height: 1.15;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+#produtos-destaque .produto-tipo-v {
+  margin: 4px 0 0;
+  color: var(--cor-texto-secundario);
+  font-size: .7rem;
+  line-height: 1.4;
+}
+
+#produtos-destaque .produto-mercado-v {
+  margin: 0;
+  min-height: 25px;
+  align-items: flex-start;
+  font-size: .72rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+#produtos-destaque .produto-adicionar-v {
+  width: 100%;
+  gap: 6px;
+  min-height: 40px;
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 9px;
+  font-size: .8rem;
+}
+
+#produtos-destaque .produto-ofertas-v {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--cor-borda);
+}
+
+#produtos-destaque .outros-mercados-titulo-v {
+  margin: 0 0 8px;
+  color: var(--cor-texto-secundario);
+  font-size: .68rem;
+}
+
+#produtos-destaque .outro-mercado-v {
+  align-items: flex-start;
+  gap: 6px;
+  margin-top: 5px;
+  font-size: .68rem;
+  line-height: 1.4;
+}
+
+#produtos-destaque .outro-mercado-v span { min-width: 0; gap: 4px; overflow-wrap: anywhere; }
+#produtos-destaque .outro-mercado-v strong { flex-shrink: 0; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 1099px) {
+  #produtos-destaque { grid-template-columns: minmax(0, 1fr); gap: 16px; max-width: 620px; margin: 0 auto; }
+  #produtos-destaque .produto-card-v { grid-template-columns: minmax(100px, 32%) minmax(0, 1fr); }
+  #produtos-destaque .produto-identidade-v { min-height: 0; }
+  #produtos-destaque .precificacao-v { min-height: 0; }
+  #produtos-destaque .descricao-v { padding: 20px; }
+  #produtos-destaque .imagem-v img { height: 180px; }
+  #produtos-destaque .produto-selo { font-size: .68rem; padding: 5px 9px; }
+  #produtos-destaque .produto-preco { font-size: 1.65rem; }
+  #produtos-destaque .outro-mercado-v { font-size: .75rem; }
+}
+
+@media (max-width: 480px) {
+  #produtos-destaque .produto-card-v { grid-template-columns: 96px minmax(0, 1fr); }
+  #produtos-destaque .descricao-v { padding: 16px 12px; }
+  #produtos-destaque .imagem-v { padding: 12px 6px; }
+  #produtos-destaque .imagem-v img { height: 130px; }
+  #produtos-destaque .produto-selo { gap: 3px; padding: 5px 5px; font-size: .58rem; }
+  #produtos-destaque .produto-preco { font-size: 1.35rem; }
+  #produtos-destaque .outro-mercado-v { gap: 5px; font-size: .68rem; }
+}

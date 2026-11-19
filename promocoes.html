@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ECONOMIZAI | Gerenciar produtos</title>
+  <link rel="stylesheet" href="css/styles.css"><link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/gerenciar-produtos.css">
+  <script src="js/api.js" defer></script><script src="js/components/LayoutCompartilhado.js" defer></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  <script src="js/promocoes-admin.js" defer></script>
+</head>
+<body><economizai-header></economizai-header>
+  <main class="admin-pagina" id="conteudo-produtos" hidden><section class="admin-card">
+    <div class="admin-cabecalho"><h1>Gerenciar produtos</h1><p>Aprove promoções, altere os dados e os preços ou exclua produtos do catálogo.</p></div>
+    <p id="mensagem-promocoes" class="admin-mensagem" role="status" aria-live="polite"></p>
+    <h2>Aguardando aprovação</h2>
+    <div id="lista-promocoes" class="lista-promocoes"></div>
+    <h2>Catálogo publicado</h2>
+    <form id="form-busca-produtos" class="admin-acoes" role="search">
+      <label for="busca-admin-produtos">Buscar produto ou mercado
+        <input id="busca-admin-produtos" type="search" autocomplete="off" placeholder="Nome do produto ou mercado">
+      </label>
+      <button class="admin-botao" type="submit">Buscar</button>
+    </form>
+    <div id="lista-produtos-admin" class="lista-promocoes"></div>
+  </section></main>
+  <dialog class="admin-dialog" id="editar-produto-dialog" aria-labelledby="editar-produto-titulo">
+    <form id="form-editar-produto" class="auth-form">
+      <h2 id="editar-produto-titulo">Editar produto</h2>
+      <label class="auth-field">Nome do produto
+        <input class="auth-control" name="nome" minlength="2" maxlength="120" required>
+      </label>
+      <label class="auth-field">Categoria
+        <select class="auth-control" name="categoria" required></select>
+      </label>
+      <label class="auth-field">Tipo de venda
+        <select class="auth-control" name="tipo" required></select>
+      </label>
+      <label class="auth-field">Trocar foto (opcional, até 1 MB)
+        <input class="auth-control" name="imagem" type="file" accept="image/png,image/jpeg,image/webp">
+      </label>
+      <h3>Preços por mercado</h3>
+      <div id="ofertas-edicao" class="auth-form"></div>
+      <button class="admin-botao" id="adicionar-oferta" type="button">Adicionar mercado</button>
+      <p id="mensagem-edicao" class="admin-mensagem" role="status" aria-live="polite"></p>
+      <div class="admin-acoes">
+        <button class="admin-botao" id="cancelar-edicao" type="button">Cancelar</button>
+        <button class="admin-botao admin-botao--principal" type="submit">Salvar alterações</button>
+      </div>
+    </form>
+  </dialog>
+  <dialog class="admin-dialog" id="excluir-produto-dialog" aria-labelledby="excluir-produto-titulo">
+    <form id="form-excluir-produto">
+      <h2 id="excluir-produto-titulo">Excluir produto</h2>
+      <p>Excluir <strong id="nome-produto-exclusao"></strong> e todas as suas ofertas do catálogo?</p>
+      <p id="mensagem-exclusao" class="admin-mensagem" role="status" aria-live="polite"></p>
+      <div class="admin-acoes">
+        <button class="admin-botao" id="cancelar-exclusao" type="button">Cancelar</button>
+        <button class="admin-botao admin-botao--perigo" type="submit">Excluir produto</button>
+      </div>
+    </form>
+  </dialog>
+  <economizai-footer></economizai-footer>
+</body></html>
