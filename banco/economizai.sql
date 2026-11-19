@@ -4,10 +4,10 @@ USE economizai;
 
 CREATE TABLE IF NOT EXISTS usuarios (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    nome VARCHAR(80) NOT NULL,
+    nome LONGTEXT NOT NULL,
     data_nascimento DATE NOT NULL,
     sexo VARCHAR(20) NOT NULL,
-    nome_materno VARCHAR(80) NOT NULL,
+    nome_materno LONGTEXT NOT NULL,
     cpf CHAR(11) NOT NULL UNIQUE,
     email VARCHAR(160) NOT NULL UNIQUE,
     telefone_celular VARCHAR(20) NOT NULL,
@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
 CREATE TABLE IF NOT EXISTS logs_autenticacao (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT UNSIGNED NULL,
-    nome VARCHAR(80) NOT NULL,
+    nome LONGTEXT NOT NULL,
     cpf CHAR(11) NOT NULL,
     perfil ENUM('master', 'comum') NOT NULL,
     fator VARCHAR(100) NOT NULL,

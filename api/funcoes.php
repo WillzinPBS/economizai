@@ -36,7 +36,12 @@ function consultar(string $sql, array $parametros = []): PDOStatement
 
 function texto(array $dados, string $campo): string
 {
-    return isset($dados[$campo]) && is_string($dados[$campo]) ? trim($dados[$campo]) : '';
+    return trim(textoOriginal($dados, $campo));
+}
+
+function textoOriginal(array $dados, string $campo): string
+{
+    return is_string($dados[$campo] ?? null) ? $dados[$campo] : '';
 }
 
 function digitos(string $valor): string
@@ -63,12 +68,28 @@ function normalizar(string $valor): string
 
 function nomeValido(string $nome): bool
 {
-    return preg_match('/^[\p{L} ]{15,80}$/u', $nome) === 1;
+    return preg_match('/\S/u', $nome) === 1;
 }
 
-function senhaValida(string $senha): bool
+const PREFIXO_HASH_SENHA = 'sha384:';
+
+function prepararSenhaParaHash(string $senha): string
 {
-    return preg_match('/^[a-zA-Z]{8}$/', $senha) === 1;
+    // O bcrypt aceita até 72 bytes. A representação Base64 do SHA-384 tem 64 bytes.
+    return base64_encode(hash('sha384', $senha, true));
+}
+
+function gerarHashSenha(string $senha): string
+{
+    return PREFIXO_HASH_SENHA . password_hash(prepararSenhaParaHash($senha), PASSWORD_BCRYPT);
+}
+
+function verificarSenha(string $senha, string $hash): bool
+{
+    if (str_starts_with($hash, PREFIXO_HASH_SENHA)) {
+        return password_verify(prepararSenhaParaHash($senha), substr($hash, strlen(PREFIXO_HASH_SENHA)));
+    }
+    return password_verify(trim($senha), $hash);
 }
 
 function cpfValido(string $cpf): bool
@@ -159,17 +180,16 @@ function validarCadastro(array $dados): array
         'cidade', 'estado', 'endereco', 'login', 'senha', 'confirmaSenha'];
     $usuario = [];
     foreach ($campos as $campo) {
-        $usuario[$campo] = texto($dados, $campo);
+        $usuario[$campo] = in_array($campo, ['senha', 'confirmaSenha'], true)
+            ? textoOriginal($dados, $campo)
+            : texto($dados, $campo);
         if ($usuario[$campo] === '') {
             falhar('Preencha todos os campos obrigatórios.');
         }
     }
     $usuario['complemento'] = texto($dados, 'complemento');
-    if (!nomeValido($usuario['nome'])) {
-        falhar('O nome deve ter entre 15 e 80 letras e espaços.');
-    }
-    if (!preg_match('/^[\p{L} ]{2,80}$/u', $usuario['nomeMaterno'])) {
-        falhar('Informe um nome materno válido, com até 80 letras.');
+    if (!nomeValido($usuario['nome']) || !nomeValido($usuario['nomeMaterno'])) {
+        falhar('Preencha o nome e o nome materno.');
     }
     $data = DateTimeImmutable::createFromFormat('!Y-m-d', $usuario['dataNascimento']);
     if (!$data || $data->format('Y-m-d') !== $usuario['dataNascimento'] || $data > new DateTimeImmutable('today')) {
@@ -198,9 +218,6 @@ function validarCadastro(array $dados): array
         falhar('O login deve ter exatamente 6 letras.');
     }
     $usuario['login'] = strtolower($usuario['login']);
-    if (!senhaValida($usuario['senha'])) {
-        falhar('A senha deve ter exatamente 8 letras.');
-    }
     if ($usuario['senha'] !== $usuario['confirmaSenha']) {
         falhar('A confirmação deve ser igual à senha.');
     }

@@ -21,21 +21,36 @@ session_start();
 // Gera um PDF de texto com paginação, sem precisar instalar bibliotecas.
 function textoPdf(string $texto): string
 {
-    $texto = iconv('UTF-8', 'Windows-1252//TRANSLIT', $texto);
     $texto = preg_replace('/[\x00-\x1F\x7F]/', ' ', $texto);
     return str_replace(['\\', '(', ')'], ['\\\\', '\\(', '\\)'], $texto);
 }
 
 function gerarPdf(array $usuarios): string
 {
-    $paginas = array_chunk($usuarios, 5) ?: [[]];
+    $linhas = [];
+    foreach ($usuarios as $usuario) {
+        $campos = [
+            $usuario['nome'],
+            'Login: ' . $usuario['login'] . ' | CPF: ' . $usuario['cpf'],
+            'E-mail: ' . $usuario['email'],
+        ];
+        foreach ($campos as $campo) {
+            $bytes = iconv('UTF-8', 'Windows-1252//TRANSLIT//IGNORE', $campo);
+            foreach (str_split($bytes, 50) as $trecho) {
+                $linhas[] = $trecho;
+            }
+        }
+        $linhas[] = '';
+    }
+    // Com início em y=730 e passo de 13 pontos, a última linha fica acima do rodapé.
+    $paginas = array_chunk($linhas, 52) ?: [['Nenhum usuario encontrado.']];
     $objetos = [
         1 => '<< /Type /Catalog /Pages 2 0 R >>',
         2 => '',
         3 => '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
     ];
     $referencias = [];
-    foreach ($paginas as $indice => $usuariosPagina) {
+    foreach ($paginas as $indice => $linhasPagina) {
         $paginaId = count($objetos) + 1;
         $conteudoId = $paginaId + 1;
         $referencias[] = "$paginaId 0 R";
@@ -44,25 +59,9 @@ function gerarPdf(array $usuarios): string
         $subtitulo = 'Emitido em ' . date('d/m/Y H:i') . ' | ' . count($usuarios) . ' usuario(s)';
         $conteudo .= 'BT /F1 10 Tf 40 770 Td (' . textoPdf($subtitulo) . ") Tj ET\n";
         $y = 730;
-        if (!$usuariosPagina) {
-            $conteudo .= "BT /F1 11 Tf 40 $y Td (Nenhum usuario encontrado.) Tj ET\n";
-        }
-        foreach ($usuariosPagina as $usuario) {
-            $linhas = [
-                $usuario['nome'],
-                'Login: ' . $usuario['login'] . ' | CPF: ' . $usuario['cpf'],
-                'E-mail: ' . $usuario['email'],
-            ];
-            foreach ($linhas as $linha) {
-                // Limita cada linha pela largura, preservando textos longos.
-                $bytes = iconv('UTF-8', 'Windows-1252//TRANSLIT', $linha);
-                foreach (str_split($bytes, 50) as $trecho) {
-                    $trecho = iconv('Windows-1252', 'UTF-8', $trecho);
-                    $conteudo .= "BT /F1 10 Tf 40 $y Td (" . textoPdf($trecho) . ") Tj ET\n";
-                    $y -= 13;
-                }
-            }
-            $y -= 10;
+        foreach ($linhasPagina as $linha) {
+            $conteudo .= "BT /F1 10 Tf 40 $y Td (" . textoPdf($linha) . ") Tj ET\n";
+            $y -= 13;
         }
         $rodape = 'Pagina ' . ($indice + 1) . ' de ' . count($paginas);
         $conteudo .= 'BT /F1 10 Tf 40 30 Td (' . textoPdf($rodape) . ") Tj ET\n";

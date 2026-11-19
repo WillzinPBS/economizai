@@ -76,7 +76,7 @@ try {
             $usuario['cpf'], $usuario['email'], $usuario['telefoneCelular'], $usuario['telefoneFixo'],
             $usuario['cep'], $usuario['logradouro'], $usuario['numero'], $usuario['complemento'],
             $usuario['bairro'], $usuario['cidade'], $usuario['estado'], $usuario['endereco'],
-            $usuario['login'], password_hash($usuario['senha'], PASSWORD_DEFAULT), 'comum',
+            $usuario['login'], gerarHashSenha($usuario['senha']), 'comum',
         ]);
         responder(['mensagem' => 'Cadastro realizado. Entre com seu login e senha.', 'redirecionar' => 'login.html'], 201);
     }
@@ -85,12 +85,12 @@ try {
         $_SESSION = [];
         session_regenerate_id(true);
         $login = strtolower(texto($dados, 'login'));
-        $senha = texto($dados, 'senha');
+        $senha = textoOriginal($dados, 'senha');
         if ($login === '' || $senha === '') {
             falhar('Preencha o login e a senha.');
         }
         $usuario = consultar('SELECT * FROM usuarios WHERE login = ?', [$login])->fetch();
-        if (!$usuario || !password_verify($senha, $usuario['senha'])) {
+        if (!$usuario || !verificarSenha($senha, $usuario['senha'])) {
             falhar('Login ou senha inválidos.', 401);
         }
         $tipos = array_keys(perguntas());
@@ -200,22 +200,22 @@ try {
         if ($usuario['perfil'] !== 'comum') {
             falhar('Somente o usuário comum pode alterar a própria senha.', 403);
         }
-        $atual = texto($dados, 'senhaAtual');
-        $nova = texto($dados, 'novaSenha');
-        if (!password_verify($atual, $usuario['senha'])) {
+        $atual = textoOriginal($dados, 'senhaAtual');
+        $nova = textoOriginal($dados, 'novaSenha');
+        if (!verificarSenha($atual, $usuario['senha'])) {
             falhar('A senha atual está incorreta.');
         }
-        if (!senhaValida($nova)) {
-            falhar('A nova senha deve ter exatamente 8 letras.');
+        if ($nova === '') {
+            falhar('Informe a nova senha.');
         }
-        if ($nova !== texto($dados, 'confirmaSenha')) {
+        if ($nova !== textoOriginal($dados, 'confirmaSenha')) {
             falhar('A confirmação deve ser igual à nova senha.');
         }
         if ($atual === $nova) {
             falhar('A nova senha deve ser diferente da atual.');
         }
         consultar('UPDATE usuarios SET senha = ?, versao_sessao = versao_sessao + 1 WHERE id = ?',
-            [password_hash($nova, PASSWORD_DEFAULT), $usuario['id']]);
+            [gerarHashSenha($nova), $usuario['id']]);
         $_SESSION['versao_sessao'] = (int) $usuario['versao_sessao'] + 1;
         responder(['mensagem' => 'Senha alterada com sucesso.']);
     }
@@ -224,7 +224,7 @@ try {
         $usuario = usuarioAtual();
         $nome = array_key_exists('nome', $dados) ? texto($dados, 'nome') : $usuario['nome'];
         if (!nomeValido($nome)) {
-            falhar('O nome deve ter entre 15 e 80 letras e espaços.');
+            falhar('Informe seu nome.');
         }
         $foto = $usuario['foto'];
         if (array_key_exists('foto', $dados)) {

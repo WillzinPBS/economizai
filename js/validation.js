@@ -40,7 +40,8 @@ function definirErroCampo(campoOuId, texto) {
 }
 
 function campoEstaVazio(campo) {
-  return !String(campo.value || "").trim();
+  const valor = String(campo.value || "");
+  return campo.autocomplete?.endsWith("-password") ? !valor : !valor.trim();
 }
 
 function limparErrosFormulario(formulario) {

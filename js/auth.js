@@ -9,9 +9,7 @@ function mostrarMensagem(texto, sucesso = false) {
 }
 
 function valor(id) { return document.getElementById(id)?.value.trim() || ""; }
-function validarNome(nome) { return /^[A-Za-zÀ-ÖØ-öø-ÿ ]{15,80}$/.test(nome); }
 function validarLogin(loginDigitado) { return /^[A-Za-z]{6}$/.test(loginDigitado); }
-function validarSenha(senha) { return /^[A-Za-z]{8}$/.test(senha); }
 function validarTelefoneCelular(telefone) { return /^\(\+55\)\d{2}-\d{8,9}$/.test(telefone); }
 function validarTelefoneFixo(telefone) { return /^\(\+55\)\d{2}-\d{8}$/.test(telefone); }
 function validarCep(cep) { return /^\d{5}-?\d{3}$/.test(cep); }
@@ -27,15 +25,6 @@ function validarCPF(cpf) {
     if ((resto === 10 ? 0 : resto) !== Number(numeros[tamanho])) return false;
   }
   return true;
-}
-
-function atualizarForcaSenhaCadastro() {
-  const campo = document.getElementById("senha");
-  const indicador = document.getElementById("forca-senha-cadastro");
-  if (!campo || !indicador) return;
-  const valida = validarSenha(campo.value);
-  indicador.className = "auth-forca-senha" + (campo.value ? (valida ? " auth-forca-senha--forte" : " auth-forca-senha--fraca") : "");
-  indicador.textContent = campo.value ? (valida ? "Senha válida." : "Use exatamente 8 letras, sem números ou símbolos.") : "";
 }
 
 function montarEnderecoCompleto() {
@@ -90,15 +79,12 @@ async function cadastrar() {
     senha: document.getElementById("senha").value, confirmaSenha: document.getElementById("confirma_senha").value,
   };
   const verificacoes = [
-    ["nome", validarNome(dados.nome), "Use entre 15 e 80 letras e espaços."],
-    ["nome_materno", /^[A-Za-zÀ-ÖØ-öø-ÿ ]{2,80}$/.test(dados.nomeMaterno), "Use entre 2 e 80 letras e espaços."],
     ["cpf", validarCPF(dados.cpf), "Informe um CPF válido."],
     ["email", /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(dados.email), "Informe um e-mail válido."],
     ["telefone_celular", validarTelefoneCelular(dados.telefoneCelular), "Use (+55)21-999999999."],
     ["telefone_fixo", validarTelefoneFixo(dados.telefoneFixo), "Use (+55)21-33334444."],
     ["cep", validarCep(dados.cep), "Informe um CEP com 8 dígitos."],
     ["login", validarLogin(dados.login), "Use exatamente 6 letras."],
-    ["senha", validarSenha(dados.senha), "Use exatamente 8 letras, sem números ou símbolos."],
     ["confirma_senha", dados.senha === dados.confirmaSenha, "A confirmação deve ser igual à senha."],
   ];
   let valido = true;
@@ -123,8 +109,8 @@ async function login() {
   if (!validarCamposObrigatorios(formulario)) { mostrarMensagem("Preencha login e senha."); return; }
   const loginDigitado = valor("login");
   const senha = document.getElementById("senha").value;
-  if (!validarLogin(loginDigitado) || !validarSenha(senha)) {
-    mostrarMensagem("O login deve ter 6 letras e a senha, 8 letras."); return;
+  if (!validarLogin(loginDigitado)) {
+    mostrarMensagem("O login deve ter 6 letras."); return;
   }
   const botao = formulario.querySelector('[type="submit"]');
   botao.disabled = true;
@@ -181,6 +167,12 @@ function aplicarMascaraTelefone(input, tipo) {
   });
 }
 
+function definirVisibilidadeSenha(botao, visivel) {
+  const campo = document.getElementById(botao.dataset.alvo);
+  campo.type = visivel ? "text" : "password";
+  botao.setAttribute("aria-label", visivel ? "Ocultar senha" : "Mostrar senha");
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   const cadastro = document.getElementById("cadastroForm");
   ["telefone_celular", "telefone_fixo"].forEach((id) => {
@@ -199,8 +191,12 @@ document.addEventListener("DOMContentLoaded", async () => {
   ["logradouro", "numero", "complemento", "bairro", "cidade", "estado", "cep"].forEach((id) => {
     document.getElementById(id)?.addEventListener("input", montarEnderecoCompleto);
   });
-  document.getElementById("senha")?.addEventListener("input", atualizarForcaSenhaCadastro);
   if (cadastro) cadastro.addEventListener("submit", (evento) => { evento.preventDefault(); cadastrar(); });
+  document.querySelectorAll(".auth-toggle-senha").forEach((botao) => {
+    botao.addEventListener("click", () => {
+      definirVisibilidadeSenha(botao, document.getElementById(botao.dataset.alvo).type === "password");
+    });
+  });
   const aviso = sessionStorage.getItem("aviso-login");
   if (document.getElementById("loginForm") && aviso) {
     mostrarMensagem(aviso, aviso.startsWith("Cadastro"));
@@ -209,12 +205,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   document.querySelectorAll("#cadastroForm, #loginForm").forEach((formulario) => {
     formulario.addEventListener("reset", () => {
       limparErrosFormulario(formulario); mostrarMensagem("");
-      formulario.querySelectorAll(".auth-toggle-senha").forEach((botao) => {
-        document.getElementById(botao.dataset.alvo).type = "password";
-        botao.setAttribute("aria-label", "Mostrar senha");
-        botao.querySelector("i").className = "fa-solid fa-eye";
-      });
-      setTimeout(atualizarForcaSenhaCadastro, 0);
+      formulario.querySelectorAll(".auth-toggle-senha").forEach((botao) => definirVisibilidadeSenha(botao, false));
       atualizarStatusCep("Preencha o CEP para consultar o endereço.");
     });
   });

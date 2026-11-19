@@ -101,7 +101,7 @@
                   type="text"
                   placeholder="Digite seu nome completo"
                   class="auth-control auth-control--icone"
-                  id="nome" minlength="15" maxlength="80"
+                  id="nome"
                   autocomplete="name"
                   required
                 >
@@ -155,7 +155,7 @@
                   type="text"
                   placeholder="Digite o nome materno"
                   class="auth-control auth-control--icone"
-                  id="nome_materno" minlength="2" maxlength="80"
+                  id="nome_materno"
                   required
                 >
               </div>
@@ -437,20 +437,16 @@
                 <i class="auth-control-icone fa-solid fa-lock" aria-hidden="true"></i>
                 <input
                   type="password"
-                  placeholder="Exatamente 8 letras"
+                  placeholder="Digite sua senha"
                   class="auth-control auth-control--icone"
                   id="senha"
                   autocomplete="new-password"
-                  minlength="8" maxlength="8" pattern="[A-Za-z]{8}"
                   required
                   style="padding-right: 2.4rem;"
                 >
-                <button type="button" class="auth-toggle-senha" data-alvo="senha" aria-label="Mostrar senha">
-                  <i class="fa-solid fa-eye" aria-hidden="true"></i>
-                </button>
+                <button type="button" class="auth-toggle-senha" data-alvo="senha" aria-label="Mostrar senha"></button>
               </div>
 
-              <p id="forca-senha-cadastro" class="auth-forca-senha" aria-live="polite"></p>
             </div>
 
             <div class="auth-field">
@@ -466,13 +462,10 @@
                   class="auth-control auth-control--icone"
                   id="confirma_senha"
                   autocomplete="new-password"
-                  minlength="8" maxlength="8" pattern="[A-Za-z]{8}"
                   required
                   style="padding-right: 2.4rem;"
                 >
-                <button type="button" class="auth-toggle-senha" data-alvo="confirma_senha" aria-label="Mostrar senha">
-                  <i class="fa-solid fa-eye" aria-hidden="true"></i>
-                </button>
+                <button type="button" class="auth-toggle-senha" data-alvo="confirma_senha" aria-label="Mostrar senha"></button>
               </div>
             </div>
           </div>
@@ -498,19 +491,5 @@
 
   <economizai-footer></economizai-footer>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function() {
-      document.querySelectorAll(".auth-toggle-senha").forEach(function(botao) {
-        botao.addEventListener("click", function() {
-          const alvo = document.getElementById(botao.dataset.alvo);
-          if (!alvo) return;
-          const visivel = alvo.type === "text";
-          alvo.type = visivel ? "password" : "text";
-          botao.querySelector("i").className = visivel ? "fa-solid fa-eye" : "fa-solid fa-eye-slash";
-          botao.setAttribute("aria-label", visivel ? "Mostrar senha" : "Ocultar senha");
-        });
-      });
-    });
-  </script>
 </body>
 </html>

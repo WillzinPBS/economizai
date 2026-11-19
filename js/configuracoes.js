@@ -88,8 +88,8 @@
 
   $("form-nome").addEventListener("submit", async (evento) => {
     evento.preventDefault();
-    const nome = $("nome_config").value.trim().replace(/\s+/g, " ");
-    if (!validarNome(nome)) { mensagem("msg-nome", "Use entre 15 e 80 letras e espaços."); return; }
+    const nome = $("nome_config").value.trim();
+    if (!nome) { mensagem("msg-nome", "Informe seu nome."); return; }
     const botao = evento.currentTarget.querySelector('[type="submit"]');
     botao.disabled = true;
     try {
@@ -101,29 +101,12 @@
     finally { botao.disabled = false; }
   });
 
-  function atualizarForcaSenha() {
-    const senha = $("nova_senha").value;
-    const valida = validarSenha(senha);
-    $("forca-nova-senha").className = "auth-forca-senha" + (senha ? (valida ? " auth-forca-senha--forte" : " auth-forca-senha--fraca") : "");
-    $("forca-nova-senha").textContent = senha ? (valida ? "Senha válida." : "Use exatamente 8 letras, sem números ou símbolos.") : "";
-  }
-  $("nova_senha").addEventListener("input", atualizarForcaSenha);
-  document.querySelectorAll(".auth-toggle-senha").forEach((botao) => {
-    botao.addEventListener("click", () => {
-      const campo = $(botao.dataset.alvo);
-      const mostrar = campo.type === "password";
-      campo.type = mostrar ? "text" : "password";
-      botao.setAttribute("aria-label", mostrar ? "Ocultar senha" : "Mostrar senha");
-      botao.querySelector("i").className = mostrar ? "bi bi-eye-slash" : "bi bi-eye";
-    });
-  });
-
   $("form-senha").addEventListener("submit", async (evento) => {
     evento.preventDefault();
     if (usuario.perfil !== "comum") return;
     const dados = { senhaAtual: $("senha_atual").value, novaSenha: $("nova_senha").value, confirmaSenha: $("confirma_nova_senha").value };
-    if (!dados.senhaAtual || !validarSenha(dados.novaSenha) || dados.novaSenha !== dados.confirmaSenha) {
-      mensagem("msg-senha", "Informe a senha atual e confirme uma nova senha com exatamente 8 letras."); return;
+    if (!dados.senhaAtual || !dados.novaSenha || dados.novaSenha !== dados.confirmaSenha) {
+      mensagem("msg-senha", "Informe a senha atual e confirme a nova senha."); return;
     }
     const formulario = evento.currentTarget;
     const botao = formulario.querySelector('[type="submit"]');
@@ -131,12 +114,7 @@
     try {
       await requisitar("senha", dados);
       formulario.reset();
-      document.querySelectorAll(".auth-toggle-senha").forEach((item) => {
-        $(item.dataset.alvo).type = "password";
-        item.setAttribute("aria-label", "Mostrar senha");
-        item.querySelector("i").className = "bi bi-eye";
-      });
-      atualizarForcaSenha();
+      document.querySelectorAll(".auth-toggle-senha").forEach((botao) => definirVisibilidadeSenha(botao, false));
       mensagem("msg-senha", "Senha alterada.", true);
     } catch (erro) { mensagem("msg-senha", erro.message); }
     finally { botao.disabled = false; }

@@ -28,7 +28,7 @@ Este projeto precisa do **MySQL Server** para guardar os dados e do **MySQL Work
    & C:\php\php.exe banco/atualizar-curtidas.php
    ```
 
-   A atualização cria a tabela de curtidas e remove os campos antigos de descrição das ofertas e promoções. Ela pode ser executada novamente e preserva os produtos, preços, usuários e solicitações existentes. Não é necessário apagar ou recriar o banco.
+   A atualização cria a tabela de curtidas e remove os campos antigos de descrição das ofertas e promoções. Ela pode ser executada novamente e preserva os produtos, preços, usuários e solicitações existentes. Em um banco criado antes da remoção dos limites de nome, execute também [banco/atualizar-nomes.sql](banco/atualizar-nomes.sql) no Workbench para ampliar os campos de nome dos usuários e dos logs.
 
 8. Inicie o PHP:
 
@@ -80,9 +80,9 @@ O catálogo publicado usa as tabelas `produtos` e `ofertas`. A tabela `promocoes
 
 ## Regras do cadastro
 
-- Nome: 15 a 80 caracteres, com letras e espaços.
+- Nome e nome materno obrigatórios, sem tamanho ou formato fixo.
 - Login: exatamente 6 letras, sem números.
-- Senha: exatamente 8 letras, sem números, com confirmação igual.
+- Senha obrigatória, sem tamanho ou formato fixo, com confirmação idêntica.
 - CPF: 11 dígitos, com conferência dos dígitos verificadores.
 - CEP: 8 dígitos, com consulta ao ViaCEP e preenchimento manual quando a consulta falhar.
 - Telefone fixo: prefixo `(+55)`, DDD de 2 dígitos e número de 8 dígitos, por exemplo `(+55)21-33334444`. O celular também aceita 9 dígitos, como `(+55)21-999998888`.

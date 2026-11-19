@@ -114,16 +114,13 @@
               <input
                 id="senha"
                 type="password"
-                placeholder="Senha com 8 letras"
+                placeholder="Digite sua senha"
                 class="auth-control auth-control--icone"
                 autocomplete="current-password"
-                minlength="8" maxlength="8" pattern="[A-Za-z]{8}"
                 required
                 style="padding-right: 2.4rem;"
               >
-              <button type="button" class="auth-toggle-senha" data-alvo="senha" aria-label="Mostrar senha">
-                <i class="fa-solid fa-eye" aria-hidden="true"></i>
-              </button>
+              <button type="button" class="auth-toggle-senha" data-alvo="senha" aria-label="Mostrar senha"></button>
             </div>
           </div>
 
@@ -172,16 +169,6 @@
         });
       }
 
-      document.querySelectorAll(".auth-toggle-senha").forEach(function(botao) {
-        botao.addEventListener("click", function() {
-          const alvo = document.getElementById(botao.dataset.alvo);
-          if (!alvo) return;
-          const visivel = alvo.type === "text";
-          alvo.type = visivel ? "password" : "text";
-          botao.querySelector("i").className = visivel ? "fa-solid fa-eye" : "fa-solid fa-eye-slash";
-          botao.setAttribute("aria-label", visivel ? "Mostrar senha" : "Ocultar senha");
-        });
-      });
     });
   </script>
 </body>

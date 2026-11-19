@@ -46,15 +46,16 @@ function conferir(resposta, status, contexto) {
 }
 
 const fixture = {
-  nome: `Usuario de Teste ${letras}`,
-  dataNascimento: "2000-02-29", sexo: "outro", nomeMaterno: "Maria de Teste",
+  nome: `Usuário ${letras} ${"D’Ávila-Souza ".repeat(8)}Filho`,
+  dataNascimento: "2000-02-29", sexo: "outro", nomeMaterno: `Maria ${"D’Ávila-Souza ".repeat(8)}Silva`,
   cpf: gerarCPF(), email: `${letras}.${Date.now()}@example.com`,
   telefoneCelular: "(+55)21-999999999", telefoneFixo: "(+55)21-33334444",
   cep: "20040002", logradouro: "Avenida Rio Branco", numero: "1", complemento: "",
   bairro: "Centro", cidade: "Rio de Janeiro", estado: "RJ",
   endereco: "Avenida Rio Branco, 1, Centro, Rio de Janeiro - RJ, CEP 20040-002",
-  login: letras, senha: "Senhaabc", confirmaSenha: "Senhaabc", perfil: "master",
+  login: letras, senha: ` Árvore123!${"x".repeat(80)}A `, perfil: "master",
 };
+fixture.confirmaSenha = fixture.senha;
 const dadosMaster = { login: "master", senha: "Masteraa", nomeMaterno: "Maria Administradora", dataNascimento: "1990-01-01", cep: "20040002" };
 
 function respostaDoDesafio(tipo, dados) {
@@ -84,12 +85,15 @@ try {
   conferir(await anonimo("usuarios"), 401, "consulta anônima");
   conferir(await anonimo("cadastro", { ...fixture, cpf: "11111111111" }), 400, "CPF inválido");
   conferir(await anonimo("cadastro", { ...fixture, login: "abc12x" }), 400, "login com números");
-  conferir(await anonimo("cadastro", { ...fixture, senha: "Senha123", confirmaSenha: "Senha123" }), 400, "senha com números");
+  conferir(await anonimo("cadastro", { ...fixture, senha: "", confirmaSenha: "" }), 400, "senha vazia");
+  conferir(await anonimo("cadastro", { ...fixture, confirmaSenha: fixture.senha.trim() }), 400, "confirmação diferente");
   conferir(await anonimo("cadastro", fixture), 201, "cadastro");
   usuarioCriado = true;
   conferir(await anonimo("cadastro", fixture), 409, "cadastro duplicado");
   console.log("OK cadastro, validações e duplicidade");
 
+  conferir(await comum("login", { login: fixture.login, senha: fixture.senha.replace("A ", "B ") }), 401, "diferença após 72 bytes");
+  conferir(await comum("login", { login: fixture.login, senha: fixture.senha.trim() }), 401, "espaços da senha preservados");
   conferir(await comum("login", { login: fixture.login, senha: fixture.senha }), 200, "login pendente");
   assert.equal(conferir(await comum("sessao"), 200, "sessão pendente").usuario, null);
   conferir(await comum("usuarios"), 401, "permissão antes de 2FA");
@@ -112,6 +116,7 @@ try {
   assert.equal(conferir(await comum("sessao"), 200, "desafio ausente preserva sessão").usuario.id, usuarioId);
   assert.equal(entrada.usuario.perfil, "comum", "cadastro não pode forjar perfil master");
   assert.equal(entrada.usuario.login, fixture.login);
+  assert.equal(entrada.usuario.nome, fixture.nome);
   for (const campo of ["senha", "cpf", "nomeMaterno", "dataNascimento"]) {
     assert.ok(!(campo in entrada.usuario), `sessão expôs ${campo}`);
   }
@@ -122,12 +127,15 @@ try {
 
   const outroLogin = cliente();
   await autenticar(outroLogin, fixture);
+  const nomeCurto = `李-${letras[0]}`;
+  assert.equal(conferir(await comum("perfil", { nome: nomeCurto }), 200, "nome curto").usuario.nome, nomeCurto);
+  assert.equal(conferir(await comum("perfil", { nome: fixture.nome }), 200, "nome longo").usuario.nome, fixture.nome);
   conferir(await comum("senha", { senhaAtual: "Erradaaa", novaSenha: "Senhadef", confirmaSenha: "Senhadef" }), 400, "senha atual incorreta");
-  conferir(await comum("senha", { senhaAtual: fixture.senha, novaSenha: "Senhadef", confirmaSenha: "Senhadef", id: 1 }), 200, "alteração da própria senha");
+  conferir(await comum("senha", { senhaAtual: fixture.senha, novaSenha: "!", confirmaSenha: "!", id: 1 }), 200, "alteração da própria senha");
   assert.equal(conferir(await outroLogin("sessao"), 200, "outra sessão revogada").usuario, null);
   const senhaAntiga = cliente();
   conferir(await senhaAntiga("login", { login: fixture.login, senha: fixture.senha }), 401, "senha antiga revogada");
-  fixture.senha = fixture.confirmaSenha = "Senhadef";
+  fixture.senha = fixture.confirmaSenha = "!";
   const sessaoParaExcluir = cliente();
   await autenticar(sessaoParaExcluir, fixture);
   console.log("OK troca de senha altera somente a conta da sessão e revoga outras sessões");
