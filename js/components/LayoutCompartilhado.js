@@ -962,6 +962,10 @@ class EconomizaiHeader extends HTMLElement {
                     <i class="bi bi-gear" aria-hidden="true"></i>
                     <span>Configurações</span>
                   </a>
+                  <a class="usuario-item" href="configuracoes.html#secao-senha" data-comum hidden>
+                    <i class="bi bi-lock" aria-hidden="true"></i>
+                    <span>Alterar senha</span>
+                  </a>
 
                   <a class="usuario-item" href="modelo-bd.html">Modelo do banco de dados</a>
                   <a class="usuario-item" data-master href="usuarios.html" hidden>Consultar usuários</a>
@@ -1155,6 +1159,7 @@ class EconomizaiHeader extends HTMLElement {
     raiz.querySelectorAll("[data-master]").forEach((item) => {
       item.hidden = cadastro.perfil !== "master";
     });
+    raiz.querySelector("[data-comum]").hidden = cadastro.perfil !== "comum";
 
     const nomeCompletoEl = raiz.getElementById("usuario-nome-completo");
     nomeCompletoEl.textContent = nomeCompleto;
@@ -1191,6 +1196,7 @@ class EconomizaiHeader extends HTMLElement {
     });
 
     botaoSair.addEventListener("click", () => this.sair());
+    painel.querySelector("[data-comum]").addEventListener("click", () => this.fecharMenuUsuario());
 
     // Fecha ao clicar fora (composedPath atravessa o shadow DOM)
     this._cliqueForaUsuario = (evento) => {

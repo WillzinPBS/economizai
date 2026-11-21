@@ -94,11 +94,10 @@
               <input
                 id="login"
                 type="text"
-                placeholder="Login com 6 letras"
+                placeholder="Até 6 letras"
                 class="auth-control auth-control--icone"
                 autocomplete="username"
-                minlength="6"
-                maxlength="6" pattern="[A-Za-z]{6}"
+                maxlength="6" pattern="[A-Za-z]{1,6}"
                 required
               >
             </div>
@@ -114,9 +113,10 @@
               <input
                 id="senha"
                 type="password"
-                placeholder="Digite sua senha"
+                placeholder="Até 8 caracteres"
                 class="auth-control auth-control--icone"
                 autocomplete="current-password"
+                maxlength="8"
                 required
                 style="padding-right: 2.4rem;"
               >

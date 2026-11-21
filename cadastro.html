@@ -229,12 +229,11 @@
                 <i class="auth-control-icone fa-solid fa-user" aria-hidden="true"></i>
                 <input
                   type="text"
-                  placeholder="Exatamente 6 letras"
+                  placeholder="Até 6 letras"
                   class="auth-control auth-control--icone"
                   id="login"
                   autocomplete="username"
-                  minlength="6"
-                  maxlength="6" pattern="[A-Za-z]{6}"
+                  maxlength="6" pattern="[A-Za-z]{1,6}"
                   required
                 >
               </div>
@@ -437,10 +436,11 @@
                 <i class="auth-control-icone fa-solid fa-lock" aria-hidden="true"></i>
                 <input
                   type="password"
-                  placeholder="Digite sua senha"
+                  placeholder="Até 8 caracteres"
                   class="auth-control auth-control--icone"
                   id="senha"
                   autocomplete="new-password"
+                  maxlength="8"
                   required
                   style="padding-right: 2.4rem;"
                 >
@@ -462,6 +462,7 @@
                   class="auth-control auth-control--icone"
                   id="confirma_senha"
                   autocomplete="new-password"
+                  maxlength="8"
                   required
                   style="padding-right: 2.4rem;"
                 >

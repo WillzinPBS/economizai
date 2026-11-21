@@ -89,6 +89,12 @@ try {
         if ($login === '' || $senha === '') {
             falhar('Preencha o login e a senha.');
         }
+        if (!loginValido($login)) {
+            falhar('O login deve ter de 1 a 6 letras.');
+        }
+        if (!senhaValida($senha)) {
+            falhar('A senha deve ter até 8 caracteres.');
+        }
         $usuario = consultar('SELECT * FROM usuarios WHERE login = ?', [$login])->fetch();
         if (!$usuario || !verificarSenha($senha, $usuario['senha'])) {
             falhar('Login ou senha inválidos.', 401);
@@ -207,6 +213,9 @@ try {
         }
         if ($nova === '') {
             falhar('Informe a nova senha.');
+        }
+        if (!senhaValida($nova)) {
+            falhar('A nova senha deve ter até 8 caracteres.');
         }
         if ($nova !== textoOriginal($dados, 'confirmaSenha')) {
             falhar('A confirmação deve ser igual à nova senha.');

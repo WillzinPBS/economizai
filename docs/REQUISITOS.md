@@ -70,7 +70,7 @@ O formulário de cadastro sempre cria uma conta comum, independentemente de quem
 
 ## Regras dos dados
 
-O nome, o nome materno e a senha são obrigatórios e aceitam comprimentos e caracteres variados. A confirmação deve ser idêntica à senha. O login contém exatamente 6 letras. O CPF precisa ter os dígitos verificadores corretos. O nascimento deve representar uma data válida e anterior ou igual ao dia atual. E-mail, sexo e endereço completo são obrigatórios.
+O nome e o nome materno são obrigatórios e aceitam comprimentos e caracteres variados. O login tem de 1 a 6 letras. A senha é obrigatória, tem até 8 caracteres e exige confirmação idêntica no cadastro e na troca. O CPF precisa ter os dígitos verificadores corretos. O nascimento deve representar uma data válida e anterior ou igual ao dia atual. E-mail, sexo e endereço completo são obrigatórios.
 
 O CEP aceita 8 dígitos, com ou sem a máscara na interface. A busca externa preenche logradouro, bairro, cidade e estado; número e complemento são informados pelo usuário. A falha de conexão permite completar o endereço manualmente.
 

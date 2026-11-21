@@ -71,6 +71,18 @@ function nomeValido(string $nome): bool
     return preg_match('/\S/u', $nome) === 1;
 }
 
+function loginValido(string $login): bool
+{
+    return preg_match('/\A[A-Za-z]{1,6}\z/', $login) === 1;
+}
+
+function senhaValida(string $senha): bool
+{
+    // A mesma contagem em UTF-16 usada pelo maxlength dos campos HTML.
+    $unidades = iconv('UTF-8', 'UTF-16LE', $senha);
+    return $unidades !== false && $unidades !== '' && strlen($unidades) <= 16;
+}
+
 const PREFIXO_HASH_SENHA = 'sha384:';
 
 function prepararSenhaParaHash(string $senha): string
@@ -214,10 +226,13 @@ function validarCadastro(array $dados): array
         falhar('Informe um CEP com 8 dígitos.');
     }
     $usuario['cep'] = digitos($usuario['cep']);
-    if (!preg_match('/^[a-zA-Z]{6}$/', $usuario['login'])) {
-        falhar('O login deve ter exatamente 6 letras.');
+    if (!loginValido($usuario['login'])) {
+        falhar('O login deve ter de 1 a 6 letras.');
     }
     $usuario['login'] = strtolower($usuario['login']);
+    if (!senhaValida($usuario['senha'])) {
+        falhar('A senha deve ter até 8 caracteres.');
+    }
     if ($usuario['senha'] !== $usuario['confirmaSenha']) {
         falhar('A confirmação deve ser igual à senha.');
     }

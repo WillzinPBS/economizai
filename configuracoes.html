@@ -116,7 +116,7 @@
         <section class="config-secao" id="secao-senha" aria-labelledby="titulo-senha" hidden>
           <div class="auth-secao">
             <span class="auth-secao-numero" aria-hidden="true"><i class="bi bi-lock"></i></span>
-            <h2 class="auth-secao-titulo" id="titulo-senha">Senha</h2>
+            <h2 class="auth-secao-titulo" id="titulo-senha">Alterar senha</h2>
           </div>
 
           <form class="auth-form" id="form-senha" novalidate>
@@ -136,7 +136,7 @@
               <div class="auth-control-wrap">
                 <i class="bi bi-lock auth-control-icone" aria-hidden="true"></i>
                 <input class="auth-control auth-control--icone auth-control--toggle" id="nova_senha"
-                  type="password" required autocomplete="new-password" aria-describedby="erro-nova_senha">
+                  type="password" maxlength="8" placeholder="Até 8 caracteres" required autocomplete="new-password" aria-describedby="erro-nova_senha">
                 <button class="auth-toggle-senha" type="button" data-alvo="nova_senha" aria-label="Mostrar senha"></button>
               </div>
               <p class="auth-field-error" id="erro-nova_senha" role="alert" hidden></p>
@@ -147,7 +147,7 @@
               <div class="auth-control-wrap">
                 <i class="bi bi-lock auth-control-icone" aria-hidden="true"></i>
                 <input class="auth-control auth-control--icone auth-control--toggle" id="confirma_nova_senha"
-                  type="password" required autocomplete="new-password" aria-describedby="erro-confirma_nova_senha">
+                  type="password" maxlength="8" required autocomplete="new-password" aria-describedby="erro-confirma_nova_senha">
                 <button class="auth-toggle-senha" type="button" data-alvo="confirma_nova_senha" aria-label="Mostrar senha"></button>
               </div>
               <p class="auth-field-error" id="erro-confirma_nova_senha" role="alert" hidden></p>
