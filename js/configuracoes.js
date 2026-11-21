@@ -105,8 +105,14 @@
     evento.preventDefault();
     if (usuario.perfil !== "comum") return;
     const dados = { senhaAtual: $("senha_atual").value, novaSenha: $("nova_senha").value, confirmaSenha: $("confirma_nova_senha").value };
-    if (!dados.senhaAtual || !dados.novaSenha || dados.novaSenha !== dados.confirmaSenha) {
-      mensagem("msg-senha", "Informe a senha atual e confirme a nova senha."); return;
+    if (!dados.senhaAtual || !dados.novaSenha) {
+      mensagem("msg-senha", "Informe a senha atual e a nova senha."); return;
+    }
+    if (!validarSenha(dados.novaSenha)) {
+      mensagem("msg-senha", "A nova senha deve ter até 8 caracteres."); return;
+    }
+    if (dados.novaSenha !== dados.confirmaSenha) {
+      mensagem("msg-senha", "A confirmação deve ser igual à nova senha."); return;
     }
     const formulario = evento.currentTarget;
     const botao = formulario.querySelector('[type="submit"]');
@@ -120,7 +126,9 @@
     finally { botao.disabled = false; }
   });
 
-  $("secao-senha").hidden = usuario.perfil !== "comum";
+  const secaoSenha = $("secao-senha");
+  secaoSenha.hidden = usuario.perfil !== "comum";
+  if (!secaoSenha.hidden && location.hash === "#secao-senha") secaoSenha.scrollIntoView();
   $("nome_config").value = usuario.nome;
   atualizarResumo();
 })();

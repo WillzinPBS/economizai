@@ -1,0 +1,6 @@
+# Dependencias e testes locais (Playwright) - nao versionar
+node_modules/
+package.json
+package-lock.json
+playwright.config.js
+playwright/

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 
 const base = (process.argv[2] || "http://127.0.0.1:8000").replace(/\/$/, "");
-const letras = Array.from({ length: 6 }, () => String.fromCharCode(97 + Math.floor(Math.random() * 26))).join("");
+const letras = Array.from({ length: 5 }, () => String.fromCharCode(97 + Math.floor(Math.random() * 26))).join("");
 
 function gerarCPF() {
   const numeros = Array.from({ length: 9 }, () => Math.floor(Math.random() * 10));
@@ -53,7 +53,7 @@ const fixture = {
   cep: "20040002", logradouro: "Avenida Rio Branco", numero: "1", complemento: "",
   bairro: "Centro", cidade: "Rio de Janeiro", estado: "RJ",
   endereco: "Avenida Rio Branco, 1, Centro, Rio de Janeiro - RJ, CEP 20040-002",
-  login: letras, senha: ` Árvore123!${"x".repeat(80)}A `, perfil: "master",
+  login: letras, senha: " Á9!😁z ", perfil: "master",
 };
 fixture.confirmaSenha = fixture.senha;
 const dadosMaster = { login: "master", senha: "Masteraa", nomeMaterno: "Maria Administradora", dataNascimento: "1990-01-01", cep: "20040002" };
@@ -85,14 +85,18 @@ try {
   conferir(await anonimo("usuarios"), 401, "consulta anônima");
   conferir(await anonimo("cadastro", { ...fixture, cpf: "11111111111" }), 400, "CPF inválido");
   conferir(await anonimo("cadastro", { ...fixture, login: "abc12x" }), 400, "login com números");
+  conferir(await anonimo("cadastro", { ...fixture, login: "abcdefg" }), 400, "login acima de 6 letras");
   conferir(await anonimo("cadastro", { ...fixture, senha: "", confirmaSenha: "" }), 400, "senha vazia");
+  conferir(await anonimo("cadastro", { ...fixture, senha: fixture.senha + "x", confirmaSenha: fixture.senha + "x" }), 400, "senha acima de 8 caracteres");
   conferir(await anonimo("cadastro", { ...fixture, confirmaSenha: fixture.senha.trim() }), 400, "confirmação diferente");
   conferir(await anonimo("cadastro", fixture), 201, "cadastro");
   usuarioCriado = true;
   conferir(await anonimo("cadastro", fixture), 409, "cadastro duplicado");
   console.log("OK cadastro, validações e duplicidade");
 
-  conferir(await comum("login", { login: fixture.login, senha: fixture.senha.replace("A ", "B ") }), 401, "diferença após 72 bytes");
+  conferir(await comum("login", { login: fixture.login + "ab", senha: fixture.senha }), 400, "login acima de 6 letras");
+  conferir(await comum("login", { login: fixture.login, senha: fixture.senha + "x" }), 400, "senha acima de 8 no login");
+  conferir(await comum("login", { login: fixture.login, senha: fixture.senha.replace("z", "q") }), 401, "senha incorreta");
   conferir(await comum("login", { login: fixture.login, senha: fixture.senha.trim() }), 401, "espaços da senha preservados");
   conferir(await comum("login", { login: fixture.login, senha: fixture.senha }), 200, "login pendente");
   assert.equal(conferir(await comum("sessao"), 200, "sessão pendente").usuario, null);
@@ -131,6 +135,7 @@ try {
   assert.equal(conferir(await comum("perfil", { nome: nomeCurto }), 200, "nome curto").usuario.nome, nomeCurto);
   assert.equal(conferir(await comum("perfil", { nome: fixture.nome }), 200, "nome longo").usuario.nome, fixture.nome);
   conferir(await comum("senha", { senhaAtual: "Erradaaa", novaSenha: "Senhadef", confirmaSenha: "Senhadef" }), 400, "senha atual incorreta");
+  conferir(await comum("senha", { senhaAtual: fixture.senha, novaSenha: "123456789", confirmaSenha: "123456789" }), 400, "nova senha acima de 8 caracteres");
   conferir(await comum("senha", { senhaAtual: fixture.senha, novaSenha: "!", confirmaSenha: "!", id: 1 }), 200, "alteração da própria senha");
   assert.equal(conferir(await outroLogin("sessao"), 200, "outra sessão revogada").usuario, null);
   const senhaAntiga = cliente();

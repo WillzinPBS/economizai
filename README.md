@@ -69,7 +69,7 @@ As senhas ficam no banco como hashes gerados por `password_hash()`. Contas, senh
 - Cadastro com validação de CPF, CEP, dados pessoais e confirmação de senha.
 - Login com sessão PHP, perguntas de verificação e logout.
 - Perfis comum e master, com permissões conferidas pela API.
-- Configurações de nome e foto; alteração da própria senha para o usuário comum.
+- Configurações de nome e foto; alteração da própria senha pelo menu da conta do usuário comum.
 - Consulta de usuários comuns por trecho do nome e exclusão pelo master.
 - Download da lista de usuários comuns em PDF, respeitando o filtro por nome, disponível ao master.
 - Logs de autenticação por nome ou CPF, com data, hora e pergunta utilizada.
@@ -81,8 +81,8 @@ O catálogo publicado usa as tabelas `produtos` e `ofertas`. A tabela `promocoes
 ## Regras do cadastro
 
 - Nome e nome materno obrigatórios, sem tamanho ou formato fixo.
-- Login: exatamente 6 letras, sem números.
-- Senha obrigatória, sem tamanho ou formato fixo, com confirmação idêntica.
+- Login obrigatório, de 1 a 6 letras.
+- Senha obrigatória, de até 8 caracteres, com confirmação idêntica no cadastro e na troca.
 - CPF: 11 dígitos, com conferência dos dígitos verificadores.
 - CEP: 8 dígitos, com consulta ao ViaCEP e preenchimento manual quando a consulta falhar.
 - Telefone fixo: prefixo `(+55)`, DDD de 2 dígitos e número de 8 dígitos, por exemplo `(+55)21-33334444`. O celular também aceita 9 dígitos, como `(+55)21-999998888`.

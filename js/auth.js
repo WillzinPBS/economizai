@@ -9,7 +9,8 @@ function mostrarMensagem(texto, sucesso = false) {
 }
 
 function valor(id) { return document.getElementById(id)?.value.trim() || ""; }
-function validarLogin(loginDigitado) { return /^[A-Za-z]{6}$/.test(loginDigitado); }
+function validarLogin(loginDigitado) { return /^[A-Za-z]{1,6}$/.test(loginDigitado); }
+function validarSenha(senha) { return senha.length > 0 && senha.length <= 8; }
 function validarTelefoneCelular(telefone) { return /^\(\+55\)\d{2}-\d{8,9}$/.test(telefone); }
 function validarTelefoneFixo(telefone) { return /^\(\+55\)\d{2}-\d{8}$/.test(telefone); }
 function validarCep(cep) { return /^\d{5}-?\d{3}$/.test(cep); }
@@ -84,7 +85,8 @@ async function cadastrar() {
     ["telefone_celular", validarTelefoneCelular(dados.telefoneCelular), "Use (+55)21-999999999."],
     ["telefone_fixo", validarTelefoneFixo(dados.telefoneFixo), "Use (+55)21-33334444."],
     ["cep", validarCep(dados.cep), "Informe um CEP com 8 dígitos."],
-    ["login", validarLogin(dados.login), "Use exatamente 6 letras."],
+    ["login", validarLogin(dados.login), "Use de 1 a 6 letras."],
+    ["senha", validarSenha(dados.senha), "Use até 8 caracteres."],
     ["confirma_senha", dados.senha === dados.confirmaSenha, "A confirmação deve ser igual à senha."],
   ];
   let valido = true;
@@ -110,7 +112,10 @@ async function login() {
   const loginDigitado = valor("login");
   const senha = document.getElementById("senha").value;
   if (!validarLogin(loginDigitado)) {
-    mostrarMensagem("O login deve ter 6 letras."); return;
+    mostrarMensagem("O login deve ter de 1 a 6 letras."); return;
+  }
+  if (!validarSenha(senha)) {
+    mostrarMensagem("A senha deve ter até 8 caracteres."); return;
   }
   const botao = formulario.querySelector('[type="submit"]');
   botao.disabled = true;
